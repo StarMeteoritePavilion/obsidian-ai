@@ -1,0 +1,15 @@
+
+# macOS 本地系统文件
+.DS_Store
+
+# Obsidian
+.obsidian
+
+# Claudian 本地会话与运行状态
+.claudian/
+
+# Claude Code 本地配置与会话
+.claude/
+
+# Obsidian 本地回收站
+.trash/
