@@ -116,3 +116,26 @@
 - 将字幕整理为正式 Markdown，未把 `.srt` 文件导入知识库。
 - 校正 Context Engineering、Harness、Agent Skills、Sub-agents、Claude Code、Codex、Prompt Caching、`/loop`、`/goal`、`--worktree`、CI、Issue、Commit、Maker、Checker 和 Evaluator 等转写错误。
 - 新建资料摘要，更新循环工程综合页、上下文工程综合页和内容索引，补充共用基础设施、五步搭建路线与六项上线检查。
+
+## [2026-07-30] ingest | 排行榜遥遥领先，用起来怎么各种拉胯？
+
+- 完整读取 110 条字幕，并对照 3 分 18 秒原始音轨、视频画面和四个官方章节；字幕内容与视频旁白对应，没有重复章节或大段缺失。
+- 根据画面中的 `EPISODE 01 / 08` 和结尾对代码评分实战的预告，将资料确认为评估工程第一期。
+- 将字幕整理为正式 Markdown，未把 `.srt` 文件导入知识库。
+- 校正 ARC、MMLU、TruthfulQA、HellaSwag、GSM8K、Benchmark、Customer Eval、Likert、Python、正则表达式、LLM 裁判、Anthropic、Workbench、Prompt 和 CI/CD 等转写错误。
+- 新建资料摘要与评估工程综合页，更新循环工程资料摘要、综合页和内容索引，补充黄金数据集、三种评分方式、三阶段落地路线及业务质量门禁。
+
+## [2026-07-30] query | 视频信息图的实现方式
+
+- 根据评估工程第一期的视频关键帧，区分能够确认的视觉结构与无法从成片确认的制作工具。
+- 归纳深色网格背景、卡片组件、分层显现、进度动画和独立字幕层等可复用实现要素。
+
+## [2026-07-30] query | Markdown 中的信息图实现选择
+
+- 对比 Mermaid、Markdown 表格、SVG 与 JSON Canvas 在知识库原始资料和综合页中的适用范围。
+- 建议原始资料保持现有普通 Markdown 格式，在综合页使用 Mermaid 表达结构与流程、使用表格表达评分方式对比。
+
+## [2026-07-30] query | Mermaid 的复杂视觉边界
+
+- 明确 Mermaid 能表达信息结构和基础样式，但不能可靠复刻视频中的精确卡片排版、光效、纹理与时间轴动画。
+- 对需要接近视频视觉效果的 Markdown 内容，建议嵌入 SVG；Mermaid 继续作为可维护的结构图使用。

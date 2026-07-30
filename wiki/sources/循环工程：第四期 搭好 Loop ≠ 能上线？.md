@@ -54,10 +54,11 @@ Loop Engineering 是建立在 Context Engineering 基础设施之上的更高层
 
 ## 系列收束
 
-本期资料明确说明它是 Loop Engineering 系列最后一期。系列形成的完整结构是：Prompt、Context、Loop 三层递进，Harness 作为共同外壳；下一阶段转向评估工程，通过定义质量、指标和评测集为优化提供方向。
+本期资料明确说明它是 Loop Engineering 系列最后一期。系列形成的完整结构是：Prompt、Context、Loop 三层递进，Harness 作为共同外壳；下一阶段转向评估工程，通过定义质量、指标和评测集为优化提供方向。后续见[[wiki/sources/评估工程：第一期 排行榜遥遥领先，用起来怎么各种拉胯？|评估工程第一期]]。
 
 ## 关联
 
 - 上一期：[[wiki/sources/循环工程：第三期 Loop 该怎么搭？]]
+- 下一系列：[[wiki/sources/评估工程：第一期 排行榜遥遥领先，用起来怎么各种拉胯？]]
 - 跨资料综合：[[wiki/syntheses/循环工程：从逐轮操作到外部调度]]
 - 信息治理基础：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
