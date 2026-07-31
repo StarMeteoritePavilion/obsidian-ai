@@ -29,5 +29,6 @@ tags:
 
 ## 关联
 
+- 系列综述：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
 - 上一篇：[[wiki/sources/上下文工程：第一期 从 Prompt 到 Context]]
 - 下一篇：[[wiki/sources/上下文工程：第三期 原则、策略、评估]]
