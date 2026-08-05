@@ -163,3 +163,19 @@
 - 校正 Python、LLM、Claude、Prompt、精确字符串匹配、集合匹配、XML、`<thinking>`、`<answer>`、正则表达式、`set`、`lower`、`strip`、few-shot 和 Agent 等转写错误。
 - 记录结尾画面“五条核心认知”与旁白“七条核心认知”的呈现差异，正式文章按旁白逐项收束。
 - 新建资料摘要，更新第一期资料摘要、评估工程综合页和内容索引，补充六步闭环、结构化评估接口、失败分类和小样本边界。
+
+## [2026-08-03] ingest | 让 AI 评价 AI，为什么能成立？
+
+- 完整读取 235 条字幕，并对照 7 分 13 秒原始音轨、视频画面和八个官方章节；字幕内容与视频旁白对应，没有重复章节或大段缺失。
+- 根据开场画面中的 `EVAL ENGINEERING · EPISODE 03`、对代码评分边界的承接和结尾预告，将资料确认为评估工程第三期。
+- 将字幕整理为正式 Markdown，未把 `.srt` 文件导入知识库。
+- 校正代码评分、LLM、Prompt、few-shot、CoT、自偏好、近因偏见、Claude、Gemini、Boolean、Trace、Span、Cohen's Kappa、SLM、Llama Guard、Luna 和 Prometheus 等转写错误。
+- 新建资料摘要，更新第二期资料摘要、评估工程综合页和内容索引，补充领域化裁判、五种系统性偏见、多模型聚合与人类校准门槛。
+
+## [2026-08-05] ingest | 评估场景，为什么不需要瑞士军刀？
+
+- 完整读取 216 条字幕，并对照 7 分 29 秒原始音轨、视频画面和八个官方章节；字幕内容与视频旁白对应，没有重复章节或大段缺失。
+- 根据结尾画面中的“第 4 期 / 共 8 期”、对 LLM 裁判成本问题的承接和下期预告，将资料确认为评估工程第四期。
+- 将字幕整理为正式 Markdown，未把 `.srt` 文件导入知识库。
+- 校正 SLM、Token、PII、Llama Guard 3、Meta、Luna、Galileo、log probabilities、PHUDGE、Microsoft Phi-3、SOTA、Prometheus 2、Pearson、LoRA、F1、INT8、vLLM、TGI、KV 缓存和 INT4 等转写错误。
+- 新建资料摘要，更新第三期资料摘要、评估工程综合页和内容索引，补充专用裁判、五步构建、多指标适配器、蒸馏量化和 SLM—LLM 分层决策框架。
