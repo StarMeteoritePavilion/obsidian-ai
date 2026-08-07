@@ -179,3 +179,11 @@
 - 将字幕整理为正式 Markdown，未把 `.srt` 文件导入知识库。
 - 校正 SLM、Token、PII、Llama Guard 3、Meta、Luna、Galileo、log probabilities、PHUDGE、Microsoft Phi-3、SOTA、Prometheus 2、Pearson、LoRA、F1、INT8、vLLM、TGI、KV 缓存和 INT4 等转写错误。
 - 新建资料摘要，更新第三期资料摘要、评估工程综合页和内容索引，补充专用裁判、五步构建、多指标适配器、蒸馏量化和 SLM—LLM 分层决策框架。
+
+## [2026-08-07] ingest | 能跑的评估和能放心用的评估，差在哪一层？
+
+- 完整读取 207 条字幕，并对照 6 分 37 秒原始音轨、视频画面和五个官方章节；字幕内容与视频旁白对应，没有重复章节或大段缺失。
+- 根据开场和结尾画面中的 `EVAL ENGINEERING · 05 / 08`、对前四期的承接和下期预告，将资料确认为评估工程第五期。
+- 将字幕整理为正式 Markdown，未把 `.srt` 文件导入知识库。
+- 校正评估器、产品级、Ziyou Yan、Cohen's Kappa、few-shot、Ground Truth、SME、timing advice、counter-examples、嵌入聚类、TPR、TNR、CI/CD 和 Agent 等转写错误。
+- 新建资料摘要，更新第四期资料摘要、评估工程综合页和内容索引，补充产品评估三层架构、Ground Truth 四要素、SME 精炼循环、策略性采样、双指标和治理框架。
