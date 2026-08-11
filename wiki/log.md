@@ -187,3 +187,12 @@
 - 将字幕整理为正式 Markdown，未把 `.srt` 文件导入知识库。
 - 校正评估器、产品级、Ziyou Yan、Cohen's Kappa、few-shot、Ground Truth、SME、timing advice、counter-examples、嵌入聚类、TPR、TNR、CI/CD 和 Agent 等转写错误。
 - 新建资料摘要，更新第四期资料摘要、评估工程综合页和内容索引，补充产品评估三层架构、Ground Truth 四要素、SME 精炼循环、策略性采样、双指标和治理框架。
+
+## [2026-08-11] ingest | Agent 评估为什么比 LLM 评估难一个数量级？
+
+- 完整读取 242 条字幕，并对照 8 分 05 秒视频、画面文字和八个官方章节；官方接口没有字幕轨，因此只确认时间结构、章节顺序和画面可验证术语，不将其表述为音轨逐字核验。
+- 字幕时间覆盖 00:00:00.060～00:08:05.400，与官方 486 秒时长一致；未发现重复章节或大段缺失，指标解释中两次“K 越大”属于不同指标的正常论述。
+- 根据开场画面中的“评估工程系列 · 第 6 期 / 共 8 期”、对前五期的承接和结尾预告，将资料确认为评估工程第六期。
+- 将字幕整理为正式 Markdown，未把 `.srt` 文件导入知识库。
+- 校正 Agent、LLM、SLM、Capability Suite、Regression Suite、Harness、Graders、Metrics、Task、Trial、Grader、Transcript、Outcome、Agent Scaffold、Claude Code、CrewAI、`pass@k`、`pass^k`、Code-based、Model-based、Human Grader、SWE-bench Verified、LLM rubric、Groundedness、Coverage、Source Quality、Computer Use、CI/CD 和误报级联等转写错误。
+- 新建资料摘要，更新第五期资料摘要、评估工程综合页和内容索引，补充状态评估、Capability 与 Regression、非确定性双指标、分型评分器和八步落地路线。
