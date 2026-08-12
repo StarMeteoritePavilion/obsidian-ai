@@ -4,6 +4,7 @@ source: https://www.bilibili.com/video/BV11i3w61EKQ
 author: 晴天AI实战
 published: 2026-07-27
 ingested: 2026-07-27
+updated: 2026-08-12
 tags:
   - AI
   - 循环工程
@@ -37,7 +38,7 @@ Loop Engineering 是建立在 Context Engineering 基础设施之上的更高层
 4. **评判**：使用 Fresh 模型根据明确完成条件作出独立判断。
 5. **隔离**：让并行 Agent 各自在独立 Git worktree 中工作。
 
-资料以视频发布时的 Claude Code `/loop`、`/goal` 和 `--worktree` 为例，并把 Codex Automations 与后台 Worktree 列为对应能力。具体命令属于 2026-07-27 的工具状态，不应脱离时间直接外推。
+资料以发布时的 Claude Code `/loop`、`/goal` 和 `--worktree` 为例，并把 Codex Automations 与后台 Worktree 列为对应能力。具体命令属于 2026-07-27 的工具状态，不应脱离时间直接外推。
 
 ## 上线检查
 

@@ -4,6 +4,7 @@ source: https://www.bilibili.com/video/BV1ijTR6vENm
 author: 晴天AI实战
 created: 2026-07-06
 ingested: 2026-07-15
+updated: 2026-08-12
 tags:
   - AI
   - 提示词工程

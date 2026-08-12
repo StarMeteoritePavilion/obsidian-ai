@@ -13,11 +13,11 @@ tags:
 
 这是 Loop Engineering 系列的最后一期。前三期已经说明 Loop 是什么、三种流派怎样选择，以及内部组件怎样组合。
 
-这一期完成两件事：先说明 Loop 如何建立在 Context Engineering 的基础设施之上，再从一行命令出发，用五步搭建第一个能够自行运行的循环，并用六条检查判断它能否上线。
+本期完成两件事：先说明 Loop 如何建立在 Context Engineering 的基础设施之上，再从一行命令出发，通过五个步骤搭建第一个能够自行运行的循环，并用六项检查判断它能否上线。
 
-## Loop 是积木的更高一层
+## Loop 是基础设施的更高一层
 
-Loop Engineering 不是凭空出现的新系统，而是用 Context Engineering 的基础设施搭出的自动化流水线。两者使用相同的积木，但处理的问题不同：
+Loop Engineering 不是凭空出现的新系统，而是利用 Context Engineering 基础设施搭建的自动化流水线。两者使用相同的基础组件，但处理的问题不同：
 
 - **Context Engineering** 决定窗口里装什么，通过检索、压缩、结构化和隔离，把信息整理成一次可用的上下文。
 - **Loop Engineering** 决定系统怎样反复运行，通过定时、分诊、状态、评判和并行，把一次执行连接成跨轮次流程。
@@ -40,7 +40,7 @@ Loop Engineering 不是凭空出现的新系统，而是用 Context Engineering 
 
 ### 工具平台：信息治理与循环编排的汇合点
 
-视频发布时给出的工具速查中，Claude Code 同时承载两类能力：Context 侧使用混合检索、Compaction、结构化笔记和 Prompt Caching，Loop 侧使用 `/loop`、`/goal`、`--worktree`、子 Agent 与 Hook 完成调度和编排。
+资料发布时给出的工具速查中，Claude Code 同时承载两类能力：Context 侧使用混合检索、Compaction、结构化笔记和 Prompt Caching，Loop 侧使用 `/loop`、`/goal`、`--worktree`、子 Agent 与 Hook 完成调度和编排。
 
 同一份速查把 Codex 的 Automations 和后台 Worktree 列为对应能力，并指出 MCP Connector 可以跨两边使用。具体命令会随工具版本变化，这里的重点不是固定语法，而是同一个终端可以同时承载 Context 和 Loop 两类基础设施。
 
@@ -48,7 +48,7 @@ Loop Engineering 不是凭空出现的新系统，而是用 Context Engineering 
 
 ### 第一步：先运行一个 `/loop`
 
-视频给出三种形式：
+资料给出三种形式：
 
 ```text
 /loop 5m check the deploy
@@ -68,7 +68,7 @@ Loop Engineering 不是凭空出现的新系统，而是用 Context Engineering 
 
 ### 第三步：增加状态文件
 
-把分诊结果写入仓库中的 Markdown 文件，不要只留在对话窗口里。Agent 会忘记对话，仓库里的状态文件不会。今天没有处理完的事项，可以在下一轮被重新读取并继续推进。
+把分诊结果写入仓库中的 Markdown 文件，而非只保留在对话窗口中。Agent 可能遗忘对话，仓库中的状态文件则可以长期保留。当前未处理完的事项可以在下一轮重新读取并继续推进。
 
 ### 第四步：安装评判器
 
@@ -89,22 +89,22 @@ Loop Engineering 不是凭空出现的新系统，而是用 Context Engineering 
 1. **发现源**：循环会扫描哪些来源，例如 CI、Issue、Commit 或待处理收件箱？
 2. **状态文件**：跨轮记忆是否保存在仓库中的文件里？
 
-后四条决定循环运行后是否会闯祸：
+后四项决定循环运行后能否避免失控：
 
 3. **Evaluator**：是否存在能够说“不”的独立评判器？
 4. **隔离**：每个并行 Agent 是否使用独立 Worktree？
 5. **Token 上限**：是否设置预算边界，避免无限循环？
 6. **人工复核**：哪些步骤必须由人最终检查？
 
-缺少任何一条，都不应上线。最常见的错误是只完成发现源和状态文件，就启动一个没有人监督、也没有机制阻止其自我确认的循环。第一个 Loop 可以很小，但评判器和人工复核点不能省略。
+缺少任何一项，都不应上线。最常见的错误是只完成发现源和状态文件，便启动一个缺少人工监督、也没有机制阻止其自我确认的循环。第一个 Loop 可以很小，但评判器和人工复核点不能省略。
 
 ## 总结
 
-四句话说完：
+本期内容可以归纳为四点：
 
 1. Loop 是 Context 基础设施搭出的更高层结构，Prompt、Context 和 Loop 都在 Harness 中运行。
 2. Agent Skills 和 Sub-agents 在 Context 与 Loop 两层含义不同，但共享同一套实现。
 3. 第一个循环按触发、发现、状态、评判和隔离五步搭建。
 4. 发现源、状态文件、Evaluator、隔离、Token 上限和人工复核六项齐备后，才具备上线条件。
 
-Loop Engineering 系列到此结束。从 Prompt 到 Context 再到 Loop，系统已经能够持续运行。下一站是评估工程：先定义什么叫好，建立指标和评测集，知道系统差在哪里，后续优化才有方向。
+Loop Engineering 系列到此结束。从 Prompt 到 Context 再到 Loop，系统已经能够持续运行。下一个主题是评估工程：先定义质量标准，建立指标和评测集，确定系统存在的问题，为后续优化提供方向。

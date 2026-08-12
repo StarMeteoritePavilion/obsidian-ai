@@ -4,6 +4,7 @@ source: https://www.bilibili.com/video/BV1GB3g67EnG
 author: 晴天AI实战
 published: 2026-07-25
 ingested: 2026-07-25
+updated: 2026-08-12
 tags:
   - AI
   - 循环工程

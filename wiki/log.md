@@ -196,3 +196,27 @@
 - 将字幕整理为正式 Markdown，未把 `.srt` 文件导入知识库。
 - 校正 Agent、LLM、SLM、Capability Suite、Regression Suite、Harness、Graders、Metrics、Task、Trial、Grader、Transcript、Outcome、Agent Scaffold、Claude Code、CrewAI、`pass@k`、`pass^k`、Code-based、Model-based、Human Grader、SWE-bench Verified、LLM rubric、Groundedness、Coverage、Source Quality、Computer Use、CI/CD 和误报级联等转写错误。
 - 新建资料摘要，更新第五期资料摘要、评估工程综合页和内容索引，补充状态评估、Capability 与 Regression、非确定性双指标、分型评分器和八步落地路线。
+
+## [2026-08-12] maintenance | 全库原始文章书面化复核
+
+- 完整复核提示词工程 6 篇、上下文工程 8 篇、循环工程 5 篇和评估工程 6 篇，共 25 篇当前原始文章。
+- 对全部 25 篇完成书面化润色，共改写 435 行，重点移除口播式自指、对话式反问、口语化转场和过度夸张措辞。
+- 保留原有文件名、frontmatter、标题层级、事实、数字、专名、代码、来源链接、系列期数和预告含义；未引入外部知识。
+- 将修改前的 25 篇原文逐字保存在 `raw/sources/history/2026-08-12/`，并确认归档文件与修改前版本一致。
+- 本次仅进行文体复核，未重新核对官方字幕、原始音轨或视频画面；未导入字幕文件，也未调整资料摘要、综合页和内容索引。
+- 通过 Obsidian 检查 25 篇现行文章与 25 篇历史版本均已载入，未解析链接为零。
+
+## [2026-08-12] maintenance | 整个知识库重建
+
+- 基于当前 25 篇原始文章重新复核并更新 25 篇资料摘要，统一记录 `updated: 2026-08-12`，清理导入过程和视频载体措辞，保留事实、来源边界与内部冲突。
+- 重写提示词工程、上下文工程、循环工程和评估工程 4 篇跨资料综合，改为问题分层、工作流、选择规则、风险边界和资料链结构。
+- 重写 `wiki/index.md`，保留 Prompt、Context、Loop、Evaluation 四阶段主线，新增按问题进入的导航，并为全部资料摘要和综合页保留唯一索引入口。
+- 明确保留 Harness 位置的来源表述演进、原始 RAG 与现代工程管道的层级差异，以及评估数字不能脱离本地数据外推等边界。
+- 未新增实体页、概念页或问题页；现有 4 篇综合已经覆盖反复出现的稳定概念，无需增加重复层级。
+- 验证 25 篇资料摘要与 25 篇当前原始文章一一对应，4 篇综合均进入索引；未发现索引缺项、未闭合代码围栏或未解析链接。
+
+## [2026-08-12] maintenance | 删除原始文章历史版本
+
+- 按用户确认删除 `raw/sources/history/`，包括已跟踪的 2026-07-31 历史稿和本次书面化过程中生成的 2026-08-12 快照。
+- 当前 25 篇书面化原始文章继续作为事实来源；此前日志中的历史快照记录保留当时状态，但对应文件现已不再存在。
+- 未删除 `raw/sources/` 当前文章、`raw/assets/` 或 `raw/inbox/` 中的其他内容。
