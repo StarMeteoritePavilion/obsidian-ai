@@ -2,9 +2,9 @@
 title: 上下文工程：第二期 窗口与 Token
 source: https://www.bilibili.com/video/BV1r5MH6QEgD
 author: 晴天AI实战
-created: 2026-07-09
+published: 2026-07-09
 ingested: 2026-07-15
-updated: 2026-08-12
+updated: 2026-08-23
 tags:
   - AI
   - 上下文工程

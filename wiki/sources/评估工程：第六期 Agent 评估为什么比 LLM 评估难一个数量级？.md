@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1URui6CEBT
 author: 晴天AI实战
 published: 2026-08-11
 ingested: 2026-08-11
-updated: 2026-08-12
+updated: 2026-08-23
 tags:
   - AI
   - 评估工程
@@ -68,5 +68,6 @@ Code-based 评分器适合确定性的编程结果，Model-based 评分器适合
 ## 关联
 
 - 上一期：[[wiki/sources/评估工程：第五期 能跑的评估和能放心用的评估，差在哪一层？]]
+- 下一期：[[wiki/sources/评估工程：第七期 从事后评估到生产护栏，差的是挡住还是知道？]]
 - 跨资料综合：[[wiki/syntheses/评估工程：从通用基准到业务质量门]]
 - Agent 循环与独立评判器：[[wiki/syntheses/循环工程：从逐轮操作到外部调度]]

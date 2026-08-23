@@ -2,9 +2,9 @@
 title: 上下文工程：第一期 从 Prompt 到 Context
 source: https://www.bilibili.com/video/BV1pmMb6GEAM
 author: 晴天AI实战
-created: 2026-07-07
+published: 2026-07-07
 ingested: 2026-07-15
-updated: 2026-08-12
+updated: 2026-08-23
 tags:
   - AI
   - 上下文工程

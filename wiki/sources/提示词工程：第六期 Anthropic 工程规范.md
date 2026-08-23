@@ -2,9 +2,9 @@
 title: 提示词工程：第六期 Anthropic 工程规范
 source: https://www.bilibili.com/video/BV1ijTR6vENm
 author: 晴天AI实战
-created: 2026-07-06
+published: 2026-07-06
 ingested: 2026-07-15
-updated: 2026-08-12
+updated: 2026-08-23
 tags:
   - AI
   - 提示词工程

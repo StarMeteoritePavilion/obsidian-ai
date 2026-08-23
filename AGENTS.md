@@ -24,6 +24,13 @@
 - `wiki/questions/`：值得沉淀的提问、分析结果和后续研究问题。
 - 上述内容目录按实际需要创建，不预建空目录、页面或模板。
 
+## Frontmatter 约定
+
+- `raw/sources/` 原始文章依次使用 `title`、`source`、`author`、`created`、`tags`；`created` 记录来源发布日期。
+- `wiki/sources/` 资料摘要依次使用 `title`、`source`、`author`、`published`、`ingested`、`updated`、`tags`。
+- `published` 记录来源发布日期，`ingested` 记录资料进入知识库的日期，`updated` 记录摘要最近一次修改日期。
+- 资料摘要不得使用 `created` 代替 `published`；新增或更新摘要时保持字段名称和顺序一致。
+
 ## 工作流
 
 ### Ingest

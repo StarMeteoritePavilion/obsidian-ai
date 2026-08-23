@@ -2,9 +2,9 @@
 title: 上下文工程：第四期 RAG 检索增强生成
 source: https://www.bilibili.com/video/BV17eNu6zEbx
 author: 晴天AI实战
-created: 2026-07-12
+published: 2026-07-12
 ingested: 2026-07-15
-updated: 2026-08-12
+updated: 2026-08-23
 tags:
   - AI
   - 上下文工程

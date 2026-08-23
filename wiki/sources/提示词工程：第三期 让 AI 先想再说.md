@@ -2,9 +2,9 @@
 title: 提示词工程：第三期 让 AI 先想再说
 source: https://www.bilibili.com/video/BV1hoTq65EFG
 author: 晴天AI实战
-created: 2026-07-01
+published: 2026-07-01
 ingested: 2026-07-15
-updated: 2026-08-12
+updated: 2026-08-23
 tags:
   - AI
   - 提示词工程
