@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1GHP4zZESk
 author: 唐国梁Tommy
 published: 2026-03-06
 ingested: 2026-09-02
-updated: 2026-09-02
+updated: 2026-09-03
 tags:
   - AI
   - 模型架构
@@ -46,3 +46,4 @@ Memory Caching 把分段器、段内 RNN 与跨段聚合器解耦，可以接入
 - 应用层上下文治理：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
 - 窗口、Attention 与 KV Cache：[[wiki/sources/上下文工程：第二期 窗口与 Token]]
 - 上下文压缩与 KV 缓存优化边界：[[wiki/sources/上下文工程：第五期 上下文工程压缩]]
+- Transformer 块级稀疏注意力：[[wiki/sources/模型架构：MoBA 混合块注意力]]
