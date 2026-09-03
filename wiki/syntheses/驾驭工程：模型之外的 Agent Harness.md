@@ -38,7 +38,7 @@ Agent Harness 是模型输出与真实执行之间的工程外壳。它决定模
 
 ## 从静态外壳到可进化对象
 
-静态 Harness 的问题不只是不够灵活，还包括组件纠缠和运行轨迹浪费。HarnessX 以窄接口 Processor、八个生命周期挂载点和九维行为配置建立组合边界，使 Prompt、工具、记忆、控制、安全、可观测性和训练桥可以独立修改。
+静态 Harness 的问题不只是不够灵活，还包括组件纠缠和运行轨迹浪费。HarnessX 以窄接口 Processor、八个生命周期挂载点和九维行为配置建立组合边界，使 Prompt、工具、记忆、控制、安全、可观测性和训练桥可以独立修改。（[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness|HarnessX 专题]]）
 
 AEGIS 再把 Harness 配置视为状态、修改视为动作、轨迹与验证器视为反馈，并由确定性闸门决定是否接受。这个“运行对偶”揭示 Harness 自动优化与强化学习共享奖励作弊、灾难性遗忘和探索不足等风险。
 
@@ -46,7 +46,7 @@ AEGIS 再把 Harness 配置视为状态、修改视为动作、轨迹与验证�
 
 ## 单一配置与变体隔离
 
-全局 Harness 适合任务需求一致的场景；当不同任务需要互相冲突的 Prompt、工具或控制策略时，继续修改单一配置会形成跷跷板。HarnessX 的变体隔离允许保留多个配置，再由路由器把任务交给更适合的变体。
+全局 Harness 适合任务需求一致的场景；当不同任务需要互相冲突的 Prompt、工具或控制策略时，继续修改单一配置会形成跷跷板。HarnessX 的变体隔离允许保留多个配置，再由路由器把任务交给更适合的变体。（[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness|HarnessX 专题]]）
 
 多变体提高适配能力，也增加版本、路由、回归测试和审计成本。只有在冲突已经由轨迹和评测证实后才值得引入，不能把配置分岔当作默认架构。
 
@@ -60,7 +60,7 @@ RLM Harness 证明，Context Offloading 和 Programmatic Subcalls 可以让长�
 
 可进化 Harness 至少需要版本化配置、完整轨迹、可验证任务、确定性回退和独立回归集。缺少这些条件时，自动修改外壳会把不可观测的手工配置变成不可观测的自动配置，风险反而更大。
 
-HarnessX 的结果没有使用独立留出测试集，只覆盖离散文本动作，并依赖强根 Agent；RLM 和 SKILLRL 也分别受限于特定底座、可分解任务与教师模型。当前资料支持“Harness 是模型之外的重要优化杠杆”，不支持“Agent 的瓶颈永远不在模型”这一无条件结论。
+HarnessX 的结果没有使用独立留出测试集，只覆盖离散文本动作，并依赖强根 Agent；RLM 和 SKILLRL 也分别受限于特定底座、可分解任务与教师模型。当前资料支持“Harness 是模型之外的重要优化杠杆”，不支持“Agent 的瓶颈永远不在模型”这一无条件结论。（[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness|HarnessX]]、[[wiki/sources/大模型后训练：RLM Harness 组合泛化|RLM Harness]]、[[wiki/sources/大模型后训练：SKILLRL 技能增强强化学习|SKILLRL]]）
 
 ## 资料链
 

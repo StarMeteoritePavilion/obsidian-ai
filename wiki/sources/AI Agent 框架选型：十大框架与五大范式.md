@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1SqAVzLEci
 author: 唐国梁Tommy
 published: 2026-03-19
 ingested: 2026-09-02
-updated: 2026-09-02
+updated: 2026-09-03
 tags:
   - AI
   - AI Agent
@@ -14,7 +14,7 @@ tags:
 
 # AI Agent 框架选型：十大框架与五大范式
 
-原始资料：[[raw/sources/AI Agent/框架选型/2026 AI Agent框架终极指南：从入门到生产部署的选型地图，10大框架五大范式，一期全讲透|2026 AI Agent 框架终极指南]]
+原始资料：[[raw/sources/应用工程/AI Agent/框架选型/2026 AI Agent框架终极指南：从入门到生产部署的选型地图，10大框架五大范式，一期全讲透|2026 AI Agent 框架终极指南]]
 
 ## 核心结论
 
