@@ -7,7 +7,6 @@ tags:
   - AI
   - 模型架构
   - 长序列建模
-  - Memory Caching
 ---
 
 > Memory Caching：为 RNN 增加可增长的记忆

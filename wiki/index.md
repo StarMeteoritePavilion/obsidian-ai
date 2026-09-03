@@ -1,6 +1,6 @@
 ---
 title: AI 知识索引
-updated: 2026-09-03
+updated: 2026-09-04
 tags:
   - AI
   - 索引
@@ -8,7 +8,7 @@ tags:
 
 # AI 知识索引
 
-本知识库收录 44 份资料摘要和 7 篇跨资料综合。AI 应用工程沿 Prompt、Context、Loop、Evaluation 四个阶段组织，并收录 Agent 记忆工程与驾驭工程；模型相关资料当前收录大模型后训练、注意力机制、长序列建模、大语言模型原理、多模态推理与推理优化主题。原始事实保存在 `raw/sources/`，本目录负责摘要、关联、冲突记录与综合判断。
+本知识库收录 49 份资料摘要和 7 篇跨资料综合。AI 应用工程沿 Prompt、Context、Loop、Evaluation 四个阶段组织，并收录 Agent 记忆工程、世界模型与驾驭工程；模型相关资料当前收录大模型后训练、训练基础设施、注意力机制、长序列建模、大语言模型原理、多模态推理与推理优化主题。原始事实保存在 `raw/sources/`，本目录负责摘要、关联、冲突记录与综合判断。
 
 维护历史见 [[wiki/log|维护日志]]。
 
@@ -29,14 +29,18 @@ tags:
 | --- | --- |
 | 指令、格式或示例不稳定 | [[wiki/syntheses/提示词工程：从单轮指令到生产规范]] |
 | 文档存在却答不到、历史过长或工具过多 | [[wiki/syntheses/上下文工程：有限窗口中的信息治理]] |
+| 需要理解个人知识库的基础向量 RAG 链路与局限 | [[wiki/sources/上下文工程：RAG 个人知识库基础架构]] |
+| 需要用实体关系与分层摘要同时支持局部和全局检索 | [[wiki/sources/上下文工程：GraphRAG 从知识图谱到分层检索]] |
 | 需要在固定窗口预算下分配 RAG 文档、示例与迭代次数 | [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]] |
 | 需要定时运行、跨轮接力、独立验证或停止条件 | [[wiki/syntheses/循环工程：从逐轮操作到外部调度]] |
 | 不知道系统是否真的变好、能否上线或是否发生回退 | [[wiki/syntheses/评估工程：从通用基准到业务质量门]] |
 | 需要比较 Agent 框架或确定技术选型 | [[wiki/sources/AI Agent 框架选型：十大框架与五大范式]] |
 | 需要判断 SFT 后是否使用 RL，或怎样选择 RLHF、DPO、GRPO、RLVR | [[wiki/syntheses/大模型后训练：从模仿到行为选择]] |
+| 需要保存、复制和恢复长时程 Agent 的沙箱环境 | [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]] |
 | 需要比较长序列记忆、召回与计算成本 | [[wiki/sources/长序列建模：Memory Caching]] |
 | 需要理解块级稀疏注意力与长上下文计算 | [[wiki/sources/模型架构：MoBA 混合块注意力]] |
 | 需要理解 Tokenization、隐藏表示或 Latent Reasoning | [[wiki/sources/模型原理：Token Space 与 Latent Space]] |
+| 需要理解 Kimi K2 Thinking 的 MoE、MuonClip、Agent 训练与 INT4 | [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]] |
 | 需要理解文本与图像怎样交错推理 | [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]] |
 | 需要梳理多模态模型的架构、数据、推理、CMR 与 RAG | [[wiki/sources/多模态模型：架构、数据、推理与检索]] |
 | 需要理解视觉推理中的指代漂移、框与点及视觉 Token 压缩 | [[wiki/sources/多模态推理：视觉原语与 Reference Gap]] |
@@ -45,6 +49,7 @@ tags:
 | 需要估算 API Token、长上下文、缓存与批处理的任务成本 | [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]] |
 | 需要让短任务训练迁移到长任务或新领域 | [[wiki/sources/大模型后训练：RLM Harness 组合泛化]] |
 | 需要让 Agent 冻结权重并从运行时反馈更新记忆 | [[wiki/sources/Agent 记忆：MemRL 运行时强化学习]] |
+| 需要理解 Agent 如何压缩环境、判断动作后果或选择检查器与模拟器 | [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]] |
 
 ## 资料摘要
 
@@ -66,18 +71,26 @@ tags:
 | [[wiki/sources/上下文工程：第一期 从 Prompt 到 Context]] | 提示、上下文、框架、记忆工程的边界与六类信息 |
 | [[wiki/sources/上下文工程：第二期 窗口与 Token]] | 窗口容量、Token 预算、KV 缓存、注意力和中间遗忘 |
 | [[wiki/sources/上下文工程：第三期 原则、策略、评估]] | 注意力预算、写入选择压缩隔离和三层评估 |
+| [[wiki/sources/上下文工程：RAG 个人知识库基础架构]] | 分块、Embedding、向量存储、相似片段检索及局部检索边界 |
 | [[wiki/sources/上下文工程：第四期 RAG 检索增强生成]] | 原始 RAG、分块、混合检索、查询增强和可追溯性 |
 | [[wiki/sources/上下文工程：第五期 上下文工程压缩]] | 四类压缩、锚点保护、Compaction 和 KV 缓存优化 |
 | [[wiki/sources/上下文工程：第六期 结构化与隔离]] | 分隔符、XML、JSON、任务隔离、沙箱和子上下文 |
 | [[wiki/sources/上下文工程：第七期 上下文是怎么坏掉的]] | 毒化、分心、混淆、冲突和 GraphRAG |
 | [[wiki/sources/上下文工程：第八期 2026 生产实践]] | Skills、混合压缩、路由、自主检索和工具管理 |
 | [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]] | DRAG 演示、IterDRAG 迭代检索、固定预算优化与推理扩展边界 |
+| [[wiki/sources/上下文工程：GraphRAG 从知识图谱到分层检索]] | 实体关系抽取、来源映射、Leiden 社区分层及 Local Search 与 Global Search |
 
 ### 记忆工程
 
 | 页面 | 内容 |
 | --- | --- |
 | [[wiki/sources/Agent 记忆：MemRL 运行时强化学习]] | 冻结模型权重，以语义粗筛、Q-value 精排和环境反馈更新实现运行时情景记忆学习 |
+
+### 世界模型
+
+| 页面 | 内容 |
+| --- | --- |
+| [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]] | 环境、判断与知识三层结构，检查器和学习型世界模型两条路线，以及记忆过期与验证边界 |
 
 ### 循环工程
 
@@ -123,6 +136,12 @@ tags:
 | [[wiki/sources/大模型后训练：SKILLRL 技能增强强化学习]] | 轨迹到技能的蒸馏、冷启动 SFT、技能增强 RL、验证驱动进化及工程限制 |
 | [[wiki/sources/大模型后训练：RLM Harness 组合泛化]] | 局部分布内、Context 卸载、程序化子调用及跨长度与跨领域组合泛化 |
 
+### 模型训练基础设施
+
+| 页面 | 内容 |
+| --- | --- |
+| [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]] | Partial Rollout、microVM 沙箱、暂停恢复、环境分岔、增量检查点与 Off-Policy 边界 |
+
 ### 长序列建模
 
 | 页面 | 内容 |
@@ -147,6 +166,7 @@ tags:
 | 页面 | 内容 |
 | --- | --- |
 | [[wiki/sources/模型原理：Token Space 与 Latent Space]] | Token 到隐藏表示再回到 Token 的生成路径、分词机制、模型可解释性与 Latent Reasoning |
+| [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]] | 1.04T MoE、MuonClip、Data Rephrasing、Agent SFT/RL、原生 INT4 与长程工具调用 |
 | [[wiki/sources/多模态推理：ThinkMorph 交错思维链]] | 文本规划与视觉操作交替推进、三种涌现能力、测试时扩展及适用边界 |
 | [[wiki/sources/多模态模型：架构、数据、推理与检索]] | 视觉编码、模态接口、数据工程、MCoT、跨模态检索与多模态 RAG 的完整链路 |
 | [[wiki/sources/多模态推理：视觉原语与 Reference Gap]] | Perception Gap 与 Reference Gap、框和点作为推理变量、类 LLaVA 架构及 7056× 工程压缩链路 |
@@ -167,10 +187,11 @@ tags:
 - 评估工程系列共八期，当前知识库已经完整收录；第八期以合同驱动架构收束从代码评分到企业治理的演进。
 - 驾驭工程收尾篇采用作者的宽泛 Harness 定义；其术语范围与本库此前“Harness 作为 Prompt、Context 与 Loop 共同外壳”的来源表述并存，不合并为统一定义。
 - Agent 框架资料反映 2026 年 3 月的版本、生态与商业模式；实际选型前需要重新核对官方文档。视频内 Dify Star 数存在旁白与画面差异，Agno 也未获得与其余框架同等篇幅的分析。
-- 当前大模型后训练综合由强化学习路线总览、SKILLRL 方法解读和 RLM Harness 实验共同支撑；其中数字来自各自模型、任务和论文设置，不构成统一数据集上的算法效果排名或其他 Agent 的收益保证。
+- 当前大模型后训练综合由强化学习路线总览、Kimi K2 Thinking、SKILLRL、RLM Harness、HarnessX、MemRL 与 Kimi K3 AgentENV 共同支撑；其中数字来自各自模型、任务、论文和基础设施设置，不构成统一数据集上的效果排名或其他 Agent 的收益保证。
 - Memory Caching 的实验数字来自资料转述的特定模型、规模和任务；其模型架构层记忆机制不等同于应用层上下文治理。
 - MoBA 的复杂度、百万 Token 召回及约 6.5 倍计算时间改进来自资料转述的 Llama-8B-1M、块划分、Top-k 与对应硬件设置；不能外推为其他模型和部署的保证。
 - Tokenization、SuperBPE、T-Free、SAE、Coconut 和 Soft Thinking 的性能或节省数字来自资料转述的对应研究设置；不能据此外推到其他模型、语言和任务。Latent 表示也不构成模型具有意识或主观体验的证据。
+- Kimi K2 Thinking 的架构参数、15.5T Token 稳定训练、INT4 约 2 倍生成速度、200～300 次连续工具调用和评测数字来自资料对应的模型、硬件、工具与预算设置；不能外推为其他部署的收益或长程可靠性保证。
 - ThinkMorph 的实验数字来自 BAGEL-7B、24,990 条训练轨迹及对应基准；模式切换的 5.3% 在讲解文字与论文图注中分别归于 MMVP 和 Chart Refocus，本库保留该来源冲突。
 - 多模态技术地图中的架构提升、训练数据、推理成绩、检索指标和延迟来自资料转述的不同论文设置；不能合并为统一排行榜或外推为其他模型、任务和部署的普遍规律。
 - 视觉原语资料的 7,056× 是原始像素数与视觉 KV Cache 条目数之间的工程比值；90 个缓存条目与 77.2 平均分来自论文指定分辨率和七项选定评测，不代表模型整体能力。
@@ -179,4 +200,7 @@ tags:
 - DSpark 的接受长度、草稿接受率和 60%～85% 单用户生成速度提升来自资料转述的对应实验及 DeepSeek-V4 线上负载；不能外推到其他模型、硬件、批量或流量结构。
 - Token API 资料中的价差、输入输出倍率、长上下文分档、缓存节省上限和 Batch 折扣反映视频发布时的平台规则概括；实际采购需核对具体模型、区域、服务等级和当前官方价格页。
 - MemRL 的 3.8 个百分点平均提升、探索密集型任务 6.2 个百分点提升与约零额外推理成本来自资料转述的四项实验；不能外推为其他 Agent 的效果或成本保证。
+- RAG 个人知识库资料中的 1536 维与 3072 维分别对应 `text-embedding-3-small` 和 `text-embedding-3-large`；Pinecone、ChromaDB 及 PostgreSQL 配合 pgvector 只是来源列举的存储选择，不构成固定架构要求。
 - DRAG 与 IterDRAG 的平均准确率、CoT 对比和参数热图来自资料转述的 Gemini 1.5 Flash、四项基准及对应配置空间；不能外推为其他 RAG 系统的固定参数或收益保证。
+- Kimi K3 AgentENV 的沙箱、镜像、最低检查点与恢复延迟、98% 等待占比和最高 6.5 倍内存超配来自对应训练与评估工作负载；不能外推为其他集群的容量、延迟或资源利用保证。
+- Agent 世界模型资料中的 78%、90%、约 4%、71% 和 94% 来自对应下棋与易犯规游戏设置；合成世界训练略微超过真实环境训练也只属于 Qwen-AgentWorld 的对应实验，不能外推为所有 Agent 或训练环境的收益。

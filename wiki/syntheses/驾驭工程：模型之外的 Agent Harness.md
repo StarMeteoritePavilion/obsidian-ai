@@ -36,6 +36,18 @@ Agent Harness 是模型输出与真实执行之间的工程外壳。它决定模
 
 单次 Harness 执行并不自动构成 Loop；只有外部触发、持久状态、独立验证和停止条件连接起来，系统才具备跨轮自治。Harness 也不能替代业务评测：它可以执行和记录，是否合格仍需独立标准决定。
 
+## 检查器是最小的行动模型
+
+当 Agent 的主要失败来自非法动作时，Harness 不一定需要构造完整环境模拟器，一个确定性检查器就可以承担最小世界模型：它保留与行动合法性有关的状态，并在执行前拒绝无效动作。资料所述 AutoHarness 让 Agent 自动合成代码检查器，在对应游戏实验中把合法动作率推近 100%；易犯规游戏的对比中，大模型无检查器为 71%，小模型配检查器为 94%。（[[wiki/sources/Agent 世界模型：服务于行动的选择性压缩|Agent 世界模型]]）
+
+检查器只是环境的选择性压缩，不是环境真理。用于训练或自动优化后，Agent 可能钻其判定漏洞；规则变化也会让检查器过期。因此，Harness 应先按最大失败来源选择最小检查范围，再用真实执行、独立测试和版本治理约束它。
+
+## 执行环境也需要独立生命周期
+
+Harness 的“隔离与恢复”不能只停留在抽象职责。长时程 Agent 会修改文件、启动进程、安装依赖和改变数据库，消息历史或工具返回无法单独重建这些状态。Kimi K3 的 AgentENV 以 Firecracker microVM 隔离操作系统内核，并提供 Pause and Resume、Fork 与 Snapshot，使执行环境可以暂停释放资源、为奖励评判复制无副作用分支，并从定期恢复点继续。（[[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV|Kimi K3 AgentENV]]）
+
+这与 Worktree 或子上下文隔离的粒度不同：前者主要隔离文件与信息，microVM 沙箱还覆盖内存、进程、内核和虚拟硬件。AgentENV 也只负责外部环境状态；模型版本、KV Cache、请求状态和策略更新仍由其他训练基础设施管理。一个完整 Harness 需要明确这些状态分别由谁保存，不能用单一“记忆”概念代替。
+
 ## 从静态外壳到可进化对象
 
 静态 Harness 的问题不只是不够灵活，还包括组件纠缠和运行轨迹浪费。HarnessX 以窄接口 Processor、八个生命周期挂载点和九维行为配置建立组合边界，使 Prompt、工具、记忆、控制、安全、可观测性和训练桥可以独立修改。（[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness|HarnessX 专题]]）
@@ -68,5 +80,7 @@ HarnessX 的结果没有使用独立留出测试集，只覆盖离散文本动�
 - [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]]
 - [[wiki/sources/大模型后训练：RLM Harness 组合泛化]]
 - [[wiki/sources/大模型后训练：SKILLRL 技能增强强化学习]]
+- [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]]
+- [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]]
 - [[wiki/syntheses/循环工程：从逐轮操作到外部调度]]
 - [[wiki/syntheses/评估工程：从通用基准到业务质量门]]

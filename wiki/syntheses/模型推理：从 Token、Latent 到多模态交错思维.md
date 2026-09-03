@@ -55,6 +55,14 @@ Token、Latent State 和 Interleaved CoT 回答的是中间信息以什么形式
 
 DSpark 的半自回归和置信度调度说明，模型质量与系统效率也不能分开优化。第一个草稿 Token 更依赖模型容量，后续位置更依赖连贯性；验证范围则取决于草稿通过概率和当前硬件批量。其 60%～85% 单用户生成速度提升来自 DeepSeek-V4 的特定线上条件，不构成其他模型或部署环境的通用收益保证。（[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]）
 
+## 从稀疏容量到长程工具调用
+
+Kimi K2 Thinking 把模型容量、每 Token 计算量和部署精度作为三项不同变量。资料所述架构有 1.04T 总参数、32B 激活参数、384 个专家，每个 Token 使用 8 个路由专家与 1 个共享专家；MLA 压缩 Key-Value 状态，MoE 组件再通过 QAT 获得原生 Weight-only INT4。总参数增加不等于每次推理同比增加计算，量化也不等于减少逻辑步骤。（[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练|Kimi K2 Thinking]]）
+
+资料称原生 INT4 使生成速度提高约 2 倍，并支持 200～300 次连续工具调用。前者属于模型、硬件和推理实现共同决定的执行效率，后者属于 Agent 在长程轨迹中维持目标和上下文的行为能力。二者不能用同一指标替代：更快生成不会自动减少工具错误，长调用链也不证明端到端延迟或任务成功成本更低。
+
+Kimi K2 Thinking 的 Test-Time Scaling 又增加了第四项变量：推理时允许模型使用多少思考时间和工具调用预算。它与 DRAG/IterDRAG 分配检索和演示预算、DSpark 优化 Token 验证执行属于不同实现，但都说明模型评估必须同时报告计算预算、工具环境和停止条件，不能只比较最终分数。
+
 ## 从推理阶段到 API 成本
 
 Prefill 与 Decode 的计算形态解释了输入和输出 Token 为什么常被区别定价。Prefill 面对完整输入，可以较为并行地建立中间状态；Decode 按自回归顺序逐 Token 生成，每一步都需要新的计算和调度。Reasoning Token、图像 Token 和音频 Token 则把用户不可见的内部生成或非文本输入继续折算为计量单位。（[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本专题]]）
@@ -70,6 +78,7 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 - [[wiki/sources/多模态模型：架构、数据、推理与检索]]
 - [[wiki/sources/多模态推理：视觉原语与 Reference Gap]]
 - [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]]
+- [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
 - [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]
 - [[wiki/sources/模型推理优化：DSpark 投机解码]]
 - [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
