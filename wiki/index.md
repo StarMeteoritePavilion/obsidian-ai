@@ -8,7 +8,7 @@ tags:
 
 # AI 知识索引
 
-本知识库收录 40 份资料摘要和 7 篇跨资料综合。AI 应用工程沿 Prompt、Context、Loop、Evaluation 四个阶段组织，并收录 Agent 记忆工程与驾驭工程；模型相关资料当前收录大模型后训练、注意力机制、长序列建模、大语言模型原理、多模态推理与推理优化主题。原始事实保存在 `raw/sources/`，本目录负责摘要、关联、冲突记录与综合判断。
+本知识库收录 44 份资料摘要和 7 篇跨资料综合。AI 应用工程沿 Prompt、Context、Loop、Evaluation 四个阶段组织，并收录 Agent 记忆工程与驾驭工程；模型相关资料当前收录大模型后训练、注意力机制、长序列建模、大语言模型原理、多模态推理与推理优化主题。原始事实保存在 `raw/sources/`，本目录负责摘要、关联、冲突记录与综合判断。
 
 维护历史见 [[wiki/log|维护日志]]。
 
@@ -29,6 +29,7 @@ tags:
 | --- | --- |
 | 指令、格式或示例不稳定 | [[wiki/syntheses/提示词工程：从单轮指令到生产规范]] |
 | 文档存在却答不到、历史过长或工具过多 | [[wiki/syntheses/上下文工程：有限窗口中的信息治理]] |
+| 需要在固定窗口预算下分配 RAG 文档、示例与迭代次数 | [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]] |
 | 需要定时运行、跨轮接力、独立验证或停止条件 | [[wiki/syntheses/循环工程：从逐轮操作到外部调度]] |
 | 不知道系统是否真的变好、能否上线或是否发生回退 | [[wiki/syntheses/评估工程：从通用基准到业务质量门]] |
 | 需要比较 Agent 框架或确定技术选型 | [[wiki/sources/AI Agent 框架选型：十大框架与五大范式]] |
@@ -38,7 +39,10 @@ tags:
 | 需要理解 Tokenization、隐藏表示或 Latent Reasoning | [[wiki/sources/模型原理：Token Space 与 Latent Space]] |
 | 需要理解文本与图像怎样交错推理 | [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]] |
 | 需要梳理多模态模型的架构、数据、推理、CMR 与 RAG | [[wiki/sources/多模态模型：架构、数据、推理与检索]] |
+| 需要理解视觉推理中的指代漂移、框与点及视觉 Token 压缩 | [[wiki/sources/多模态推理：视觉原语与 Reference Gap]] |
+| 需要理解视觉原语的数据过滤、专家训练、OPD 与密集奖励 | [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]] |
 | 需要在保持输出分布的前提下提高模型生成速度 | [[wiki/sources/模型推理优化：DSpark 投机解码]] |
+| 需要估算 API Token、长上下文、缓存与批处理的任务成本 | [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]] |
 | 需要让短任务训练迁移到长任务或新领域 | [[wiki/sources/大模型后训练：RLM Harness 组合泛化]] |
 | 需要让 Agent 冻结权重并从运行时反馈更新记忆 | [[wiki/sources/Agent 记忆：MemRL 运行时强化学习]] |
 
@@ -67,6 +71,7 @@ tags:
 | [[wiki/sources/上下文工程：第六期 结构化与隔离]] | 分隔符、XML、JSON、任务隔离、沙箱和子上下文 |
 | [[wiki/sources/上下文工程：第七期 上下文是怎么坏掉的]] | 毒化、分心、混淆、冲突和 GraphRAG |
 | [[wiki/sources/上下文工程：第八期 2026 生产实践]] | Skills、混合压缩、路由、自主检索和工具管理 |
+| [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]] | DRAG 演示、IterDRAG 迭代检索、固定预算优化与推理扩展边界 |
 
 ### 记忆工程
 
@@ -135,6 +140,7 @@ tags:
 | 页面 | 内容 |
 | --- | --- |
 | [[wiki/sources/模型推理优化：DSpark 投机解码]] | 首 Token 容量、半自回归草稿、置信度调度、校准、无损早停及 DeepSeek-V4 线上结果 |
+| [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]] | Prefill 与 Decode、Reasoning Token、KV Cache、Prompt Caching、Batch、任务总成本与 Token FinOps |
 
 ### 模型原理
 
@@ -143,6 +149,8 @@ tags:
 | [[wiki/sources/模型原理：Token Space 与 Latent Space]] | Token 到隐藏表示再回到 Token 的生成路径、分词机制、模型可解释性与 Latent Reasoning |
 | [[wiki/sources/多模态推理：ThinkMorph 交错思维链]] | 文本规划与视觉操作交替推进、三种涌现能力、测试时扩展及适用边界 |
 | [[wiki/sources/多模态模型：架构、数据、推理与检索]] | 视觉编码、模态接口、数据工程、MCoT、跨模态检索与多模态 RAG 的完整链路 |
+| [[wiki/sources/多模态推理：视觉原语与 Reference Gap]] | Perception Gap 与 Reference Gap、框和点作为推理变量、类 LLaVA 架构及 7056× 工程压缩链路 |
+| [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]] | 两阶段数据过滤、框点专家训练、Unified RFT、OPD、三层奖励及拓扑评测边界 |
 
 ## 模型工程综合
 
@@ -165,6 +173,10 @@ tags:
 - Tokenization、SuperBPE、T-Free、SAE、Coconut 和 Soft Thinking 的性能或节省数字来自资料转述的对应研究设置；不能据此外推到其他模型、语言和任务。Latent 表示也不构成模型具有意识或主观体验的证据。
 - ThinkMorph 的实验数字来自 BAGEL-7B、24,990 条训练轨迹及对应基准；模式切换的 5.3% 在讲解文字与论文图注中分别归于 MMVP 和 Chart Refocus，本库保留该来源冲突。
 - 多模态技术地图中的架构提升、训练数据、推理成绩、检索指标和延迟来自资料转述的不同论文设置；不能合并为统一排行榜或外推为其他模型、任务和部署的普遍规律。
+- 视觉原语资料的 7,056× 是原始像素数与视觉 KV Cache 条目数之间的工程比值；90 个缓存条目与 77.2 平均分来自论文指定分辨率和七项选定评测，不代表模型整体能力。
+- 视觉原语下集的 4,000 万样本、66.9% 迷宫导航和 56.7% 路径追踪结果来自报告的特定数据、低推理预算与评测协议；报告没有标准消融表，不能分别量化视觉原语、框点分训、OPD 和 CSA 的贡献。
 - RLM Harness 的组合泛化结果只验证了一个 30B 底座和适合切块的任务；训练样本耗时为直接训练的 1.5～3.0 倍，不能外推为所有模型或高度耦合任务的通用结论。
 - DSpark 的接受长度、草稿接受率和 60%～85% 单用户生成速度提升来自资料转述的对应实验及 DeepSeek-V4 线上负载；不能外推到其他模型、硬件、批量或流量结构。
+- Token API 资料中的价差、输入输出倍率、长上下文分档、缓存节省上限和 Batch 折扣反映视频发布时的平台规则概括；实际采购需核对具体模型、区域、服务等级和当前官方价格页。
 - MemRL 的 3.8 个百分点平均提升、探索密集型任务 6.2 个百分点提升与约零额外推理成本来自资料转述的四项实验；不能外推为其他 Agent 的效果或成本保证。
+- DRAG 与 IterDRAG 的平均准确率、CoT 对比和参数热图来自资料转述的 Gemini 1.5 Flash、四项基准及对应配置空间；不能外推为其他 RAG 系统的固定参数或收益保证。

@@ -11,7 +11,7 @@ tags:
 
 # 模型推理：从 Token、Latent 到多模态交错思维
 
-模型推理不能只用“生成下一个 Token”或“在隐藏空间思考”概括。现有资料呈现出三种相互衔接、但不能混为一谈的表示层：离散 Token 是输入输出接口，Latent State 承担模型内部连续计算，ThinkMorph 的 Interleaved CoT 则把部分中间处理显式展开为交替的文本片段和图像片段。DSpark 进一步表明，表示机制之外还存在独立的执行优化层，它不改变目标输出分布，而是调整草稿怎样生成、验证多少位置以及算力怎样随负载分配。（[[wiki/sources/模型原理：Token Space 与 Latent Space|Token Space 与 Latent Space]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]）
+模型推理不能只用“生成下一个 Token”或“在隐藏空间思考”概括。现有资料呈现出三种相互衔接、但不能混为一谈的表示层：离散 Token 是输入输出接口，Latent State 承担模型内部连续计算，ThinkMorph 的 Interleaved CoT 则把部分中间处理显式展开为交替的文本片段和图像片段。表示机制之外还存在独立的测试时计算、执行与服务层：DRAG 和 IterDRAG 分配检索文档、演示与迭代步骤，DSpark 调整草稿怎样生成、验证多少位置以及算力怎样随负载分配，API 成本资料则把 Prefill、Decode、KV Cache、Prompt Caching 和 Batch 映射为计费与架构选择。（[[wiki/sources/模型原理：Token Space 与 Latent Space|Token Space 与 Latent Space]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本]]）
 
 ## 三层表示的职责
 
@@ -29,6 +29,10 @@ tags:
 
 MCoT 的能力还取决于训练路线和数据质量。资料将其分为 Prompt 提示、SFT 长链训练和 RL 三阶段；最后一阶段只有在结果可以可靠验证时才容易形成有效奖励。数学、科学和代码可借助答案或执行结果验证，情感、创意和社会常识则缺少稳定的单一评分标准。ThinkMorph 展示的是统一模型怎样显式交替生成文本和图像，二者共同说明“推理表示”与“训练反馈”是两项相互作用但不可混同的设计选择。
 
+《Thinking with Visual Primitives》进一步指出，视觉信息已经进入模型也不等于推理能够稳定引用它。自然语言中的“左边那个”或“他旁边的”在复杂场景中可能发生指代漂移；点和边界框可以作为中间推理变量，把语言概念绑定到可重复引用的图像坐标。它解决的是 Reference Gap，而非单纯增加感知分辨率。（[[wiki/sources/多模态推理：视觉原语与 Reference Gap|视觉原语专题]]）
+
+视觉原语要成为可靠推理变量，还需要数据、训练与验证共同约束。报告把 97,984 个原始数据源经过语义和视觉几何过滤缩减为 31,701 个，再采样、去重形成超过 4,000 万个样本；框与点分别训练专家后，通过 Unified RFT 和 OPD 合并。格式、质量和任务准确性三层奖励进一步检查坐标语法、原语—答案一致性、迷宫合法探索与双向路径匹配。表示形式因此只提供“可以怎样思考”的接口，训练信号才决定模型是否会稳定使用该接口。（[[wiki/sources/多模态推理：视觉原语的数据、训练与奖励|视觉原语训练专题]]）
+
 ## 推理表示应跟随任务需要
 
 纯文本 CoT 适合抽象规划、逻辑计算和可审计表达，但难以直接验证局部视觉细节。Latent Reasoning 可以减少必须写成自然语言的中间步骤，却把解释和追责压力转移到 Decoder、Probe、SAE 或因果干预工具。Interleaved CoT 在文本与视觉空间同时搜索，适合需要裁剪、放大、定位或视觉重构的任务，但生成图像的成本明显更高。
@@ -41,17 +45,31 @@ MCoT 的能力还取决于训练路线和数据质量。资料将其分为 Promp
 
 现有资料的实验数字分别来自不同模型、任务和论文设置，不能横向拼成统一排名。ThinkMorph 模式切换数据还存在讲解文字与论文图注的基准归属冲突，说明评估结论必须保留原始表格、评判器和适用条件，而不能只摘取提升比例。
 
-## 表示机制与执行优化是两条轴
+视觉原语实验也说明最终答案准确率不足以评价中间推理。DS_Maze_Navigation 和 DS_Path_Tracing 分别比所列 GPT-5.4 结果高 16.3 与 10.2 个百分点，但本文模型在 CountQA、CV-Bench 和 OmniSpatial 上仍略低于 Gemini 3 Flash；而且比较统一使用低推理预算。点和框的收益集中在需要精确引用与连续轨迹的任务，不构成模型整体能力排名。报告也没有提供标准消融表，无法把收益分别归因于视觉原语、框点分训、OPD 或 CSA。
 
-Token、Latent State 和 Interleaved CoT 回答的是中间信息以什么形式存在、哪些步骤对人可见；DSpark 回答的是自回归输出已经确定以后，怎样减少生成这些 Token 的等待时间和无效计算。投机解码仍以 Token 为输入输出接口，目标模型内部仍执行 Latent 计算，但草稿模型先预测一段候选 Token，目标模型再并行验证，从而在保持目标输出分布的条件下提高生成速度。
+## 表示机制、RAG 推理扩展与执行优化是三条轴
 
-两条轴不能用同一组指标替代。表示路线需要比较准确率、可见 Token、隐藏步骤、图像 Token 和可审计性；执行优化还要记录接受长度、有效吞吐、每秒轮数、端到端延迟和并发负载。减少可见 Token 不等于提高服务吞吐，增加单轮验证长度也不必然降低延迟。
+Token、Latent State 和 Interleaved CoT 回答的是中间信息以什么形式存在、哪些步骤对人可见；DRAG 与 IterDRAG 回答的是在有效上下文预算内，怎样把测试时计算分配给外部文档、示例和迭代检索；DSpark 回答的是自回归输出已经确定以后，怎样减少生成这些 Token 的等待时间和无效计算。投机解码仍以 Token 为输入输出接口，目标模型内部仍执行 Latent 计算，但草稿模型先预测一段 Token，目标模型再并行验证，从而在保持目标输出分布的条件下提高生成速度。
+
+三条轴不能用同一组指标替代。表示路线需要比较准确率、可见 Token、隐藏步骤、图像 Token 和可审计性；RAG 推理扩展还要记录检索文档数、示例数、迭代次数、有效上下文长度以及 EM、F1、准确率；执行优化则要记录接受长度、有效吞吐、每秒轮数、端到端延迟和并发负载。增加 RAG 的测试时计算可能提高答案质量，却不等于提高服务吞吐；增加单轮验证长度也不必然降低延迟。
 
 DSpark 的半自回归和置信度调度说明，模型质量与系统效率也不能分开优化。第一个草稿 Token 更依赖模型容量，后续位置更依赖连贯性；验证范围则取决于草稿通过概率和当前硬件批量。其 60%～85% 单用户生成速度提升来自 DeepSeek-V4 的特定线上条件，不构成其他模型或部署环境的通用收益保证。
+
+## 从推理阶段到 API 成本
+
+Prefill 与 Decode 的计算形态解释了输入和输出 Token 为什么常被区别定价。Prefill 面对完整输入，可以较为并行地建立中间状态；Decode 按自回归顺序逐 Token 生成，每一步都需要新的计算和调度。Reasoning Token、图像 Token 和音频 Token 则把用户不可见的内部生成或非文本输入继续折算为计量单位。（[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本专题]]）
+
+KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保存当前请求已经计算的 Key 与 Value，用显存换取历史状态复用；Prompt Caching 识别跨请求重复的稳定前缀，把重复上下文变成低成本输入；Batch 允许延后请求并合并调度，用等待时间换取 GPU 利用率。三者不能互相替代，也不能只用“减少 Token 数”概括。
+
+推理性能最终还要落到任务经济性。每百万 Token 单价忽略了重试、延迟、错误、人工稽核、运维和成功率；便宜模型若反复失败，完成任务的总成本可能更高。模型路由、缓存友好的 Prompt 结构和 Token FinOps 因此属于推理服务架构，而不只是采购或提示词技巧。
 
 ## 资料链
 
 - [[wiki/sources/模型原理：Token Space 与 Latent Space]]
 - [[wiki/sources/多模态推理：ThinkMorph 交错思维链]]
 - [[wiki/sources/多模态模型：架构、数据、推理与检索]]
+- [[wiki/sources/多模态推理：视觉原语与 Reference Gap]]
+- [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]]
+- [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]
 - [[wiki/sources/模型推理优化：DSpark 投机解码]]
+- [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
