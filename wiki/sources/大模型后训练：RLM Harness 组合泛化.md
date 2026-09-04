@@ -17,7 +17,7 @@ tags:
 
 # 大模型后训练：RLM Harness 组合泛化
 
-原始资料：[[raw/sources/模型工程/后训练/RLM Harness：短任务训练如何迁移到长任务与新领域|RLM Harness：短任务训练如何迁移到长任务与新领域]]
+原始资料：[[raw/sources/模型工程/训练与后训练/RLM Harness：短任务训练如何迁移到长任务与新领域|RLM Harness：短任务训练如何迁移到长任务与新领域]]
 
 ## 核心结论
 

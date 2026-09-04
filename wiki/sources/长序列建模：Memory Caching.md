@@ -15,7 +15,7 @@ tags:
 
 # 长序列建模：Memory Caching
 
-原始资料：[[raw/sources/模型架构/长序列建模/RNN不再“金鱼记忆”！一篇论文讲透Memory Caching，Mamba长上下文终于能打了|RNN 不再“金鱼记忆”]]
+原始资料：[[raw/sources/模型原理/模型架构/RNN不再“金鱼记忆”！一篇论文讲透Memory Caching，Mamba长上下文终于能打了|RNN 不再“金鱼记忆”]]
 
 ## 核心问题
 

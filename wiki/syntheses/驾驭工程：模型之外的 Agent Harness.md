@@ -1,6 +1,6 @@
 ---
 title: 驾驭工程：模型之外的 Agent Harness
-updated: 2026-09-03
+updated: 2026-09-04
 tags:
   - AI
   - Agent
@@ -35,6 +35,12 @@ Agent Harness 是模型输出与真实执行之间的工程外壳。它决定模
 - **训练桥**：把执行轨迹回流到模型训练，或把 Harness 本身纳入搜索和优化对象。
 
 单次 Harness 执行并不自动构成 Loop；只有外部触发、持久状态、独立验证和停止条件连接起来，系统才具备跨轮自治。Harness 也不能替代业务评测：它可以执行和记录，是否合格仍需独立标准决定。
+
+## 模型调用与工具连接
+
+最小 Agent 链路包含两个不同接口。Agent 通过 System Prompt 中的格式约定或 Function Calling 向模型声明工具，模型返回调用请求；Agent 再直接执行本地函数，或作为 MCP Client 调用 MCP Server 暴露的 Tool。工具结果由 Agent 交回模型，模型据此继续判断或生成最终回复。（[[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP|AI Agent 基础]]）
+
+Function Calling 解决模型与 Agent 之间的结构化调用，MCP 解决 Agent 与外部服务之间的连接。MCP 还可以暴露 Resource 与 Prompt，并不绑定具体模型。这些接口构成 Harness 的行动层，但不会自动提供权限、安全、验证、持久状态、停止或恢复机制。（[[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP|AI Agent 基础]]）
 
 ## 检查器是最小的行动模型
 
@@ -82,5 +88,6 @@ HarnessX 的结果没有使用独立留出测试集，只覆盖离散文本动�
 - [[wiki/sources/大模型后训练：SKILLRL 技能增强强化学习]]
 - [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]]
 - [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]]
+- [[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP]]
 - [[wiki/syntheses/循环工程：从逐轮操作到外部调度]]
 - [[wiki/syntheses/评估工程：从通用基准到业务质量门]]

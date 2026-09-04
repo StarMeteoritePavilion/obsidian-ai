@@ -16,7 +16,7 @@ tags:
 
 # Agent 记忆：MemRL 运行时强化学习
 
-原始资料：[[raw/sources/应用工程/记忆工程/AI Agent终于能边用边学了？MemRL这篇论文太有工程价值了！MemRL给出新解法，提出无参数化Runtime Learning|MemRL 无参数化 Runtime Learning]]
+原始资料：[[raw/sources/应用工程/AI Agent/AI Agent终于能边用边学了？MemRL这篇论文太有工程价值了！MemRL给出新解法，提出无参数化Runtime Learning|MemRL 无参数化 Runtime Learning]]
 
 ## 核心结论
 

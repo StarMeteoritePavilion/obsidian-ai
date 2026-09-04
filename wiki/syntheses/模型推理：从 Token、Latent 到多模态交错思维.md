@@ -1,7 +1,7 @@
 ---
 title: 模型推理：从 Token、Latent 到多模态交错思维
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-04
 tags:
   - AI
   - 模型原理
@@ -23,6 +23,36 @@ tags:
 
 三层不是互斥架构。文本和图像输入仍会被编码为离散或连续表示，模型内部仍需 Latent 计算；ThinkMorph 的不同之处，是把部分推理过程外化为文本思考、图像操作和后续文本验证，而不是把全部中间过程隐藏在 Latent State 中。
 
+## Transformer 的三种基础路线
+
+原始 Transformer 用 Encoder—Decoder 结构完成序列到序列转换：Encoder 处理完整输入并形成内部表示，Decoder 结合该表示和已经生成的目标 Token 继续自回归输出。GPT 路线保留适合下一个 Token 预测的 Decoder 主体，形成 Decoder-only 架构；BERT 路线使用 Encoder-only 架构，通过恢复 `[MASK]` 等目标学习双向文本表示。（[[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支|Transformer 架构导论]]）
+
+三种路线共享 Transformer 的分层参数计算，却不能只用“理解”与“生成”两个拟人化标签区分。实际差异还包括注意力可见范围、是否接收独立 Encoder 输出、训练目标和解码方式。资料中的“含义矩阵”适合作为内部表示的教学类比，不代表模型形成了可直接读取、与人类概念一一对应的语义表。
+
+## Linear、Activation 与 MLP 提供基础变换
+
+Linear 通过 $y=Wx+b$ 把一个向量映射为另一个向量，Weight 与 Bias 由训练数据确定。多个 Linear 直接复合仍然是线性函数；ReLU、Sigmoid、tanh 和 GELU 等 Activation 在层间引入非线性，使 FFN／MLP 能够拟合更复杂的关系。Transformer 的 Feed Forward 模块建立在这类结构上。（[[wiki/sources/模型架构：Linear、Activation 与 MLP|Linear、Activation 与 MLP]]）
+
+GPT-2 XL 的输出 Linear 将 1600 维内部表示映射为 50257 个 Token 的匹配分数。视频演示的三层 MLP 则采用 `1→128→256→1`，包含 33537 个可训练参数，以 2000 条数据拟合非线性曲线。这些实例说明同一基础模块可以承担不同映射职责，不表示模型参数能够逐项翻译为人类概念。
+
+## 注意力怎样形成上下文表示
+
+Token 进入 Transformer 后先映射为 Embedding，再分别投影为 Query、Key 和 Value。$QK^T$ 计算当前位置与其他位置的匹配分数，按 $\sqrt{d_k}$ 缩放并经过 Softmax 后形成注意力权重，最后对 Value 加权求和。自回归模型还用因果 Mask 把未来位置的权重压到 0，保证当前位置只读取已经出现的 Token。（[[wiki/sources/模型架构：多头注意力与 QKV|多头注意力]]）
+
+多头结构让多组独立投影并行学习不同关系，再拼接各头结果。资料用“语法表”“需求表”和“内容矩阵”解释 Key、Query 与 Value，但明确这些只是教学类比；真实隐向量维度与 Attention Head 通常不能直接命名为可读概念。这条链路解释 Latent State 怎样吸收上下文，不意味着人类能够逐维读出模型内部含义。
+
+## Attention Residuals 沿深度选择表示
+
+标准残差连接让原始输入与各模块输出沿深度连续相加，为训练信号提供直通路径；固定单位权重也会使深层隐藏表示的数值持续累积，并稀释单层贡献。Attention Residuals（AttnRes）把 Attention 的动态聚合从 Token 维度移到层深度：当前层使用可训练 pseudo-query 生成 Softmax 权重，再选择性汇总此前表示。（[[wiki/sources/模型架构：Attention Residuals 层间选择性聚合|Attention Residuals]]）
+
+Full AttnRes 访问所有此前层输出，提供细粒度选择，但需要保存和读取完整层历史；Block AttnRes 在块内保留标准残差，只在块间执行注意力聚合，以较粗粒度降低开销。它与 Token 间 Attention 共享“根据相关性加权”的思想，但处理对象分别是序列位置与网络深度，不能把两者视为同一个注意力轴。
+
+## MoE 把容量与活跃计算分开
+
+Attention 形成上下文表示后，FFN 负责继续变换每个位置。Dense 模型让所有 FFN 参数处理每个 Token；MoE 把大型 FFN 拆为多个专家，由 Router 为当前 Token 选择少量路由专家，再与共享专家的结果加权组合。总参数因而表示模型容纳的专家容量，激活参数则更接近单次 Token 实际使用的计算规模。（[[wiki/sources/模型架构：MoE 稀疏专家路由|MoE 稀疏专家路由]]）
+
+DeepSeekMoE 对比中，145B MoE 有 144.6B 总参数、22.2B 激活参数，每 4K Token FLOPs 为 585.6T；67B Dense 的总参数和激活参数均为 67.4B，对应 2057.5T FLOPs。资料据此概括 MoE 的计算优势，但该表没有直接测量端到端延迟或 API Token 价格，不能用 FLOPs 代替这两项指标。
+
 ## 交错推理之前的多模态架构
 
 多模态推理首先受输入表示约束。典型系统由视觉编码器、模态接口和预训练语言模型组成；MLP Projection、Q-Former 与 Cross-Attention 分别以直接投影、固定 Query 压缩和按需跨模态注意力连接视觉与语言。资料对超过 120 个模型的汇总中，输入分辨率从 224 提高到 336 的画面结果为提升 11.5%，接口从 MLP 换为 Q-Former 为提升 1.2%。这组特定比较说明视觉细节是否进入模型可能比接口形式更先构成瓶颈，但不能外推为所有任务的架构排名。（[[wiki/sources/多模态模型：架构、数据、推理与检索|多模态技术地图]]）
@@ -38,6 +68,12 @@ MCoT 的能力还取决于训练路线和数据质量。资料将其分为 Promp
 纯文本 CoT 适合抽象规划、逻辑计算和可审计表达，但难以直接验证局部视觉细节。Latent Reasoning 可以减少必须写成自然语言的中间步骤，却把解释和追责压力转移到 Decoder、Probe、SAE 或因果干预工具。Interleaved CoT 在文本与视觉空间同时搜索，适合需要裁剪、放大、定位或视觉重构的任务，但生成图像的成本明显更高。
 
 因此，表示方式应由信息需求决定：语言和已有视觉编码足以解决问题时，纯文本路径更短；必须产生新的视觉证据时，加入图像操作；需要压缩或并行保留多个内部方向时，才考虑更多 Latent 计算。ThinkMorph 的自主模式切换与 Token-Latent Hybrid 的设想都指向同一原则：保留可读接口，把额外计算放在确实能增加信息的表示空间中。（[[wiki/sources/模型原理：Token Space 与 Latent Space|Token 与 Latent]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
+
+## 可见思维链与内部计算不是同一对象
+
+可见 CoT 是模型在 Token Space 中生成的文本，内部计算则发生在不可直接读取的 Latent State 中。前者可以帮助人检查步骤，却不能自动成为后者的忠实记录。1776 年案例中，模型正确叙述闰年规则后给出相反结论；DataAlchemy 的任务泛化实验还出现了错误推理过程与正确答案并存的情况，后者可由两种变换在实验设置中的可交换性解释。（[[wiki/sources/大语言模型：思维链的模式匹配与泛化边界|思维链泛化边界]]）
+
+DataAlchemy 进一步从任务、长度和格式三个维度观察到：测试分布偏离训练分布时，可见推理链会变得脆弱。该结果支持思维链受到训练数据分布约束的解释，但不能据此断言全部大模型内部都不存在抽象推理。评估时应同时检查最终答案、可见步骤、二者的一致性以及任务所处的分布范围。
 
 ## 评估不能只看最终准确率
 
@@ -73,7 +109,13 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 
 ## 资料链
 
+- [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
 - [[wiki/sources/模型原理：Token Space 与 Latent Space]]
+- [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]]
+- [[wiki/sources/模型架构：Linear、Activation 与 MLP]]
+- [[wiki/sources/模型架构：多头注意力与 QKV]]
+- [[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]
+- [[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - [[wiki/sources/多模态推理：ThinkMorph 交错思维链]]
 - [[wiki/sources/多模态模型：架构、数据、推理与检索]]
 - [[wiki/sources/多模态推理：视觉原语与 Reference Gap]]
