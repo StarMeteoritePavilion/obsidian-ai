@@ -34,10 +34,14 @@ DeepSeekMoE 论文表格中，DeepSeek 67B Dense 的总参数和激活参数均�
 
 资料将其概括为“约两倍空间换约三倍性能”。该结论来自对应训练设置；表格记录的是总参数、激活参数、FLOPs 与 Loss，不直接等于所有硬件上的端到端速度、Token 成本或服务价格。
 
+DeepSeek V4 进一步处理 MoE 的训练稳定性：Anticipatory Routing 使用历史路由参数预先计算专家索引，打断路由概率与专家参数更新之间的即时正反馈；SwiGLU Clamping 同时限制异常激活。该机制解决的是长时间训练中的 Loss Spike，不改变 MoE 通过稀疏激活分离总容量与单 Token 计算量的基本结构。（[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性|DeepSeek V4]]）
+
 ## 关联
 
 - Linear、Activation 与 MLP：[[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - 上下文形成机制：[[wiki/sources/模型架构：多头注意力与 QKV]]
 - 块级稀疏注意力：[[wiki/sources/模型架构：MoBA 混合块注意力]]
 - Kimi K2 Thinking 的 MoE 实例：[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
+- Qwen 3.5 的 397B／17B 与 10 路由专家＋1 共享专家实例：[[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]]
+- DeepSeek V4 的路由稳定性：[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
 - 模型推理与成本：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

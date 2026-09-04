@@ -47,5 +47,6 @@ tags:
 - Token Embedding 与 RAG Embedding 的边界：[[wiki/sources/大语言模型：Token 与两类 Embedding]]
 - 现代 RAG 管道：[[wiki/sources/上下文工程：第四期 RAG 检索增强生成]]
 - 全局结构补充：[[wiki/sources/上下文工程：GraphRAG 从知识图谱到分层检索]]
+- 摄取时编译与长期知识治理：[[wiki/sources/上下文工程：LLM Wiki 的摄取时编译与知识治理]]
 - 推理扩展：[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]
 - 综合：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]

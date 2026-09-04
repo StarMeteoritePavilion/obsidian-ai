@@ -739,3 +739,116 @@
 - 依据原始音轨、画面和作者配套代码校正 Pydantic AI、Gemini、`GeminiModel("gemini-2.5-flash-preview-04-17")`、`GEMINI_API_KEY`、`.env`、`load_dotenv()`、`Agent`、`system_prompt`、`tools`、`run_sync()`、`resp.output`、`resp.all_messages()` 与 `message_history` 等名称。确认 `read_file` 的 docstring 表述为文件不存在时返回错误提示，实现捕获异常并返回错误字符串；用户字幕中的 `FileNotFoundError` 不符合当期代码。
 - 将字幕改写为正式博客文章，删除口播自指、关联视频提示、听众互动和无意义转场；完整保留最小 Agent 架构、三个本地工具、工具契约、密钥管理、模型与 Agent 初始化、首次文件识别、重复读取问题、消息历史回传和按内容改名，并明确该示例没有实现持久记忆、权限隔离、验证、恢复或完整 Loop。
 - 新建资料摘要，把跨调用消息历史分别整合进 AI Agent 基础、上下文治理、上下文工程综合与 Agent Harness 综合，并更新内容索引。用户粘贴字幕、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 69 篇原始资料与 69 篇资料摘要，7 篇综合均进入索引，当前专题没有期数冲突。
+
+## [2026-09-04] ingest | Qwen 3.5 为何爆火？ 从架构到应用：MoE、混合注意力、Agent 工作流一次讲透
+
+- 完整读取本地 SRT 的 494 条字幕，覆盖 00:00:00.000～00:15:41.680；字幕 SHA-256 为 `eb585e609713473d6762b20a2f262077cec2972e56541cb93191687a9ed1418a`。
+- 官方接口确认标题为《Qwen 3.5 为何爆火？ 从架构到应用：MoE、混合注意力、Agent 工作流一次讲透》，作者为“唐国梁Tommy”，发布于 2026-02-20，单 P，官方时长 952 秒；分 P 名称为“1应用演示”，官方章节和官方字幕轨均为空。
+- 对照 951.872 秒原始音轨、951.833 秒视频流、529 段全片辅助转写与关键画面完成核验，核验级别为原始音轨。有效旁白覆盖 00:00:00.000～约 00:15:41.500，之后约 10.4 秒为片尾。
+- 494 个字幕时间点严格递增，最大相邻起始时间间隔为 5.28 秒；主题顺序与原始音轨一致，未发现重复播放、正文缺失或越过视频结尾的内容，未删除任何视频时间段。
+- 官方标题、开场和结尾均无期数标识；单 P 名称“1应用演示”只描述内容，因此定位为模型原理／大语言模型独立专题，不编排期数。
+- 依据原始音轨和关键画面校正 Qwen 3.5、Agentic AI、MoE、Token、Early Fusion、Multi-Token Prediction、MTP、Qwen3.5-Plus、Qwen3.5-397B-A17B、阿里云百炼、Cline、OpenAI Compatible、DashScope、Plan、Act、Vibe Coding、智谱、MiniMax、斯蒂芬·库里、勒布朗·詹姆斯和金州勇士队等转写错误或格式。
+- 确认画面中的 397B 总参数、17B 激活参数、512 个专家、10 个路由专家＋1 个共享专家、60 层、4,096 隐藏维度、248,320 词表、262,144 Token 原生上下文和 1,048,576 Token 托管上限；成本、吞吐、语言、并行环境和部署数字均保留视频来源与时效边界。
+- 将字幕改写为正式博客文章，删除课程推广、口播自指、听众互动、视频载体提示、逐步点击说明和无意义转场；完整保留五个关键词、三层技术拆解、原生多模态、视觉 Agent、太阳系图片、库里投篮及反诱导测试、百炼 API、Cline 配置、三维太阳系项目、幻觉记录和产品时效限制。
+- 新建资料摘要，把 Qwen 3.5 作为第二个 MoE 实例补入 MoE 页面，并将“模型内 Agentic 能力不替代外部工具、权限、执行环境和验证”整合进 Agent Harness 综合页，同时更新内容索引。用户字幕、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 70 篇原始资料与 70 篇资料摘要，7 篇综合均进入索引，当前专题没有期数冲突。
+
+## [2026-09-04] ingest | ARLArena：4B小模型用SAMPO训练，Agent任务成功率碾压GPT-5.2
+
+- 完整读取用户提供的 217 条 SRT 字幕，覆盖 00:00:00.220～00:08:03.940；字幕 SHA-256 为 `cd441e356acf174016fff7f531d4c5e4746de9b986cba2b202883b9962dd9937`。
+- 官方接口确认标题为《ARLArena：4B小模型用SAMPO训练，Agent任务成功率碾压GPT-5.2》，作者为“唐国梁Tommy”，发布于 2026-03-02，单 P，官方时长 492 秒，官方字幕轨为空，官方章节为空。
+- 对照 491.157 秒原始音轨、491.125 秒视频流、234 段全片辅助转写、关键画面和论文官方仓库完成核验，核验级别为原始音轨。有效旁白覆盖 00:00:00.000～约 00:08:03.840，之后约 7.3 秒为片尾。
+- 217 个时间段严格递增、无重叠，相邻字幕之间没有超过 2 秒的空档；主题顺序与全片辅助转写一致，未发现重复播放、正文缺失或越过视频结尾的内容，未删除任何视频时间段。
+- 官方标题、开场和结尾均无期数标识，内容完整解读一项 Agentic RL 训练稳定性研究，因此定位为模型工程／大模型后训练独立论文解读。官方“前沿论文与最新技术趋势洞察”合集只表示收录关系，不作为文章期数。
+- 依据原始音轨、关键画面和论文官方仓库校正 Agentic RL、ARLArena、SAMPO、GRPO、SAPO、CISPO、GiGPO、Qwen3-4B、DeepSeek-R1、KL、Token、重要性采样比率、序列级裁剪、步骤级优势、动态采样、ALFWorld、WebShop、Sokoban、TIR Math、AIME、GPT-5.2 与 o3 Multi-Agent 等转写错误或格式。
+- 确认视频与论文图表中的主要数字：SAMPO 与 GRPO 在 ALFWorld 上分别为 92.72% 和 62.36%；CISPO、SAPO、GRPO 与 SAMPO 在 Sokoban 上分别为 26.02%、30.25%、83.90% 和 88.86%；资料列出的 ALFWorld 闭源系统结果为 GPT-5.2 单 Agent 51.56%、o3 Multi-Agent 56.25%，并明确它们没有接受相同的环境专项训练。资料旁白称 SAMPO“在四个任务上”全面超过对比方法，但论文官方表格的 SAMPO 行没有 TIR Math 结果，正文和摘要已保留该来源冲突，未自行补全。
+- 将字幕改写为正式博客文章，删除口播自指、听众互动、账号推广、视频载体提示和无意义转场；完整保留训练崩塌场景、三重压力、四个分析维度、行为克隆初始化、容忍型与序列级裁剪、步骤级优势、动态采样交互、四项任务、实验数字、公平性限定和开放式 Web Agent 迁移问题。
+- 新建资料摘要，把裁剪、优势与采样的协同稳定性整合进大模型后训练综合页并更新内容索引。用户字幕、原始音视频、辅助转写、关键帧、论文图表和接口响应均未进入知识库；连同处理期间并行写入的 Claude Code Agent Runtime 与 Engram 资料，当前共有 73 篇原始资料与 73 篇资料摘要，7 篇综合均进入索引，当前专题没有期数冲突。
+
+## [2026-09-04] ingest | DeepSeek V4 硬核全面拆解
+
+- 完整读取本地 SRT 的 453 条字幕，覆盖 00:00:00.000～00:17:00.840；字幕 SHA-256 为 `3125375e39e2a5d85bf73fde6fb900a0554aab53454e16e590eb43e04ff94f95`。
+- 官方接口确认标题为《DeepSeek V4 硬核全面拆解｜1.6万亿参数+百万级上下文+33万亿token同时不崩，CSA、mHC、Muon、OPD四大核心模块逐条拆解》，作者为“唐国梁Tommy”，发布于 2026-04-25，单 P，官方时长 1029 秒；官方章节和官方字幕轨均为空。
+- 对照 1028.288 秒原始音轨、全片辅助转写、官方页面说明与 DeepSeek-V4 技术报告完成核验，核验级别为原始音轨。有效旁白覆盖 00:00:00.000～约 00:17:00.600，之后约 7.7 秒为片尾。
+- 未发现重复播放或越过视频结尾的内容；本地字幕漏掉约 00:05:53～00:05:57、00:07:19～00:07:23、00:08:05～00:08:07 和 00:08:58～00:09:01 四段有效旁白，已依据原始音轨恢复。正文没有删除任何视频时间段。
+- 官方标题、开场和结尾均无期数标识；官方“前沿论文与最新技术趋势洞察”合集中的第 14 个位置只记录发布编排，因此定位为模型原理／模型架构下的 DeepSeek V4 独立专题，不编排期数。
+- 依据原始音轨、官方页面和技术报告校正 DeepSeek-V4、Claude Opus、KV Cache、HBM、MLA、GQA、NSA、DSA、Mamba、RWKV、CSA、HCA、Dense Attention、Top-k、mHC、Hyper-Connections、Birkhoff polytope、Sinkhorn-Knopp、AdamW、Muon、Hybrid Newton-Schulz、Anticipatory Routing、SwiGLU Clamping、OPD、Reverse KL、Mode Averaging、Mode Seeking、Covariate Shift、MRCR、Codeforces、Putnam-2025、HMMT 2026 Feb、Apex、Terminal Bench 2.0、BrowseComp、HLE w/ tools、GDPval-AA、DeepGEMM、TileLang、3FS、DSec 与 DualPipe。
+- 将字幕改写为正式博客文章，删除课程推广、口播自指、听众互动、视频载体提示和无意义转场；完整保留长上下文硬件瓶颈、CSA／HCA、mHC、Muon、MoE 路由、OPD、五条优化轴、成绩、短板、复现难度和开放问题，并区分技术报告数据与作者解释。
+- 新建资料摘要，把压缩后稀疏选择、多通道约束残差和 MoE 路由稳定性整合进既有架构页面与模型推理综合，并更新内容索引。字幕、原始音轨、辅助转写、技术报告和临时产物均未进入知识库；写入后共有 74 篇原始资料与 74 篇资料摘要，7 篇综合均进入索引，当前专题没有期数冲突。
+
+## [2026-09-04] ingest | RAG vs GraphRAG vs LLM Wiki 一次讲透
+
+- 完整读取用户粘贴并由附件承载的 278 个带时间点字幕片段，覆盖 00:00:00～00:20:18；字幕 SHA-256 为 `841c929c8b19479565142ce516e506d3151030235d2c57da8db82daeb18a7e4a`。未读取任何其他字幕文件。
+- 官方接口确认标题为《RAG vs GraphRAG vs LLM Wiki 一次讲透：Karpathy引爆的LLM Wiki，是知识工程的下一次革命，还是又一个被高估的"自我进化"》，作者为“唐国梁Tommy”，发布于 2026-04-29，单 P，官方时长 1,225 秒；官方章节和官方字幕轨均为空。
+- 对照 1,224.939 秒原始音轨、1,224.916 秒视频流、695 段全片辅助转写与关键画面完成核验，核验级别为原始音轨。有效旁白覆盖 00:00:00.000～约 00:20:18.120，之后约 6.8 秒为片尾。
+- 278 个字幕时间点严格递增；最大相邻起始间隔为 8 秒，00:07:31～00:07:39 由同一段 Frontmatter 字段说明完整覆盖。主题顺序与全片音轨一致，未发现重复播放、正文缺失或越过视频结尾的内容，未删除任何视频时间段。
+- 官方标题、开场和结尾均无期数标识，单 P 标题与视频标题一致；官方“前沿论文与最新技术趋势洞察”合集将本文列为第 13 条，但该位置只表示收录顺序。因此定位为应用工程／上下文工程独立专题，不编排期数。
+- 依据原始音轨、官方简介和关键画面校正 Andrej Karpathy、LLM Wiki、Raw sources、Schema、Frontmatter、Ingest、Crystallization、Provenance、Confidence、Supersession、`provenanceState`、`contradictedBy`、`inferredParagraphs`、`llm_wiki`、`atomicmemory`、`llm-wiki-agent`、`health.py`、`lint.py`、`llm-wiki-compiler`、`nvk/llm-wiki`、Thesis Mode、BM25、Reciprocal Rank Fusion、GraphRAG-Bench、Vanilla RAG、Adaptive RAG、Query Classifier、JSON-LD、GraphML、MCP Resources 和 Query Save Rate 等转写错误或格式。
+- 将字幕改写为正式博客文章，删除课程推广、点赞转发、口播自指、听众互动和无意义转场；完整保留 RAG／GraphRAG／LLM Wiki 技术脉络、三层架构、运行控制面、页面类型、Frontmatter、增量 Ingest、Query／Save／Lint／Research、对抗性摄取、检索路由、Agent Memory 边界、导出与隐私、生命周期指标、Confidence／Supersession、幻觉回写风险和适用场景。
+- 新建资料摘要，把查询时综合与摄取时编译的职责边界、幻觉写入风险和治理链整合进上下文工程综合页，并为 RAG 与 GraphRAG 摘要补充关联，同时更新内容索引。用户粘贴字幕、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 75 篇原始资料与 75 篇资料摘要，7 篇综合均进入索引，当前专题没有期数冲突。
+
+## [2026-09-04] ingest | Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？
+
+- 完整读取本地 SRT 的 217 条字幕，覆盖 00:00:00.220～00:08:03.940，字幕 SHA-256 为 `cd441e356acf174016fff7f531d4c5e4746de9b986cba2b202883b9962dd9937`。该字幕讲解 ARLArena、SAMPO 与 Agentic RL 训练崩塌，与用户指定的 Claude Code 视频完全不对应，因此没有把其中任何内容写入本篇资料。
+- 官方接口确认标题为《Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？》，作者为“唐国梁Tommy”，发布于 2026-04-02，单 P，官方时长 1,043 秒；官方字幕轨和官方章节均为空。
+- 对照 1,042.368 秒原始音轨、1,042.333 秒视频流、541 段全片辅助转写与关键画面完成核验，核验级别为原始音轨。有效旁白覆盖 00:00:00.000～00:17:15.020，之后约 7.3 秒为片尾。
+- 全片辅助转写相邻片段最大空档为 0.68 秒，主题顺序与官方简介列出的定义、ReAct 五阶段、六项工程设计、五个运行时维度和总体评价一致；未发现重复播放或目标视频正文缺失，未删除任何目标视频时间段。错误 SRT 整体排除，不计作目标视频中的删除段落。
+- 官方标题、开场和结尾均无期数标识，内容完整拆解一个 Agent Runtime；官方“前沿论文与最新技术趋势洞察”合集只表示收录关系，因此定位为应用工程／驾驭工程独立专题，不编排期数。
+- 依据原始音轨和关键画面校正 Claude Code、Anthropic、Agent Runtime、TypeScript、React Ink、`main.tsx`、`claude.ts`、`query.ts`、ReAct、Async Generator、Prompt Caching、`SYSTEM_PROMPT_DYNAMIC_BOUNDARY`、Snip、Micro Compact、Auto Compact、Reactive Compact、Copy-on-Write Overlay、BashTool、Zustand、`Object.is`、`useSyncExternalStore`、Hook、Fork、In-Process、Split-Pane、`AsyncLocalStorage`、Coordinator、`PlanAgent`、`ExploreAgent`、`VerificationAgent`、`ClaudeCodeGuide`、`MEMORY.md`、Zod Schema、Tool Search、KAIROS、Embedding、AST、`grep` 与 `glob` 等转写错误或格式。
+- 确认资料口径为 1,884 个 TypeScript 源文件、42 种以上工具能力、`main.tsx` 接近 4,700 行、`claude.ts` 超过 3,600 行、`query.ts` 超过 1,700 行、七层恢复、四级压缩、BashTool 20 项检查、六类 Hook／24 种事件、三种 Agent 执行模型、四个内置角色、五层记忆和六级提示优先级。视频与简介没有提供源码仓库、Commit、版本号或可复核快照，摘要和综合页已保留这一来源边界；资料也没有单独展开可观测性的结构。
+- 将目标视频内容改写为正式博客文章，删除口播自指、听众互动、账号推广、视频载体提示和无意义转场；完整保留运行闭环、异常恢复、缓存与压缩、投机执行、安全检查、状态管理、Hook、多 Agent、记忆、Prompt、安全、可观测性证据边界、总体评价和代码索引取舍。
+- 新建资料摘要，把 Claude Code 的运行时闭环整合进 Agent Harness 综合页并更新内容索引。用户提供的错误字幕、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；当前共有 73 篇原始资料与 73 篇资料摘要，7 篇综合均进入索引，当前专题没有期数冲突。
+
+## [2026-09-04] ingest | DeepSeek Engram：用"查字典"打败Transformer，推理能力反而涨了5分？
+
+- 完整读取用户提供的 217 条 SRT 字幕，时间范围为 00:00:00,220～00:08:03,940，SHA-256 为 `cd441e356acf174016fff7f531d4c5e4746de9b986cba2b202883b9962dd9937`；其正文讨论 Agentic 强化学习训练崩塌、ARLArena 与 SAMPO，与文件名和目标视频内容不符，因此没有把其中任何段落写入本资料。
+- 官方接口确认标题为《DeepSeek Engram：用"查字典"打败Transformer，推理能力反而涨了5分？》，作者为“唐国梁Tommy”，发布于 2026-03-15，单 P，官方时长 692 秒，官方字幕轨和官方章节均为空。
+- 对照 691.818 秒原始音轨、691.791 秒视频流、302 段全片辅助转写和关键画面完成核验，核验级别为原始音轨。有效旁白覆盖 00:00:00.000～00:11:24.680，之后约 7.1 秒为片尾；未发现重复播放或正文缺失，未删除目标视频的任何时间段。错配 SRT 提前约 208 秒结束且主题完全不同，不用于目标视频的重复与缺失判断。
+- 官方标题、开场和结尾均无期数标识，内容完整解读 Engram 一项模型架构研究；因此定位为模型原理／模型架构下的独立论文解读。官方“前沿论文与最新技术趋势洞察”合集只记录发布编排，不作为文章期数。
+- 依据原始音轨、官方简介和关键画面校正 DeepSeek、北京大学、Conditional Memory via Scalable Lookup、Engram、Transformer、MoE、N-gram、BPE、Embedding、Cross-Attention、Query、Key、Value、Sigmoid、Depthwise Convolution、GPU HBM、CPU、PCIe、H800、DDR5、MMLU、CMMLU、BBH、ARC-Challenge、HumanEval、LogitLens 与 CKA 等专名和格式。
+- 确认词表投影压缩约 23%，卷积参数约 16K；100B Engram 表放入 CPU 内存时，H800 上 8B 模型吞吐从每秒 6,315 Token 降至 6,140 Token，下降 2.8%。等预算对照保持 26.7B 总参数和 3.8B 激活参数，把路由专家从 72 个减至 55 个，并把 5.7B 参数分给查表记忆。
+- 确认 MMLU、CMMLU、BBH、ARC-Challenge 与 HumanEval 分别提高 3.4、4.0、5.0、3.7 与 3.0 个百分点；多针大海捞针从 84.2 提高到 97.0，变量追踪从 77.0 提高到 89.0。Engram-40B 使用 18.5B 记忆参数、39.5B 总参数和 3.8B 激活参数；75%～80% MoE、20%～25% Engram 是对应实验的较优范围，不外推为固定规律。
+- 将原始音轨内容重写为正式博客文章，删除口播自指、课程推广、听众互动和无意义转场；完整保留三类问题、并行双路径、六步数据流、预取与层位置、等预算实验、LogitLens／CKA 解释、长文本结果、Scaling、参数配比和未来研究问题，并区分实验结果、作者解释与尚未验证的方向。
+- 新建资料摘要，把 Engram 的参数化记忆稀疏性、MoE 计算稀疏性与分层内存预取整合进模型推理综合页并更新内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；连同处理期间并行写入的 Qwen 3.5、ARLArena 与 Claude Code Agent Runtime 资料，当前共有 73 篇原始资料与 73 篇资料摘要，7 篇综合均进入索引，当前专题没有期数冲突。
+
+## [2026-09-04] ingest | 为什么你的Agent总翻车？Harness Engineering全拆解
+
+- 完整读取用户新提供的 565 条 SRT 字幕，覆盖 00:00:00.040～00:22:28.940；字幕 SHA-256 为 `77ecef4bd7a66671a2fd9d11d19f54c9e1c8da3415a2fd85b209a5eb7475beb5`。该附件与 `BV1VBX9BrEon` 的标题、主题和时间轴一致。
+- 官方接口确认标题为《为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime》，作者为“唐国梁Tommy”，发布于 2026-03-29，单 P，官方时长 1,356 秒；官方章节和官方字幕轨均为空。
+- 对照 1,355.989 秒原始音轨、1,355.989 秒视频流、全片辅助转写、关键画面和官方页面说明完成核验，核验级别为原始音轨。有效旁白覆盖 00:00:00.000～约 00:22:28.780，之后约 7.2 秒为片尾。
+- 565 个字幕时间点严格递增；五组相同短语均属于机构名或正常语义复现，不是重复播放。字幕在约 00:14:31～00:14:35 漏掉“上下文隔离：用子 Agent 作为上下文防火墙”，已依据原始音轨和关键画面恢复；除此之外未发现正文缺失或越过视频结尾的内容，未删除任何视频时间段。
+- 官方“前沿论文与最新技术趋势洞察”合集将本文列为第 16 条，但官方标题、开场和结尾均无期数标识；正文完整介绍 Harness 定义、行业案例、六个模块、旧工程实践重组及风险，因此定位为应用工程／驾驭工程独立全景专题，不把合集位置当作文章期数。
+- 依据原始音轨、关键画面及一手页面校正 Harness Engineering、Anthropic、OpenAI、Google DeepMind、Stripe、Vercel、Andrej Karpathy、Shopify、HashiCorp、Mitchell Hashimoto、Claude Agent SDK、Sonnet 4.5、Opus 4.5、Planner、Generator、Evaluator、Playwright、GPT-5、Codex、Birgitta Böckeler、Aletheia、Verifier、Reviser、IMO-Proof Bench Advanced、Erdős 猜想数据库、Agent Development Kit、ADK、Thought Signatures、Minions、Devbox、Manus、`AGENTS.md`、`CLAUDE.md`、Linter、Pre-commit Hook、BrowseComp、DevOps、SRE 与 Ryan Lopopolo 等转写错误或格式。
+- 保留资料的主要数字及边界：每步 95% 成功率串联 20 步约为 36%；OpenAI 团队从三人扩至七人、约五个月生成约一百万行代码并合并约 1,500 个 PR；Vercel 移除 80% 工具；Stripe 通过 MCP 接入 400 多个内部工具；Manus 六个月五次重写；Aletheia 在 IMO-Proof Bench Advanced 上为 95.1%，另一广泛问题集错误率为 68.5%；BrowseComp 非预期解法发生率从单 Agent 0.24% 升至多 Agent 0.87%。这些数字来自不同组织与评测，没有合并为统一效果证明。
+- 将字幕改写为正式博客文章，删除口播自指、听众互动、推广、视频载体提示和无意义转场；完整保留 Prompt—Context—Harness 关系、兴起原因、企业案例、六个模块、旧技术重组、概念膨胀、过度工程、证据薄弱、可复现性、风险放大、开放问题和三步落地路径。
+- 新建资料摘要，把生成—评估分离、最小充分工具集、版本化外部制品、模型升级后的组件删减和证据边界整合进 Agent Harness 综合页，并更新内容索引。用户字幕、原始音视频、辅助转写、关键帧和一手网页缓存均未进入知识库；写入时共有 76 篇原始资料与 76 篇资料摘要，7 篇综合均进入索引，当前专题没有期数冲突。
+
+## [2026-09-04] ingest | 刚发布几天就被美国政府紧急叫停:Claude 最强模型 Fable 5 / Mythos 到底强在哪?
+
+- 完整读取用户提供的 453 条 SRT 字幕，覆盖 00:00:00.000～00:17:00.840，字幕 SHA-256 为 `3125375e39e2a5d85bf73fde6fb900a0554aab53454e16e590eb43e04ff94f95`。其正文完整讲解 DeepSeek V4 Preview、CSA、mHC、Muon 与 OPD，与指定 Claude Fable 5／Mythos 5 视频完全不对应；该字幕内容已作为 DeepSeek V4 资料导入，本次整体排除。
+- 官方接口确认标题为《刚发布几天就被美国政府紧急叫停:Claude 最强模型 Fable 5 / Mythos 到底强在哪?》，作者为“唐国梁Tommy”，发布于 2026-06-15，单 P，官方时长 1,160 秒，官方字幕轨和官方章节均为空。
+- 对照 1,159.616 秒原始音轨、1,159.579 秒视频流、全片辅助转写、900 秒后独立重跑转写和关键画面完成核验，核验级别为原始音轨。有效旁白覆盖 00:00:00.000～约 00:19:12.520，之后约 7.1 秒为片尾。
+- 辅助转写前后两段均没有超过 1 秒的空档，主题顺序与官方简介一致；未发现目标视频的重复播放、正文缺失或越过视频结尾的内容，未删除任何目标视频时间段。错配 SRT 整体排除，不计作目标视频中的删除段落。
+- 官方标题、开场和结尾均无期数标识，正文完整讨论 Claude 模型能力、Agentic Execution 与分层安全，因此定位为模型原理／大语言模型下的独立专题。官方“前沿论文与最新技术趋势洞察”合集只表示收录关系，不作为文章期数。
+- 依据原始音轨、关键画面和官方简介校正 Anthropic、Claude Fable 5、Claude Mythos 5、Haiku、Sonnet、Opus、Project Glasswing、Agentic Execution、Adaptive Thinking、Token、OpenBSD、FFmpeg、Firefox、N-day、N-hour、Remote Code Execution、Windows Kernel、SYSTEM、Prompt Injection、Ruby、Stripe 与《宝可梦 火红》等名称或格式。
+- 确认主要口径：1,000,000 Token 默认上下文、128,000 Token 单次输出、每百万输入／输出 Token 10／50 美元；Firefox 红队测试中 Opus 4.6 不到 1%、Mythos Preview 72.4%；门控评测中 Mythos 5 与 Fable 5 分别为 88.4% 和 0%，自动化越狱攻击成功率为 Opus 4.6 83.2%、Opus 4.8 56.0%、Fable 5 5.4%；生命科学流程处理 14 个靶点并得到 9 个有潜力候选，部分环节约提速 10 倍。
+- 官方标题写有“被美国政府紧急叫停”，但正文、简介和画面没有说明政府机构、命令、发生日期或执行措施，正式文章、资料摘要和索引边界均未把该说法写成事实。
+- 将目标视频内容改写为正式博客文章，删除口播自指、账号推广、听众互动、视频载体提示和无意义转场；完整保留双模型关系、公开规格、Adaptive Thinking、Project Glasswing、零日与 N-day 风险、安全门控、生命科学双重用途、三类现实价值、模型路由、Agent 竞争阶段和系统级治理要求，并为厂商数据保留来源边界。
+- 新建资料摘要，把服务层分类、模型回退与执行环境权限整合进 Agent Harness 综合页并更新内容索引。用户错配 SRT、原始音视频、辅助转写和关键帧均未进入知识库；写入后共有 77 篇原始资料与 77 篇资料摘要，7 篇综合均进入索引，当前专题没有期数冲突。
+
+## [2026-09-04] maintenance | 全知识库重建
+
+- 按 `AGENTS.md` 先完整审计 `raw/sources/` 中 77 篇原始资料的正文主题、现有目录与 frontmatter。应用工程 43 篇均符合现有目录；模型原理 23 篇中修正 2 篇；模型工程 11 篇中修正 1 篇。
+- 将 Claude Fable 5／Mythos 5 资料从 `模型原理/大语言模型` 移至 `应用工程/AI Agent`，因为正文主线是 Agentic Execution、分层开放、安全门控与执行治理；将 DLSS／FSR 资料从 `模型原理/多模态模型` 移至 `模型工程/推理优化`，因为正文主线是实时图像重建及硬件／帧率取舍；将英伟达硬件资料从 `模型工程/推理优化` 移至新建的 `模型工程/计算基础设施`，因为正文同时覆盖训练和推理的算力、内存、互联与软件生态。
+- 移动前后分别计算全部 77 篇原始资料的 SHA-256，并按哈希集合比较，结果完全一致；没有修改任何原始文章内容。同步修正三个资料摘要中的精确原始路径链接。
+- 对 77 篇原始资料与 77 篇摘要按 `source` 一一核对。修复思维链摘要中 raw 未记录的“温度”“插入／删除 Token”，移除 Transformer、ViT 与 DLSS 摘要中缺少原始资料支撑的具体归属，并为 DeepSeek V4 补充 Anticipatory Routing 仅在 Loss Spike 回滚后临时启用、稳定后恢复标准训练的条件。
+- 补全 26 篇高价值摘要中的关键证据与限制，覆盖上下文退化、原始 RAG、LLM Wiki、HarnessX、驾驭工程收束、Token 成本、DSpark、ARLArena、SKILLRL、RLM Harness、LoRA、AgentENV、Memory Caching、MoBA、Engram、Token／Latent、Kimi K2、多模态数据与视觉原语训练。未发现需要改写的其他摘要。
+- 将 Claude Fable 5／Mythos 5 摘要重命名为 `Agent 安全治理：Claude Fable 5 与 Mythos 5 的分层开放`，并将主分类调整为应用工程／AI Agent／安全治理；将 DLSS／FSR 摘要调整为模型工程／推理优化分类。
+- 新建四篇跨资料综合：`AI Agent：从工具调用到可信行动`、`长上下文模型架构：共享、筛选、压缩与可增长记忆`、`深层模型训练稳定性：残差、更新与路由`、`多模态推理闭环：感知、指代、操作与验证`。扩写上下文工程、后训练、模型推理、评估工程和 Agent Harness 综合页的相互链接与职责边界。
+- 重建 `wiki/index.md` 的综合导航、问题入口、分类清单与计数。当前共有 77 篇原始资料、77 篇资料摘要和 11 篇跨资料综合；目录、摘要、综合与索引均可相互追溯。
+
+## [2026-09-04] lint | 全知识库重建校验
+
+- 检查 77 篇原始资料与 77 篇资料摘要的 `source` 一一映射、原始链接、frontmatter 字段名称与顺序、作者和发布日期；检查 11 篇综合页及全部摘要的索引覆盖和反向链接，均通过。
+- Obsidian 未解析链接为 0；未发现重复 frontmatter 标题、未闭合 Markdown 代码围栏、空白错误、摘要索引缺项或综合索引缺项。
+- 清理移动后遗留的空目录 `raw/sources/模型架构/`。Obsidian 报告的五个孤立文件为仓库入口或规范文件：`README.md`、`raw/README.md`、`AGENTS.md`、`LICENSE` 与 `wiki/index.md`，不属于孤立知识页面。
+- `raw/sources/` 最终目录仅保留实际使用的分类；全部 77 篇原始资料内容哈希与重建前一致。当前知识库共有 77 篇原始资料、77 篇资料摘要和 11 篇跨资料综合。

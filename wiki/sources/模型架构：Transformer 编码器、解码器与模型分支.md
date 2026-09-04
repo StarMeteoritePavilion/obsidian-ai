@@ -32,7 +32,7 @@ tags:
 
 ## 生成与采样
 
-Decoder 每一步都为词表中的 Token 计算分数或概率，再通过解码策略选择下一项。Temperature 调整采样随机性；Top-K 只保留概率最高的固定数量 Token。字幕把 `K=1`、`K=2` 的行为称为 `top-p`，但 Transformers 官方定义表明，该行为属于 Top-K；Top-P 按累计概率阈值确定保留集合。
+Decoder 每一步都为词表中的 Token 计算分数或概率，再通过解码策略选择下一项。Temperature 调整采样随机性；Top-K 只保留概率最高的固定数量 Token。原始资料已校正字幕中的 `top-p` 转写：`K=1`、`K=2` 描述的是按固定数量保留 Token 的 Top-K，Top-P 则按累计概率阈值确定保留集合。
 
 资料借 GPT-2 的 50257 个 Token 说明输出层规模，并用开始标记—逐 Token 生成—结束标记展示自回归过程。该示例用于解释流程，不代表原始 Transformer 翻译模型与 GPT-2 使用相同词表。
 

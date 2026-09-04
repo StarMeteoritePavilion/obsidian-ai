@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1gkPieREDw
 author: 唐国梁Tommy
 published: 2025-02-25
 ingested: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-04
 tags:
   - AI
   - 模型架构
@@ -34,6 +34,10 @@ MoBA（Mixture of Block Attention）把 Mixture of Experts 的动态路由思想
 资料展示的 Llama-8B-1M 实验中，MoBA 与全注意力在多项短任务及 LongBench、RULER 上整体接近。RULER 128K 分别为 0.7818 与 0.7849，LongBench 32K 分别为 0.4828 与 0.4821；一百万 Token 的 Needle-in-a-Haystack 图基本保持高召回。在该实验配置下，MoBA 相对基于 FlashAttention 的全注意力减少约 6.5 倍计算时间。
 
 这些结果受模型、硬件、块划分、Top-k 和任务设置约束，不能作为其他系统的性能保证。
+
+## 待验证方向
+
+资料明确列出三项后续问题：优化块大小与 Top-k，使稀疏程度适配不同任务；扩展到图像、文本等多模态输入；检查复杂推理中的泛化，确认块级选择是否遗漏关键跨块依赖。这些内容是研究方向，不是现有实验已经证明的结论。
 
 ## 与其他长序列方法的关系
 

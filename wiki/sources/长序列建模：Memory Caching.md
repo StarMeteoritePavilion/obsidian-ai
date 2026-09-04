@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1GHP4zZESk
 author: 唐国梁Tommy
 published: 2026-03-06
 ingested: 2026-09-02
-updated: 2026-09-03
+updated: 2026-09-04
 tags:
   - AI
   - 模型架构
@@ -36,6 +36,8 @@ GRM 的英文全称在资料内部不一致：旁白为 Gated Residual Memory，
 Memory Caching 把分段器、段内 RNN 与跨段聚合器解耦，可以接入 Linear Attention、Mamba、Titans 等不同记忆模块。相应代价是检查点缓存随段数线性增长，深度记忆模块的显存占用需要单独测量。
 
 段长成为效率与召回之间的连续旋钮：短段保存更多检查点并提高检索成本，长段更接近线性 RNN。资料把段长为 1 视为趋近 Attention 的极端情况。
+
+资料还对比了使用 Fenwick Tree 组织历史隐状态的 Log-Linear 方法。它的复杂度为 $O(L\log L)$，计算上更节省，但早期层级可能把最长约为总序列一半的历史压入单个记忆模块，集中造成信息损失；资料转述的长序列检索结果因此不如均匀分段的 Memory Caching。
 
 ## 实验边界
 

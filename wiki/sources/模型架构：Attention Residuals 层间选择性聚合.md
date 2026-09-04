@@ -34,10 +34,13 @@ Full AttnRes 需要计算所有跨层权重，并保存和读取此前各层输�
 
 视频没有介绍论文的实验成绩，因此本摘要不补入外部结果。当前资料支持的是机制与成本取舍，不足以据此判断 AttnRes 在其他模型、规模和硬件上的固定收益。
 
+DeepSeek V4 的 mHC 是另一条残差改造路线：它把残差流扩成多通道，再把混合矩阵约束为 Birkhoff 多面体中的双随机矩阵，以限制深层信号放大。AttnRes 侧重跨层选择，mHC 侧重多通道表达与数值稳定，两者不能因都修改残差路径而视为同一实现。（[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性|DeepSeek V4]]）
+
 ## 关联
 
 - Linear、Activation 与 FFN：[[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - Token 间注意力：[[wiki/sources/模型架构：多头注意力与 QKV]]
 - FFN 与 MoE：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - Residual Stream 与内部表示：[[wiki/sources/模型原理：Token Space 与 Latent Space]]
+- 多通道约束残差：[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
 - 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

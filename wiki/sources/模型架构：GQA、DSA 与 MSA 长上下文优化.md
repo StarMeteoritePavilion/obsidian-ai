@@ -36,6 +36,8 @@ tags:
 
 DeepSeek Sparse Attention（DSA）按 Token 选择；MiniMax Sparse Attention（MSA）先按顺序以 128 Token 分块，使用块内最高分作为块分数，再选择 Top-N 块。选择数可以固定，因此主注意力处理的规模不必随总上下文同比增长。
 
+DeepSeek V4 的 CSA 在 DSA 前增加序列维度压缩：先以四倍压缩率形成压缩 KV，再从其中选择 Top-k；HCA 则以 128 倍压缩率形成较短 KV 并执行 Dense Attention。它们与 GQA 的 Head 共享、DSA 的原始序列筛选和 MSA 的分块评分不是同一机制。（[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性|DeepSeek V4]]）
+
 ## 没有消失的成本
 
 打分注意力仍需处理完整上下文，计算与显存仍随长度增加。资料认为它只负责重要性估计，规模通常比主注意力小几十倍，因此当前成本仍可控；它还可以采用 GQA 继续压缩 KV。这个数量级是来源的架构概括，不构成其他模型的固定资源比例。
@@ -52,6 +54,7 @@ GQA、DSA、MSA 和 MoBA 改变模型在既定窗口内怎样缓存和计算；R
 
 - 多头注意力基础：[[wiki/sources/模型架构：多头注意力与 QKV]]
 - 另一种块级稀疏注意力：[[wiki/sources/模型架构：MoBA 混合块注意力]]
+- 压缩后稀疏选择：[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
 - KV Cache 与推理成本：[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
 - 窗口与 Token：[[wiki/sources/上下文工程：第二期 窗口与 Token]]
 - 上下文工程综合：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]

@@ -42,4 +42,5 @@ GraphRAG 在原始文本切片与向量检索之外，增加实体、关系、�
 - 向量 RAG 基础：[[wiki/sources/上下文工程：RAG 个人知识库基础架构]]
 - 现代 RAG 管道：[[wiki/sources/上下文工程：第四期 RAG 检索增强生成]]
 - GraphRAG 与 Context Rot：[[wiki/sources/上下文工程：第七期 上下文是怎么坏掉的]]
+- RAG、GraphRAG 与长期知识资产层：[[wiki/sources/上下文工程：LLM Wiki 的摄取时编译与知识治理]]
 - 综合：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]

@@ -11,7 +11,7 @@ tags:
 
 # 模型推理：从 Token、Latent 到多模态交错思维
 
-模型推理不能只用“生成下一个 Token”或“在隐藏空间思考”概括。现有资料呈现出三种相互衔接、但不能混为一谈的表示层：离散 Token 是输入输出接口，Latent State 承担模型内部连续计算，ThinkMorph 的 Interleaved CoT 则把部分中间处理显式展开为交替的文本片段和图像片段。表示机制之外还存在独立的测试时计算、执行与服务层：DRAG 和 IterDRAG 分配检索文档、演示与迭代步骤，DSpark 调整草稿怎样生成、验证多少位置以及算力怎样随负载分配，计算硬件资料区分参数搬运、并行计算与卡间通信，API 成本资料则把 Prefill、Decode、KV Cache、Prompt Caching 和 Batch 映射为计费与架构选择。（[[wiki/sources/大语言模型：Token 与两类 Embedding|Token 与两类 Embedding]]、[[wiki/sources/模型原理：Token Space 与 Latent Space|Token Space 与 Latent Space]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]、[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|AI 计算硬件]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本]]）
+模型推理不能只用“生成下一个 Token”或“在隐藏空间思考”概括。现有资料呈现出三种相互衔接、但不能混为一谈的表示层：离散 Token 是输入输出接口，Latent State 承担模型内部连续计算，ThinkMorph 的 Interleaved CoT 则把部分中间处理显式展开为交替的文本片段和图像片段。模型容量也不只有 Dense 与 MoE 两种组织方式：Engram 增加按输入地址选择参数化记忆表项的稀疏轴。表示机制之外还存在独立的测试时计算、执行与服务层：DRAG 和 IterDRAG 分配检索文档、演示与迭代步骤，DSpark 调整草稿怎样生成、验证多少位置以及算力怎样随负载分配，计算硬件资料区分参数搬运、并行计算与卡间通信，API 成本资料则把 Prefill、Decode、KV Cache、Prompt Caching 和 Batch 映射为计费与架构选择。（[[wiki/sources/大语言模型：Token 与两类 Embedding|Token 与两类 Embedding]]、[[wiki/sources/模型原理：Token Space 与 Latent Space|Token Space 与 Latent Space]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/模型架构：Engram 参数化记忆查找|Engram]]、[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]、[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|AI 计算硬件]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本]]）
 
 ## 三层表示的职责
 
@@ -63,11 +63,17 @@ Attention 形成上下文表示后，FFN 负责继续变换每个位置。Dense 
 
 DeepSeekMoE 对比中，145B MoE 有 144.6B 总参数、22.2B 激活参数，每 4K Token FLOPs 为 585.6T；67B Dense 的总参数和激活参数均为 67.4B，对应 2057.5T FLOPs。资料据此概括 MoE 的计算优势，但该表没有直接测量端到端延迟或 API Token 价格，不能用 FLOPs 代替这两项指标。
 
+## Engram 把参数化记忆与动态计算分开
+
+Engram 在 MoE 之外增加 N-gram 查找通道。词表投影先统一大小写与前导空格等表面形式，多尺度 N-gram 再通过多头哈希定位少量 Embedding 表项；上下文门控过滤多义和哈希碰撞噪声，Depthwise Convolution 连接相邻位置，最后通过残差注入主干。它检索的是随模型端到端训练的参数表，不等于 RAG 从外部知识库召回资料。（[[wiki/sources/模型架构：Engram 参数化记忆查找|Engram]]）
+
+MoE 与 Engram 分别提供计算稀疏性和记忆稀疏性。资料中的等预算实验保持 26.7B 总参数与 3.8B 激活参数，把部分路由专家容量换成 5.7B 查表参数；固定预算下的较优区域约为 75%～80% 给 MoE、20%～25% 给 Engram。该比例来自对应模型与任务，不能作为其他领域的固定分配。
+
+Engram 查找地址只依赖输入 Token，使 CPU 能够在 GPU 计算浅层时预取表项。资料所述 100B 参数表放在 CPU 内存、H800 推理 8B 模型的实验中，吞吐下降 2.8%。这说明模型架构可以与内存层级共同设计，但总参数不参与密集计算不代表参数搬运、CPU 内存和 PCIe 成本消失。
+
 ## 交错推理之前的多模态架构
 
 ViT 提供了从像素到视觉特征的基础入口。资料中的 $224\times224$ 彩色图片先被切成 196 个 $16\times16$ 图块，每块展开为 768 个 RGB 数字；局部模型提取图块特征后，Transformer 编码器通过无因果限制的注意力关联全图，输出融合上下文的图块表示。这里的“狗眼睛”“狗尾巴”等名称只是对数字特征的教学类比，不能视为模型内部存在可直接读取的自然语言标签。（[[wiki/sources/多模态模型：ViT 图像分块与编码|ViT 图像分块与编码]]）
-
-DLSS／FSR 资料展示了视觉模型的另一种输入组织方式：系统不只处理一张图片，还利用亚像素抖动得到的历史帧，并以 Motion Vector 对齐移动物体，再加入 Z-buffer、曝光值和 Reactive Mask 等渲染侧信号。单帧视觉编码回答“当前图像包含什么”，时序重建则回答“怎样用多帧与几何信息恢复当前高分辨率画面”；二者都使用数字视觉表示，但任务、输入和输出不同。资料称 DLSS 4 在 2025 年由 CNN 切换为 Vision Transformer，这不等于所有 ViT 都用于游戏超分辨率。（[[wiki/sources/图像重建：DLSS 与 FSR 的时序超分辨率|DLSS 与 FSR]]）
 
 多模态推理首先受输入表示约束。典型系统由视觉编码器、模态接口和预训练语言模型组成；MLP Projection、Q-Former 与 Cross-Attention 分别以直接投影、固定 Query 压缩和按需跨模态注意力连接视觉与语言。资料对超过 120 个模型的汇总中，输入分辨率从 224 提高到 336 的画面结果为提升 11.5%，接口从 MLP 换为 Q-Former 为提升 1.2%。这组特定比较说明视觉细节是否进入模型可能比接口形式更先构成瓶颈，但不能外推为所有任务的架构排名。（[[wiki/sources/多模态模型：架构、数据、推理与检索|多模态技术地图]]）
 
@@ -105,6 +111,8 @@ Token、Latent State 和 Interleaved CoT 回答的是中间信息以什么形式
 
 DSpark 的半自回归和置信度调度说明，模型质量与系统效率也不能分开优化。第一个草稿 Token 更依赖模型容量，后续位置更依赖连贯性；验证范围则取决于草稿通过概率和当前硬件批量。其 60%～85% 单用户生成速度提升来自 DeepSeek-V4 的特定线上条件，不构成其他模型或部署环境的通用收益保证。（[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]）
 
+DeepSeek V4 又把模型内部的长上下文效率拆成压缩与稀疏两条轴。CSA 先压缩 KV 再执行 Top-k 稀疏选择，HCA 则以更高压缩率保留 Dense Attention；两者交错，使精细选择与全局覆盖不必由同一机制承担。mHC、Muon 和 Anticipatory Routing 分别限制残差信号、权重更新和 MoE 路由的异常放大，说明百万上下文可用性同时取决于推理数据流与预训练稳定性。（[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性|DeepSeek V4]]）
+
 ## 从稀疏容量到长程工具调用
 
 Kimi K2 Thinking 把模型容量、每 Token 计算量和部署精度作为三项不同变量。资料所述架构有 1.04T 总参数、32B 激活参数、384 个专家，每个 Token 使用 8 个路由专家与 1 个共享专家；MLA 压缩 Key-Value 状态，MoE 组件再通过 QAT 获得原生 Weight-only INT4。总参数增加不等于每次推理同比增加计算，量化也不等于减少逻辑步骤。（[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练|Kimi K2 Thinking]]）
@@ -137,14 +145,18 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 - [[wiki/sources/模型架构：多头注意力与 QKV]]
 - [[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]
 - [[wiki/sources/模型架构：MoE 稀疏专家路由]]
+- [[wiki/sources/模型架构：Engram 参数化记忆查找]]
 - [[wiki/sources/多模态推理：ThinkMorph 交错思维链]]
 - [[wiki/sources/多模态模型：ViT 图像分块与编码]]
-- [[wiki/sources/图像重建：DLSS 与 FSR 的时序超分辨率]]
 - [[wiki/sources/多模态模型：架构、数据、推理与检索]]
 - [[wiki/sources/多模态推理：视觉原语与 Reference Gap]]
 - [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]]
 - [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
 - [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]
 - [[wiki/sources/模型推理优化：DSpark 投机解码]]
+- [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
 - [[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态]]
 - [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
+- [[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆]]
+- [[wiki/syntheses/深层模型训练稳定性：残差、更新与路由]]
+- [[wiki/syntheses/多模态推理闭环：感知、指代、操作与验证]]

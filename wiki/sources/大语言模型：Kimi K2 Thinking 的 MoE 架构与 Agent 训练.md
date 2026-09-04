@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1sJCnBGESj
 author: 唐国梁Tommy
 published: 2025-11-12
 ingested: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-04
 tags:
   - AI
   - 模型原理
@@ -21,7 +21,9 @@ tags:
 
 ## 核心结论
 
-Kimi K2 Thinking 把 1.04T 总参数、32B 激活参数的 MoE 基础模型，与 Agent SFT、强化学习、原生 INT4 和 Test-Time Scaling 组合为一条完整技术链。模型共有 384 个专家，每个 Token 路由至 8 个专家和 1 个共享专家；采用 160K 词表、MLA 与资料所述 256K 上下文。
+Kimi K2 Thinking 把 1.04T 总参数、32B 激活参数的 MoE 基础模型，与 Agent SFT、强化学习、原生 INT4 和 Test-Time Scaling 组合为一条完整技术链。模型共有 384 个专家，每个 Token 路由至 8 个专家和 1 个共享专家；第 1 个 Transformer Block 使用 Dense FFN，从第 2 个 Block 开始使用 MoE。模型采用 160K 词表、MLA 与资料所述 256K 上下文。
+
+资料还将其与 DeepSeek R1 作结构对照：Kimi K2 Thinking 与 DeepSeek R1 的注意力头数分别为 64 与 128，MoE 专家数分别为 384 与 256，激活参数分别为 32B 与 37B；非 MoE 层分别为第 1 个 Block 与前 3 个 Block。这些数字对应资料采用的具体模型版本，不构成所有版本的固定差异。
 
 ## 预训练与数据效率
 

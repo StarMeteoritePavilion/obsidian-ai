@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1iXuH6UEd5
 author: 唐国梁Tommy
 published: 2026-08-06
 ingested: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-04
 tags:
   - AI
   - 模型工程
@@ -43,7 +43,7 @@ Partial Rollout 在一批轨迹完成到设定比例后先启动策略优化，�
 
 该资料补全了 Agent RL 轨迹优化的环境层：奖励、Rollout 和算法之外，训练系统还必须管理外部状态的隔离、暂停、恢复与复制。它也把 Agent Harness 中抽象的“执行环境和恢复”落到 microVM、快照和存储机制上。
 
-AgentENV 自身不构成长期 Loop。Partial Rollout 决定训练迭代何时暂停和恢复，AgentENV 提供可恢复的环境状态；只有调度、验证、状态写回和停止条件共同存在，才形成完整闭环。
+AgentENV 自身不构成长期 Loop。Partial Rollout 决定训练迭代何时暂停和恢复，AgentENV 提供可恢复的环境状态；只有调度、验证、状态写回和停止条件共同存在，才形成完整闭环。Kimi K3 的后训练与评估还使用传统容器运行时和 GPU 沙箱运行时，AgentENV 是其中面向 Agent 工作负载、以 microVM 提供高保真隔离和灵活生命周期的一类环境。
 
 ## 关联
 
