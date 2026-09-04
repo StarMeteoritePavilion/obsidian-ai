@@ -11,7 +11,7 @@ tags:
 
 # 模型推理：从 Token、Latent 到多模态交错思维
 
-模型推理不能只用“生成下一个 Token”或“在隐藏空间思考”概括。现有资料呈现出三种相互衔接、但不能混为一谈的表示层：离散 Token 是输入输出接口，Latent State 承担模型内部连续计算，ThinkMorph 的 Interleaved CoT 则把部分中间处理显式展开为交替的文本片段和图像片段。表示机制之外还存在独立的测试时计算、执行与服务层：DRAG 和 IterDRAG 分配检索文档、演示与迭代步骤，DSpark 调整草稿怎样生成、验证多少位置以及算力怎样随负载分配，API 成本资料则把 Prefill、Decode、KV Cache、Prompt Caching 和 Batch 映射为计费与架构选择。（[[wiki/sources/模型原理：Token Space 与 Latent Space|Token Space 与 Latent Space]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本]]）
+模型推理不能只用“生成下一个 Token”或“在隐藏空间思考”概括。现有资料呈现出三种相互衔接、但不能混为一谈的表示层：离散 Token 是输入输出接口，Latent State 承担模型内部连续计算，ThinkMorph 的 Interleaved CoT 则把部分中间处理显式展开为交替的文本片段和图像片段。表示机制之外还存在独立的测试时计算、执行与服务层：DRAG 和 IterDRAG 分配检索文档、演示与迭代步骤，DSpark 调整草稿怎样生成、验证多少位置以及算力怎样随负载分配，计算硬件资料区分参数搬运、并行计算与卡间通信，API 成本资料则把 Prefill、Decode、KV Cache、Prompt Caching 和 Batch 映射为计费与架构选择。（[[wiki/sources/大语言模型：Token 与两类 Embedding|Token 与两类 Embedding]]、[[wiki/sources/模型原理：Token Space 与 Latent Space|Token Space 与 Latent Space]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]、[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|AI 计算硬件]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本]]）
 
 ## 三层表示的职责
 
@@ -23,6 +23,12 @@ tags:
 
 三层不是互斥架构。文本和图像输入仍会被编码为离散或连续表示，模型内部仍需 Latent 计算；ThinkMorph 的不同之处，是把部分推理过程外化为文本思考、图像操作和后续文本验证，而不是把全部中间过程隐藏在 Latent State 中。
 
+## Token ID、Token Embedding 与 RAG Embedding
+
+Tokenizer 把文字切分并映射为固定词表中的 Token ID；Token Embedding 再把离散编号映射为连续向量，并随大语言模型共同训练。前者是训练期间固定的预处理，后者是模型参数。One-Hot 乘以线性映射与直接查 Embedding 表在数学关系上相通，但工程实现不必显式构造完整 One-Hot 向量。（[[wiki/sources/大语言模型：Token 与两类 Embedding|Token 与两类 Embedding]]）
+
+RAG Embedding 面向整段文本，训练目标是让相关文本靠近、无关文本远离，通常还需要 Pooling 汇总多个位置。它与大语言模型内部表示都属于连续向量，却不能因此直接等同：Token Embedding 服务于模型输入，下一个 Token 预测塑造生成模型；RAG Embedding 服务于语义检索，对比学习塑造文本距离。任意 LLM Hidden State 也不能未经单独训练和处理就视为可用的检索向量。（[[wiki/sources/大语言模型：Token 与两类 Embedding|Token 与两类 Embedding]]、[[wiki/sources/上下文工程：RAG 个人知识库基础架构|RAG 个人知识库]]）
+
 ## Transformer 的三种基础路线
 
 原始 Transformer 用 Encoder—Decoder 结构完成序列到序列转换：Encoder 处理完整输入并形成内部表示，Decoder 结合该表示和已经生成的目标 Token 继续自回归输出。GPT 路线保留适合下一个 Token 预测的 Decoder 主体，形成 Decoder-only 架构；BERT 路线使用 Encoder-only 架构，通过恢复 `[MASK]` 等目标学习双向文本表示。（[[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支|Transformer 架构导论]]）
@@ -32,6 +38,10 @@ tags:
 ## Linear、Activation 与 MLP 提供基础变换
 
 Linear 通过 $y=Wx+b$ 把一个向量映射为另一个向量，Weight 与 Bias 由训练数据确定。多个 Linear 直接复合仍然是线性函数；ReLU、Sigmoid、tanh 和 GELU 等 Activation 在层间引入非线性，使 FFN／MLP 能够拟合更复杂的关系。Transformer 的 Feed Forward 模块建立在这类结构上。（[[wiki/sources/模型架构：Linear、Activation 与 MLP|Linear、Activation 与 MLP]]）
+
+参数并不是从目标公式中直接读取。线性回归教学示例先用平方误差衡量预测与训练目标的差距，再根据损失对 $w$、$b$ 的梯度确定更新方向，由 Learning Rate 控制步长；多个样本的平方误差取平均后形成 MSE，Batch Size 决定一轮使用的样本数。该示例说明参数怎样更新，不表示所有模型都使用同一损失函数、批量或学习率。（[[wiki/sources/模型训练：梯度下降与均方误差|梯度下降与均方误差]]）
+
+PyTorch 手写数字训练实例把抽象更新过程映射为工程链路：Dataset 在返回单个样本时执行 `transform`，DataLoader 组成批次，模型产生 Logits，CrossEntropyLoss 计算分类损失，`backward()` 求梯度，Optimizer 清空梯度并更新参数，`state_dict()` 则负责保存和恢复权重。示例使用训练集样本展示预测，只能证明对应样本的结果；模型泛化仍需测试集验证。（[[wiki/sources/模型训练：PyTorch 手写数字识别实战|PyTorch 训练实战]]）
 
 GPT-2 XL 的输出 Linear 将 1600 维内部表示映射为 50257 个 Token 的匹配分数。视频演示的三层 MLP 则采用 `1→128→256→1`，包含 33537 个可训练参数，以 2000 条数据拟合非线性曲线。这些实例说明同一基础模块可以承担不同映射职责，不表示模型参数能够逐项翻译为人类概念。
 
@@ -54,6 +64,10 @@ Attention 形成上下文表示后，FFN 负责继续变换每个位置。Dense 
 DeepSeekMoE 对比中，145B MoE 有 144.6B 总参数、22.2B 激活参数，每 4K Token FLOPs 为 585.6T；67B Dense 的总参数和激活参数均为 67.4B，对应 2057.5T FLOPs。资料据此概括 MoE 的计算优势，但该表没有直接测量端到端延迟或 API Token 价格，不能用 FLOPs 代替这两项指标。
 
 ## 交错推理之前的多模态架构
+
+ViT 提供了从像素到视觉特征的基础入口。资料中的 $224\times224$ 彩色图片先被切成 196 个 $16\times16$ 图块，每块展开为 768 个 RGB 数字；局部模型提取图块特征后，Transformer 编码器通过无因果限制的注意力关联全图，输出融合上下文的图块表示。这里的“狗眼睛”“狗尾巴”等名称只是对数字特征的教学类比，不能视为模型内部存在可直接读取的自然语言标签。（[[wiki/sources/多模态模型：ViT 图像分块与编码|ViT 图像分块与编码]]）
+
+DLSS／FSR 资料展示了视觉模型的另一种输入组织方式：系统不只处理一张图片，还利用亚像素抖动得到的历史帧，并以 Motion Vector 对齐移动物体，再加入 Z-buffer、曝光值和 Reactive Mask 等渲染侧信号。单帧视觉编码回答“当前图像包含什么”，时序重建则回答“怎样用多帧与几何信息恢复当前高分辨率画面”；二者都使用数字视觉表示，但任务、输入和输出不同。资料称 DLSS 4 在 2025 年由 CNN 切换为 Vision Transformer，这不等于所有 ViT 都用于游戏超分辨率。（[[wiki/sources/图像重建：DLSS 与 FSR 的时序超分辨率|DLSS 与 FSR]]）
 
 多模态推理首先受输入表示约束。典型系统由视觉编码器、模态接口和预训练语言模型组成；MLP Projection、Q-Former 与 Cross-Attention 分别以直接投影、固定 Query 压缩和按需跨模态注意力连接视觉与语言。资料对超过 120 个模型的汇总中，输入分辨率从 224 提高到 336 的画面结果为提升 11.5%，接口从 MLP 换为 Q-Former 为提升 1.2%。这组特定比较说明视觉细节是否进入模型可能比接口形式更先构成瓶颈，但不能外推为所有任务的架构排名。（[[wiki/sources/多模态模型：架构、数据、推理与检索|多模态技术地图]]）
 
@@ -101,6 +115,10 @@ Kimi K2 Thinking 的 Test-Time Scaling 又增加了第四项变量：推理时�
 
 ## 从推理阶段到 API 成本
 
+模型的计算量只有映射到实际硬件数据流后，才会变成吞吐与延迟。CPU 可以执行模型所需运算，但单请求自回归生成可能先受参数读取带宽限制；HBM 提高带宽，批量请求复用参数后，瓶颈又会移向并行计算核心。模型超过单卡显存时，推理主要沿模型分片传递中间激活；大规模训练还需跨并行组同步与参数同量级的梯度，因此需要 NVLink、Infinity Fabric 等高速互联。峰值 FLOPs、显存容量、内存带宽和互联带宽回答的是不同问题，不能互相替代。（[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|AI 计算硬件]]）
+
+硬件执行还受到软件栈约束。PyTorch 经 cuBLAS、cuDNN 等中间层调用 CUDA 内核，长期算法适配把硬件优势放大为生态优势；ROCm 尝试兼容既有路径，TPU／OpenXLA 则另建计算、互联和软件体系。这些路线说明，推理优化不仅是模型算法问题，也受算子覆盖、框架集成、部署工具和迁移成本影响。
+
 Prefill 与 Decode 的计算形态解释了输入和输出 Token 为什么常被区别定价。Prefill 面对完整输入，可以较为并行地建立中间状态；Decode 按自回归顺序逐 Token 生成，每一步都需要新的计算和调度。Reasoning Token、图像 Token 和音频 Token 则把用户不可见的内部生成或非文本输入继续折算为计量单位。（[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本专题]]）
 
 KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保存当前请求已经计算的 Key 与 Value，用显存换取历史状态复用；Prompt Caching 识别跨请求重复的稳定前缀，把重复上下文变成低成本输入；Batch 允许延后请求并合并调度，用等待时间换取 GPU 利用率。三者不能互相替代，也不能只用“减少 Token 数”概括。
@@ -110,17 +128,23 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 ## 资料链
 
 - [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
+- [[wiki/sources/大语言模型：Token 与两类 Embedding]]
 - [[wiki/sources/模型原理：Token Space 与 Latent Space]]
 - [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]]
 - [[wiki/sources/模型架构：Linear、Activation 与 MLP]]
+- [[wiki/sources/模型训练：梯度下降与均方误差]]
+- [[wiki/sources/模型训练：PyTorch 手写数字识别实战]]
 - [[wiki/sources/模型架构：多头注意力与 QKV]]
 - [[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]
 - [[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - [[wiki/sources/多模态推理：ThinkMorph 交错思维链]]
+- [[wiki/sources/多模态模型：ViT 图像分块与编码]]
+- [[wiki/sources/图像重建：DLSS 与 FSR 的时序超分辨率]]
 - [[wiki/sources/多模态模型：架构、数据、推理与检索]]
 - [[wiki/sources/多模态推理：视觉原语与 Reference Gap]]
 - [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]]
 - [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
 - [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]
 - [[wiki/sources/模型推理优化：DSpark 投机解码]]
+- [[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态]]
 - [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]

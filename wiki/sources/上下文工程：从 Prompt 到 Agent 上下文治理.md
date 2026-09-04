@@ -29,6 +29,8 @@ Prompt Engineering 管理当前要求怎样表达，Context Engineering 管理�
 - 在资料采用的无持久状态请求模型中，Agent 或聊天服务器保存历史，并在新请求中把历史重新交给模型。
 - 工具型 Agent 还会把工具说明、Tool Call 与 Tool Response 加入上下文；自主步骤越多，中间信息越容易压过原始目标。
 
+Pydantic AI 的最小示例给出了这项职责的代码级证据：默认连续调用 `run_sync()` 时，后一次调用看不到前一次读取过的文件；应用保存 `resp.all_messages()` 并通过 `message_history` 回传后，模型才能复用此前的工具结果。这里的“记忆”属于上下文重建，不是模型自动形成的持久状态。（[[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史|Pydantic AI 实践]]）
+
 ## 五类治理方法
 
 1. 用笔记保存任务清单、完成状态和关键事实，并把笔记放在上下文的显眼位置。
@@ -45,7 +47,9 @@ Prompt Engineering 管理当前要求怎样表达，Context Engineering 管理�
 
 ## 关联
 
+- Prompt、Context 与 Harness 边界：[[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界]]
 - Agent 与工具接口：[[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP]]
+- 工具调用与消息历史实践：[[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史]]
 - 提示词工程：[[wiki/syntheses/提示词工程：从单轮指令到生产规范]]
 - 上下文工程：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
 - RAG 外移基础：[[wiki/sources/上下文工程：RAG 个人知识库基础架构]]

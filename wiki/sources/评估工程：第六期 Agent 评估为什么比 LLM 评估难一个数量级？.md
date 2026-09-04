@@ -67,6 +67,7 @@ Code-based 评分器适合确定性的编程结果，Model-based 评分器适合
 
 ## 关联
 
+- 压力与诱惑下的 Agent 安全评估：[[wiki/sources/Agent 安全评估：AutoControl Arena 与对齐幻觉]]
 - 上一期：[[wiki/sources/评估工程：第五期 能跑的评估和能放心用的评估，差在哪一层？]]
 - 下一期：[[wiki/sources/评估工程：第七期 从事后评估到生产护栏，差的是挡住还是知道？]]
 - 跨资料综合：[[wiki/syntheses/评估工程：从通用基准到业务质量门]]

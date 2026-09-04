@@ -44,6 +44,7 @@ tags:
 
 ## 关联
 
+- Token Embedding 与 RAG Embedding 的边界：[[wiki/sources/大语言模型：Token 与两类 Embedding]]
 - 现代 RAG 管道：[[wiki/sources/上下文工程：第四期 RAG 检索增强生成]]
 - 全局结构补充：[[wiki/sources/上下文工程：GraphRAG 从知识图谱到分层检索]]
 - 推理扩展：[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]

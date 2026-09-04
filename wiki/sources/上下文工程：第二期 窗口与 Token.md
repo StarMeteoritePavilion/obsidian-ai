@@ -30,6 +30,7 @@ tags:
 
 ## 关联
 
+- GQA、DSA 与 MSA：[[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]]
 - 系列综述：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
 - 上一篇：[[wiki/sources/上下文工程：第一期 从 Prompt 到 Context]]
 - 下一篇：[[wiki/sources/上下文工程：第三期 原则、策略、评估]]

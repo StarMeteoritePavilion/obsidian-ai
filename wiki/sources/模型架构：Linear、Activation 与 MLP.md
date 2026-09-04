@@ -39,6 +39,8 @@ Linear 用可训练的权重和偏置完成向量间的线性映射；多个 Lin
 官方“从0开始一起学大模型”合集将本文列为第二条，上一条为《Transformer如何成为AI模型的地基》。视频明确承接其宏观架构介绍，但没有使用“第二期”标识，因此本库记录合集顺序，不另行命名期数。
 
 - 系列导论：[[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
+- PyTorch 实践续篇：[[wiki/sources/模型架构：PyTorch 手写数字识别]]
+- 参数训练机制：[[wiki/sources/模型训练：梯度下降与均方误差]]
 - Attention 与上下文表示：[[wiki/sources/模型架构：多头注意力与 QKV]]
 - FFN 的稀疏专家化：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - 残差通道与层间聚合：[[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]

@@ -39,6 +39,7 @@ $$
 
 ## 关联
 
+- 长上下文中的 GQA、DSA 与 MSA：[[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]]
 - 稀疏块注意力：[[wiki/sources/模型架构：MoBA 混合块注意力]]
 - Attention 之后的稀疏 FFN：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - Attention 用于层间聚合：[[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]

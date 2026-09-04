@@ -13,15 +13,16 @@ tags:
 
 Agent Harness 是模型输出与真实执行之间的工程外壳。它决定模型看到什么、可以调用什么、怎样跨步骤传递状态、哪些行为被拦截，以及结果如何记录和验证。模型提供推理能力，Harness 把能力约束为可执行、可恢复、可审计的系统行为。（[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness|HarnessX 专题]]）
 
-## 三种来源口径
+## 四种来源口径
 
-本库资料对 Harness 的范围采用三种相关但不完全相同的表述：
+本库资料对 Harness 的范围采用四种相关但不完全相同的表述：
 
-1. 循环工程将 Harness 定义为包住 Prompt、Context 与 Loop 的共同外壳，横切工具、权限、安全、隔离和恢复。（[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程综合]]）
-2. 驾驭工程收尾篇采用更宽的作者定义，把模型之外的治理、优化和编排全部归入 Harness Engineering，并明确该术语没有统一定义。（[[wiki/sources/驾驭工程：系列完结，下一步该往哪走？|驾驭工程收尾篇]]）
-3. HarnessX 把范围落实为可序列化的一等运行时对象：模型配置与九维行为配置通过 Processor 和固定生命周期挂载点组成可执行 Agent，并可以接受自动进化。（[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness|HarnessX 专题]]）
+1. Prompt、Context 与 Harness 对照资料采用较窄的教学口径：Prompt 解决“怎么问”，Context 解决“怎么记”，Harness 通过预设工作流、权限和质量检查解决“怎么管”。（[[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界|三者边界专题]]）
+2. 循环工程将 Harness 定义为包住 Prompt、Context 与 Loop 的共同外壳，横切工具、权限、安全、隔离和恢复。（[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程综合]]）
+3. 驾驭工程收尾篇采用更宽的作者定义，把模型之外的治理、优化和编排全部归入 Harness Engineering，并明确该术语没有统一定义。（[[wiki/sources/驾驭工程：系列完结，下一步该往哪走？|驾驭工程收尾篇]]）
+4. HarnessX 把范围落实为可序列化的一等运行时对象：模型配置与九维行为配置通过 Processor 和固定生命周期挂载点组成可执行 Agent，并可以接受自动进化。（[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness|HarnessX 专题]]）
 
-这些口径不是互相覆盖的标准答案。第一种描述架构位置，第二种描述宽泛工程领域，第三种定义一套具体可进化实现。
+这些口径不是互相覆盖的标准答案。第一种用于区分三个职责，第二种描述架构位置，第三种描述宽泛工程领域，第四种定义一套具体可进化实现。
 
 ## Harness 的工程职责
 
@@ -41,6 +42,8 @@ Agent Harness 是模型输出与真实执行之间的工程外壳。它决定模
 最小 Agent 链路包含两个不同接口。Agent 通过 System Prompt 中的格式约定或 Function Calling 向模型声明工具，模型返回调用请求；Agent 再直接执行本地函数，或作为 MCP Client 调用 MCP Server 暴露的 Tool。工具结果由 Agent 交回模型，模型据此继续判断或生成最终回复。（[[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP|AI Agent 基础]]）
 
 Function Calling 解决模型与 Agent 之间的结构化调用，MCP 解决 Agent 与外部服务之间的连接。MCP 还可以暴露 Resource 与 Prompt，并不绑定具体模型。这些接口构成 Harness 的行动层，但不会自动提供权限、安全、验证、持久状态、停止或恢复机制。（[[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP|AI Agent 基础]]）
+
+Pydantic AI 的最小文件管理示例展示了静态 Harness 的最小闭环：`tools` 暴露 `read_file`、`list_files` 与 `rename_file`，`run_sync()` 组织模型和工具调用，应用再保存 `resp.all_messages()` 并通过 `message_history` 重建后续上下文。工具注册没有自动产生跨调用记忆；消息历史也没有提供持久化、权限、验证或恢复。这两部分分别属于行动接口与信息治理，不能合并为一个模糊的“Agent 会记住并执行”。（[[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史|Pydantic AI 实践]]）
 
 ## 检查器是最小的行动模型
 
@@ -74,6 +77,12 @@ RLM Harness 证明，Context Offloading 和 Programmatic Subcalls 可以让长�
 
 三条路线共同说明，Agent 的学习对象可以从孤立模型扩展到“模型＋外部执行结构”。但 Harness 只能补充信息组织、工具和行为约束，无法无限弥补模型缺失的推理能力；反过来，模型变强也不能自动修复坏工具、错误权限和不可靠验证器。
 
+## 工程收益需要与模型升级比较
+
+Prompt、Context 与 Harness 对照资料记录了一次作者经验：一套使用多种工程技巧、实际效果不错的 AI 系统，被某个未发布模型在没有这些技巧时直接超过。资料没有公开模型、任务、评测方法和具体差距，因此不能据此认定 Harness 必然失效；它只说明工程投资应持续与更强基础模型的直接结果比较。（[[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界|三者边界专题]]）
+
+作者以“小马、马鞍与汽车”表达模型跨代升级可能淘汰局部技巧的判断，并用 The Bitter Lesson 指代这一现象。该资料没有展开概念定义，知识库只保留来源观点，不补写外部解释。即使模型提升减少提示或编排需求，权限、真实执行、审计和独立验证仍属于系统边界，不能仅凭这则未公开案例判定其价值消失。
+
 ## 采用边界
 
 可进化 Harness 至少需要版本化配置、完整轨迹、可验证任务、确定性回退和独立回归集。缺少这些条件时，自动修改外壳会把不可观测的手工配置变成不可观测的自动配置，风险反而更大。
@@ -82,6 +91,7 @@ HarnessX 的结果没有使用独立留出测试集，只覆盖离散文本动�
 
 ## 资料链
 
+- [[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界]]
 - [[wiki/sources/驾驭工程：系列完结，下一步该往哪走？]]
 - [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]]
 - [[wiki/sources/大模型后训练：RLM Harness 组合泛化]]
@@ -89,5 +99,6 @@ HarnessX 的结果没有使用独立留出测试集，只覆盖离散文本动�
 - [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]]
 - [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]]
 - [[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP]]
+- [[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史]]
 - [[wiki/syntheses/循环工程：从逐轮操作到外部调度]]
 - [[wiki/syntheses/评估工程：从通用基准到业务质量门]]

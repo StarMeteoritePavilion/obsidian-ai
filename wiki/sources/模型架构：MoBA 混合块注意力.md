@@ -43,6 +43,7 @@ MoBA 保留 Transformer，通过块级稀疏路由减少参与注意力的 KV；
 
 ## 关联
 
+- GQA 与 Token／块级稀疏筛选：[[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]]
 - 线性 RNN 的可增长记忆：[[wiki/sources/长序列建模：Memory Caching]]
 - 窗口、Attention 与 KV Cache：[[wiki/sources/上下文工程：第二期 窗口与 Token]]
 - 应用层上下文治理：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]

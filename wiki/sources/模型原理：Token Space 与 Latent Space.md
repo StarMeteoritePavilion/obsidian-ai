@@ -42,6 +42,7 @@ CoT 把推理写成可见 Token，便于监督和审计，但会增加生成成�
 
 ## 关联
 
+- Tokenizer 与两类 Embedding：[[wiki/sources/大语言模型：Token 与两类 Embedding]]
 - 推理表示综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
 - 多模态交错推理：[[wiki/sources/多模态推理：ThinkMorph 交错思维链]]
 - Token、窗口和 KV Cache：[[wiki/sources/上下文工程：第二期 窗口与 Token]]

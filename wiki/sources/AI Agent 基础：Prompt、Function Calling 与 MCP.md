@@ -38,6 +38,8 @@ Prompt、Agent、Function Calling 与 MCP 属于不同层级：User Prompt 承�
 - MCP 不直接规定模型推理方式，也不绑定具体模型；它连接 MCP Client 与 MCP Server，并暴露 Tool、Resource 和 Prompt。
 - 资料关于厂商 API 不统一和开源模型支持情况的判断对应 2025 年 5 月，接入具体模型前需要重新核对当前官方文档。
 
+配套实践资料进一步把这条概念链落到 Pydantic AI：本地函数经 `tools` 注册，模型提出调用请求，Agent 负责执行；多次 `run_sync()` 不会自动共享上一轮内容，应用必须保存并通过 `message_history` 回传消息记录。这说明“有工具”和“有跨调用上下文”是两个独立配置。（[[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史|Pydantic AI 实践]]）
+
 ## 关联
 
 - 提示词工程：[[wiki/syntheses/提示词工程：从单轮指令到生产规范]]
@@ -46,3 +48,4 @@ Prompt、Agent、Function Calling 与 MCP 属于不同层级：User Prompt 承�
 - 循环工程：[[wiki/syntheses/循环工程：从逐轮操作到外部调度]]
 - Agent Harness：[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]
 - AI Agent 框架：[[wiki/sources/AI Agent 框架选型：十大框架与五大范式]]
+- Pydantic AI 实践：[[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史]]

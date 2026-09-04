@@ -39,6 +39,7 @@ Prompt Caching 把可复用的稳定前缀转成低成本输入。资料称缓�
 
 ## 关联
 
+- GQA 与 Sparse Attention 的长上下文优化：[[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]]
 - Token 与内部表示：[[wiki/sources/模型原理：Token Space 与 Latent Space]]
 - 推理执行优化：[[wiki/sources/模型推理优化：DSpark 投机解码]]
 - 上下文治理：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
