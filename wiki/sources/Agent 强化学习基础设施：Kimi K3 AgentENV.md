@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1iXuH6UEd5
 author: 唐国梁Tommy
 published: 2026-08-06
 ingested: 2026-09-03
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 计算基础设施
   - AI
   - 模型工程
   - 训练基础设施
@@ -17,7 +18,7 @@ tags:
 
 # Agent 强化学习基础设施：Kimi K3 AgentENV
 
-原始资料：[[raw/sources/模型工程/训练与后训练/让AI学会“存档”！Kimi K3的5122万个Agent沙箱揭秘：Agent强化学习基础设施到底有多复杂？|让 AI 学会“存档”：Kimi K3 AgentENV]]
+原始资料：[[raw/sources/模型工程/计算基础设施/让AI学会“存档”！Kimi K3的5122万个Agent沙箱揭秘：Agent强化学习基础设施到底有多复杂？|让 AI 学会“存档”：Kimi K3 AgentENV]]
 
 ## 核心结论
 

@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1oNv8BPE2m
 author: 隔壁的程序员老王
 published: 2026-01-08
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 基础原理
   - AI
   - 模型原理
   - 大语言模型
@@ -17,7 +18,7 @@ tags:
 
 # 大语言模型：Token 与两类 Embedding
 
-原始资料：[[raw/sources/模型原理/大语言模型/15分钟弄懂Token和Embedding -- 详解LLM与RAG的数据处理机制|15分钟弄懂Token和Embedding -- 详解LLM与RAG的数据处理机制]]
+原始资料：[[raw/sources/模型原理/基础原理/15分钟弄懂Token和Embedding -- 详解LLM与RAG的数据处理机制|15分钟弄懂Token和Embedding -- 详解LLM与RAG的数据处理机制]]
 
 ## 核心结论
 

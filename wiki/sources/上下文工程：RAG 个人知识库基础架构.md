@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV19RJhzyEWN
 author: 隔壁的程序员老王
 published: 2025-05-22
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 上下文与知识工程
   - AI
   - RAG
   - 上下文工程
@@ -15,7 +16,7 @@ tags:
 
 # 上下文工程：RAG 个人知识库基础架构
 
-原始资料：[[raw/sources/应用工程/上下文工程/这就是RAG 一看就懂的个人知识库架构|这就是RAG 一看就懂的个人知识库架构]]
+原始资料：[[raw/sources/应用工程/上下文与知识工程/这就是RAG 一看就懂的个人知识库架构|这就是RAG 一看就懂的个人知识库架构]]
 
 ## 核心结论
 

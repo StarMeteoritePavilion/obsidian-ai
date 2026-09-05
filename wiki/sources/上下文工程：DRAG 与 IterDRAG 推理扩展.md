@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1gFBtYwEMG
 author: 唐国梁Tommy
 published: 2024-11-24
 ingested: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-05
 tags:
+  - 上下文与知识工程
   - AI
   - 应用工程
   - 上下文工程
@@ -16,7 +17,7 @@ tags:
 
 # 上下文工程：DRAG 与 IterDRAG 推理扩展
 
-原始资料：[[raw/sources/应用工程/上下文工程/Google发表最新推理Scaling研究，从DRAG到IterDRAG，大模型RAG性能更上一层楼|Google发表最新推理 Scaling 研究]]
+原始资料：[[raw/sources/应用工程/上下文与知识工程/Google发表最新推理Scaling研究，从DRAG到IterDRAG，大模型RAG性能更上一层楼|Google发表最新推理 Scaling 研究]]
 
 ## 核心结论
 

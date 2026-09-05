@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1SFCqBFEfC
 author: 唐国梁Tommy
 published: 2025-11-17
 ingested: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-05
 tags:
+  - 视觉与多模态
   - AI
   - 模型原理
   - 多模态模型
@@ -16,7 +17,7 @@ tags:
 
 # 多模态推理：ThinkMorph 交错思维链
 
-原始资料：[[raw/sources/模型原理/多模态模型/ThinkMorph：多模态交错思维链的三种涌现能力|ThinkMorph：多模态交错思维链的三种涌现能力]]
+原始资料：[[raw/sources/模型原理/视觉与多模态/ThinkMorph：多模态交错思维链的三种涌现能力|ThinkMorph：多模态交错思维链的三种涌现能力]]
 
 ## 核心结论
 

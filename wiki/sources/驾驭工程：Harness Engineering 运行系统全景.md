@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1VBX9BrEon
 author: 唐国梁Tommy
 published: 2026-03-29
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
   - AI
   - Agent
@@ -20,7 +20,7 @@ tags:
 
 ## 核心结论
 
-资料把 Harness Engineering 定义为模型外部运行系统的设计：它不只决定模型看到什么，还管理任务拆解、工具、权限、状态、验证、恢复、日志和人类接管。按照本资料的包含口径，Harness 包含 Context，Context 包含 Prompt；三者分别回答“怎样表达”“让模型看到什么”和“让模型在什么机制中工作并确保完成”。
+资料把 Harness Engineering 定义为模型外部运行系统的设计：它不只决定模型看到什么，还管理任务拆解、工具、权限、状态、验证、恢复、日志和人类接管。按照本资料的包含口径，Harness 包含 Context，Context 包含 Prompt；三者分别回答“怎样表达”“让模型看到什么”和“让模型在什么机制中工作并确保完成”。资料用每步成功率 95%、连续 20 步约 36% 说明多步任务会累积局部失败；这是同等条件下单步成功率连续相乘的简化假设示例（`0.95^20 ≈ 36%`），不是实测系统可靠性。
 
 Harness 的价值不等于堆叠更多组件。Vercel 移除 80% 工具后反而减少步骤和 Token 并提高成功率；Anthropic 针对 Sonnet 4.5 设置的上下文重置，在 Opus 4.5 消除对应行为后失去必要性。资料据此强调，Harness 应当约束 Agent 的解空间，同时保持可删减、可替换并匹配当前模型能力。
 

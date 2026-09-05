@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1BCZBBSEJj
 author: 唐国梁Tommy
 published: 2026-02-20
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 模型专题
   - AI
   - 模型原理
   - 大语言模型
@@ -18,7 +19,7 @@ tags:
 
 # 大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示
 
-原始资料：[[raw/sources/模型原理/大语言模型/Qwen 3.5 为何爆火？ 从架构到应用：MoE、混合注意力、Agent 工作流一次讲透|Qwen 3.5 为何爆火？]]
+原始资料：[[raw/sources/模型原理/模型专题/Qwen 3.5 为何爆火？ 从架构到应用：MoE、混合注意力、Agent 工作流一次讲透|Qwen 3.5 为何爆火？]]
 
 ## 核心结论
 
@@ -44,10 +45,11 @@ API 演示通过阿里云百炼创建密钥，在 VS Code 的 Cline 中选择 `O
 
 ## 定位与关联
 
-官方标题、开场和结尾均没有期数标识；视频为单 P，分 P 名称“1应用演示”只描述内容，不构成系列期数。因此本文定位为模型原理／大语言模型独立专题。
+官方标题、开场和结尾均没有期数标识；视频为单 P，分 P 名称“1应用演示”只描述内容，不构成系列期数。本文横跨架构、训练与应用，因此归入模型原理／模型专题。
 
 - MoE 机制：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - 长上下文注意力：[[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]]
+- 混合注意力与压缩／稀疏路线对照：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维#表示机制、RAG 推理扩展与执行优化是三条轴]]、[[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆#先压缩再筛选]]
 - Kimi K2 Thinking 的 MoE 与 Agent 训练：[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
 - 模型之外的执行外壳：[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]
 - 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

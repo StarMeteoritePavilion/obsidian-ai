@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1TFG56XERd
 author: 隔壁的程序员老王
 published: 2026-05-28
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 视觉与多模态
   - AI
   - 模型原理
   - 多模态模型
@@ -16,7 +17,7 @@ tags:
 
 # 多模态模型：ViT 图像分块与编码
 
-原始资料：[[raw/sources/模型原理/多模态模型/大模型如何看懂图片 ViT Vision Transformer|大模型如何看懂图片 ViT Vision Transformer]]
+原始资料：[[raw/sources/模型原理/视觉与多模态/大模型如何看懂图片 ViT Vision Transformer|大模型如何看懂图片 ViT Vision Transformer]]
 
 ## 核心结论
 
@@ -37,7 +38,7 @@ Vision Transformer（ViT）先把图片切成固定大小的图块，把每块�
 ## 证据边界与定位
 
 - MNIST 与 CIFAR 的“90% 以上”是资料用于说明小图像识别难度的概括，没有给出模型、数据划分和评测设置，不能作为跨模型基准。
-- 官方“AI技术”合集范围涵盖 Agent、RAG、提示词、模型原理和硬件等多个主题；本视频没有期数标识，内容完整解释 ViT 基础链路，因此定位为模型原理／多模态模型下的独立专题，不编排期数。
+- 官方“AI技术”合集范围涵盖 Agent、RAG、提示词、模型原理和硬件等多个主题；本视频没有期数标识，内容完整解释 ViT 基础链路，因此定位为模型原理／视觉与多模态下的独立专题，不编排期数。
 
 ## 关联
 

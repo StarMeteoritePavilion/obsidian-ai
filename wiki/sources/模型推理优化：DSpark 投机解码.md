@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV14fTc6TEj7
 author: 唐国梁Tommy
 published: 2026-06-30
 ingested: 2026-09-03
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 推理与服务
   - AI
   - 模型工程
   - 推理优化
@@ -16,7 +17,7 @@ tags:
 
 # 模型推理优化：DSpark 投机解码
 
-原始资料：[[raw/sources/模型工程/推理优化/硬核解读 DeepSeek DSpark： 大模型推理快 60%-85%，投机解码的新天花板|硬核解读 DeepSeek DSpark：大模型推理快 60%-85%]]
+原始资料：[[raw/sources/模型工程/推理与服务/硬核解读 DeepSeek DSpark： 大模型推理快 60%-85%，投机解码的新天花板|硬核解读 DeepSeek DSpark：大模型推理快 60%-85%]]
 
 ## 核心结论
 

@@ -4,8 +4,10 @@ source: https://www.bilibili.com/video/BV1ypUkB7Eki
 author: 隔壁的程序员老王
 published: 2025-11-27
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 基础原理
+  - 模型原理
   - AI
   - 模型架构
   - PyTorch
@@ -15,7 +17,7 @@ tags:
 
 # 模型架构：PyTorch 手写数字识别
 
-原始资料：[[raw/sources/模型原理/模型架构/从零搭建神经网络，识别手写数字【PyTorch】【Transformer结构拆解】|从零搭建神经网络，识别手写数字【PyTorch】【Transformer结构拆解】]]
+原始资料：[[raw/sources/模型原理/基础原理/从零搭建神经网络，识别手写数字【PyTorch】【Transformer结构拆解】|从零搭建神经网络，识别手写数字【PyTorch】【Transformer结构拆解】]]
 
 ## 核心结论
 

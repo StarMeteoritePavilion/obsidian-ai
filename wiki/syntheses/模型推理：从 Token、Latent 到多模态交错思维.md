@@ -1,7 +1,7 @@
 ---
 title: 模型推理：从 Token、Latent 到多模态交错思维
 created: 2026-09-03
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
   - AI
   - 模型原理
@@ -113,6 +113,8 @@ DSpark 的半自回归和置信度调度说明，模型质量与系统效率也�
 
 DeepSeek V4 又把模型内部的长上下文效率拆成压缩与稀疏两条轴。CSA 先压缩 KV 再执行 Top-k 稀疏选择，HCA 则以更高压缩率保留 Dense Attention；两者交错，使精细选择与全局覆盖不必由同一机制承担。mHC、Muon 和 Anticipatory Routing 分别限制残差信号、权重更新和 MoE 路由的异常放大，说明百万上下文可用性同时取决于推理数据流与预训练稳定性。（[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性|DeepSeek V4]]）
 
+Qwen 3.5 采用另一条长上下文成本路线：资料以 15 个周期说明，线性注意力占 75%，全注意力占 25%，两类机制交替堆叠。线性注意力处理大量普通上下文，全注意力保留关键长程依赖；它降低的是注意力计算随序列长度平方增长的压力，不等于先压缩序列再稀疏选择。该资料没有展开线性注意力的精确实现、周期内部结构或消融实验，因此只能支持设计意图，不能据此判断各任务收益，也不能把成本降低 60%、吞吐提高 8 倍或长上下文最高提高 19 倍写成通用效果。（[[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示|Qwen 3.5]]）
+
 ## 从稀疏容量到长程工具调用
 
 Kimi K2 Thinking 把模型容量、每 Token 计算量和部署精度作为三项不同变量。资料所述架构有 1.04T 总参数、32B 激活参数、384 个专家，每个 Token 使用 8 个路由专家与 1 个共享专家；MLA 压缩 Key-Value 状态，MoE 组件再通过 QAT 获得原生 Weight-only INT4。总参数增加不等于每次推理同比增加计算，量化也不等于减少逻辑步骤。（[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练|Kimi K2 Thinking]]）
@@ -152,6 +154,7 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 - [[wiki/sources/多模态推理：视觉原语与 Reference Gap]]
 - [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]]
 - [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
+- [[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]]
 - [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]
 - [[wiki/sources/模型推理优化：DSpark 投机解码]]
 - [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]

@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV15j5u6WE5C
 author: 唐国梁Tommy
 published: 2026-05-12
 ingested: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-05
 tags:
+  - 视觉与多模态
   - AI
   - 模型原理
   - 多模态模型
@@ -16,7 +17,7 @@ tags:
 
 # 多模态推理：视觉原语与 Reference Gap
 
-原始资料：[[raw/sources/模型原理/多模态模型/多模态模型的真正瓶颈不是“看不清”，而是“指不准”？｜DeepSeek 视觉原语论文从架构到 7056× 压缩链路全解析|DeepSeek 视觉原语与 7056× 压缩链路]]
+原始资料：[[raw/sources/模型原理/视觉与多模态/多模态模型的真正瓶颈不是“看不清”，而是“指不准”？｜DeepSeek 视觉原语论文从架构到 7056× 压缩链路全解析|DeepSeek 视觉原语与 7056× 压缩链路]]
 
 ## 核心结论
 

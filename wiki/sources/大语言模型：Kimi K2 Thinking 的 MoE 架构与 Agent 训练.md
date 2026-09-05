@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1sJCnBGESj
 author: 唐国梁Tommy
 published: 2025-11-12
 ingested: 2026-09-03
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 模型专题
   - AI
   - 模型原理
   - 大语言模型
@@ -17,7 +18,7 @@ tags:
 
 # 大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练
 
-原始资料：[[raw/sources/模型原理/大语言模型/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent|Kimi K2 Thinking 深度解析]]
+原始资料：[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent|Kimi K2 Thinking 深度解析]]
 
 ## 核心结论
 

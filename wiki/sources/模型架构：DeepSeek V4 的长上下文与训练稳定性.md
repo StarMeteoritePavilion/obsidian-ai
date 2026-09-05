@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV153oRBXEsG
 author: 唐国梁Tommy
 published: 2026-04-25
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 模型专题
   - AI
   - 模型原理
   - 模型架构
@@ -17,7 +18,7 @@ tags:
 
 # 模型架构：DeepSeek V4 的长上下文与训练稳定性
 
-原始资料：[[raw/sources/模型原理/模型架构/DeepSeek V4 硬核全面拆解｜1.6万亿参数+百万级上下文+33万亿token同时不崩，CSA、mHC、Muon、OPD四大核心模块逐条拆解|DeepSeek V4 硬核全面拆解]]
+原始资料：[[raw/sources/模型原理/模型专题/DeepSeek V4 硬核全面拆解｜1.6万亿参数+百万级上下文+33万亿token同时不崩，CSA、mHC、Muon、OPD四大核心模块逐条拆解|DeepSeek V4 硬核全面拆解]]
 
 ## 核心结论
 
@@ -52,4 +53,5 @@ OPD 先独立训练数学、代码、Agent 和指令遵循等专家，再让 Stu
 - MoE 与专家路由基础：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - 另一种 Muon 稳定化实例：[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
 - 视觉专家的 OPD 实例：[[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]]
+- 后训练机制对照：[[wiki/syntheses/大模型后训练：从模仿到行为选择#专家分训与统一模型：SFT、RL 和 OPD|SFT、RL 与专家统一蒸馏]]
 - 推理表示与执行综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

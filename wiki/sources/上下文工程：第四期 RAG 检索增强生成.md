@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV17eNu6zEbx
 author: 晴天AI实战
 published: 2026-07-12
 ingested: 2026-07-15
-updated: 2026-08-23
+updated: 2026-09-05
 tags:
+  - 上下文与知识工程
   - AI
   - 上下文工程
   - 应用工程
@@ -14,7 +15,7 @@ tags:
 
 # 上下文工程：第四期 RAG 检索增强生成
 
-原始资料：[[raw/sources/应用工程/上下文工程/第四期：RAG 检索增强生成|第四期：RAG 检索增强生成]]
+原始资料：[[raw/sources/应用工程/上下文与知识工程/第四期：RAG 检索增强生成|第四期：RAG 检索增强生成]]
 
 ## 核心结论
 

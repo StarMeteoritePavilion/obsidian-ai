@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1e17y6wEy5
 author: 唐国梁Tommy
 published: 2026-06-05
 ingested: 2026-09-03
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 推理与服务
   - AI
   - 模型工程
   - 推理优化
@@ -17,7 +18,7 @@ tags:
 
 # 模型推理优化：Token 成本、KV Cache 与缓存机制
 
-原始资料：[[raw/sources/模型工程/推理优化/同样100万Token，为什么有的模型贵30倍？大模型 API 到底在卖什么？一口气讲透 Token 成本、KV Cache 和缓存机制|同样100万Token，为什么有的模型贵30倍？]]
+原始资料：[[raw/sources/模型工程/推理与服务/同样100万Token，为什么有的模型贵30倍？大模型 API 到底在卖什么？一口气讲透 Token 成本、KV Cache 和缓存机制|同样100万Token，为什么有的模型贵30倍？]]
 
 ## 核心结论
 

@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1zoKuzoENM
 author: 隔壁的程序员老王
 published: 2025-06-26
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 上下文与知识工程
   - AI
   - GraphRAG
   - 上下文工程
@@ -15,7 +16,7 @@ tags:
 
 # 上下文工程：GraphRAG 从知识图谱到分层检索
 
-原始资料：[[raw/sources/应用工程/上下文工程/AI知识图谱 GraphRAG 是怎么回事？|AI知识图谱 GraphRAG 是怎么回事？]]
+原始资料：[[raw/sources/应用工程/上下文与知识工程/AI知识图谱 GraphRAG 是怎么回事？|AI知识图谱 GraphRAG 是怎么回事？]]
 
 ## 核心结论
 

@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1NG9xBUEju
 author: 唐国梁Tommy
 published: 2026-04-29
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 上下文与知识工程
   - AI
   - 应用工程
   - 上下文工程
@@ -18,7 +19,7 @@ tags:
 
 # 上下文工程：LLM Wiki 的摄取时编译与知识治理
 
-原始资料：[[raw/sources/应用工程/上下文工程/RAG vs GraphRAG vs LLM Wiki 一次讲透：Karpathy引爆的LLM Wiki，是知识工程的下一次革命，还是又一个被高估的"自我进化"|RAG vs GraphRAG vs LLM Wiki 一次讲透]]
+原始资料：[[raw/sources/应用工程/上下文与知识工程/RAG vs GraphRAG vs LLM Wiki 一次讲透：Karpathy引爆的LLM Wiki，是知识工程的下一次革命，还是又一个被高估的"自我进化"|RAG vs GraphRAG vs LLM Wiki 一次讲透]]
 
 ## 核心结论
 
@@ -52,7 +53,7 @@ Wiki 还可以通过 `llms.txt`、JSON-LD、GraphML 和 MCP Resources 分别向�
 
 长期生命周期需要 Retention 与 Forgetting：旧资料不必直接删除，但长期未验证、很少访问或被新证据削弱的内容，应在检索排序和上下文注入中逐步降权。资料提出 Source Coverage、Index Freshness、Citation Coverage、Review Backlog 和 Query Save Rate 五项健康指标，分别检查来源覆盖、索引更新、引用覆盖、待审积压和高价值回答回写。
 
-官方标题、开场和结尾均无期数标识，单 P 标题与视频标题一致；官方“前沿论文与最新技术趋势洞察”合集中的第 13 个位置只表示收录顺序。因此定位为应用工程／上下文工程独立专题，不编排期数。
+官方标题、开场和结尾均无期数标识，单 P 标题与视频标题一致；官方“前沿论文与最新技术趋势洞察”合集中的第 13 个位置只表示收录顺序。因此定位为应用工程／上下文与知识工程独立专题，不编排期数。
 
 ## 关联
 

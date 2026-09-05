@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1iweMzXEm2
 author: 隔壁的程序员老王
 published: 2025-08-21
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 上下文与知识工程
   - AI
   - 提示词工程
   - 上下文工程
@@ -16,7 +17,7 @@ tags:
 
 # 上下文工程：从 Prompt 到 Agent 上下文治理
 
-原始资料：[[raw/sources/应用工程/上下文工程/AI 提示词工程 上下文工程 15分钟弄懂！|AI 提示词工程 上下文工程 15分钟弄懂！]]
+原始资料：[[raw/sources/应用工程/上下文与知识工程/AI 提示词工程 上下文工程 15分钟弄懂！|AI 提示词工程 上下文工程 15分钟弄懂！]]
 
 ## 核心结论
 

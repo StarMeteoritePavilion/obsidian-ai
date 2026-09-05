@@ -4,8 +4,9 @@ source: https://www.bilibili.com/video/BV1ABRyBqEoR
 author: 唐国梁Tommy
 published: 2026-05-05
 ingested: 2026-09-03
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 基础原理
   - AI
   - 模型原理
   - 大语言模型
@@ -16,7 +17,7 @@ tags:
 
 # 模型原理：Token Space 与 Latent Space
 
-原始资料：[[raw/sources/模型原理/大语言模型/Token Space 与 Latent Space：大模型如何处理与生成文本|Token Space 与 Latent Space：大模型如何处理与生成文本]]
+原始资料：[[raw/sources/模型原理/基础原理/Token Space 与 Latent Space：大模型如何处理与生成文本|Token Space 与 Latent Space：大模型如何处理与生成文本]]
 
 ## 核心结论
 

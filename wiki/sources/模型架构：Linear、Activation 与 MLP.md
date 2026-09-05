@@ -4,8 +4,10 @@ source: https://www.bilibili.com/video/BV1i5koBtEUU
 author: 隔壁的程序员老王
 published: 2025-11-13
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-05
 tags:
+  - 基础原理
+  - 模型原理
   - AI
   - 模型架构
   - Transformer
@@ -16,7 +18,7 @@ tags:
 
 # 模型架构：Linear、Activation 与 MLP
 
-原始资料：[[raw/sources/模型原理/模型架构/从Linear到MLP AI模型的数学本质【Transformer结构拆解】|从Linear到MLP AI模型的数学本质【Transformer结构拆解】]]
+原始资料：[[raw/sources/模型原理/基础原理/从Linear到MLP AI模型的数学本质【Transformer结构拆解】|从Linear到MLP AI模型的数学本质【Transformer结构拆解】]]
 
 ## 核心结论
 
