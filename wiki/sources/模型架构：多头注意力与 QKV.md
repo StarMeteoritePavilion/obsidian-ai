@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1of6cBAEuJ
 author: 隔壁的程序员老王
 published: 2026-02-05
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-07
 tags:
   - AI
   - 模型架构
@@ -43,6 +43,6 @@ $$
 - 稀疏块注意力：[[wiki/sources/模型架构：MoBA 混合块注意力]]
 - Attention 之后的稀疏 FFN：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - Attention 用于层间聚合：[[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]
-- Token 与隐藏表示：[[wiki/sources/模型原理：Token Space 与 Latent Space]]
+- Token 与隐藏表示：[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
 - KV Cache 的推理成本：[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]

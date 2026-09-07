@@ -4,12 +4,12 @@ source: https://www.bilibili.com/video/BV14JMX6UEuy
 author: 晴天AI实战
 published: 2026-08-03
 ingested: 2026-08-03
-updated: 2026-08-12
+updated: '2026-09-07'
 tags:
-  - AI
-  - 评估工程
-  - 应用工程
-  - 资料摘要
+- AI
+- 评估工程
+- 应用工程
+- 资料摘要
 ---
 
 # 评估工程：第三期 让 AI 评价 AI，为什么能成立？

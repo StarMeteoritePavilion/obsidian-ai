@@ -9,7 +9,10 @@ tags:
   - Agent Runtime
   - Claude Code
   - 驾驭工程
+updated: 2026-09-07
 ---
+
+# Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？
 
 > Claude Code Agent Runtime 独立专题
 
@@ -141,3 +144,9 @@ Coordinator 模式把工作流划分为研究、综合、实现和验证四个�
 代码库理解采用了另一项明确取舍：不预先建立 Embedding 代码索引，也不做 AST 语法分析，而是依赖模型推理与 `grep`、`glob` 实时搜索。作者认为这种“模型即理解引擎”的路线在模型能力增强时成立，同时指出超大代码库的效率可能成为瓶颈。
 
 这份材料展示了 Agent Runtime 如何把上下文、模型调用、工具、安全、状态、记忆、恢复和多 Agent 编排接入同一条执行链。它能作为工程结构参考，但视频没有给出可独立复核的源码版本，部分能力也仍受特性门控；具体实现和数量不能脱离 2026 年 4 月 2 日发布的视频直接外推到其他 Claude Code 版本。
+
+## 来源与版本
+
+| 编号 | 标题 | 作者 | 发布日期 | URL | 支持范围 |
+| --- | --- | --- | --- | --- | --- |
+| 原始资料 | Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？ | 唐国梁Tommy | 2026-04-02 | [原始链接](https://www.bilibili.com/video/BV1zR9JBREua) | 本文原始转述来源；不替代文中外部研究原件 |

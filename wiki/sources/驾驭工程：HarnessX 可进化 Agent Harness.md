@@ -4,19 +4,19 @@ source: https://www.bilibili.com/video/BV1Lxj86RECd
 author: 唐国梁Tommy
 published: 2026-06-21
 ingested: 2026-09-03
-updated: 2026-09-04
+updated: '2026-09-07'
 tags:
-  - AI
-  - Agent
-  - Agent Harness
-  - HarnessX
-  - 驾驭工程
-  - 资料摘要
+- AI
+- Agent
+- Agent Harness
+- HarnessX
+- 驾驭工程
+- 资料摘要
 ---
 
 # 驾驭工程：HarnessX 可进化 Agent Harness
 
-原始资料：[[raw/sources/应用工程/驾驭工程/Agent 的真正瓶颈不是模型，而是这层 Agent Harness｜HarnessX 全景解读|Agent 的真正瓶颈不是模型，而是这层 Agent Harness｜HarnessX 全景解读]]
+原始资料：[[raw/sources/应用工程/驾驭工程/Agent 的真正瓶颈不是模型，而是这层 Agent Harness｜HarnessX 全景解读|HarnessX：可组合、可进化的 Agent 运行时]]
 
 ## 核心结论
 

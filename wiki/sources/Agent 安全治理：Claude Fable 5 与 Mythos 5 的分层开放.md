@@ -4,20 +4,21 @@ source: https://www.bilibili.com/video/BV1yyjN6vEZz
 author: 唐国梁Tommy
 published: 2026-06-15
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: '2026-09-07'
 tags:
-  - AI
-  - 应用工程
-  - AI Agent
-  - 安全治理
-  - Claude
-  - Anthropic
-  - 资料摘要
+- AI
+- 模型原理
+- 大语言模型
+- Claude
+- Agent
+- AI安全
+- Anthropic
+- 资料摘要
 ---
 
 # Agent 安全治理：Claude Fable 5 与 Mythos 5 的分层开放
 
-原始资料：[[raw/sources/应用工程/AI Agent/刚发布几天就被美国政府紧急叫停：Claude 最强模型 Fable 5 ／ Mythos 到底强在哪？|Claude Fable 5 与 Mythos 5 到底强在哪]]
+原始资料：[[raw/sources/应用工程/AI Agent/刚发布几天就被美国政府紧急叫停：Claude 最强模型 Fable 5 ／ Mythos 到底强在哪？|Claude Fable 5 与 Mythos 5：模型能力与服务安全分析 (2026年6月)]]
 
 ## 核心结论
 

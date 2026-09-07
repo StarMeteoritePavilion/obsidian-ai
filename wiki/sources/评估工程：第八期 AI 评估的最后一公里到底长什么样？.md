@@ -4,12 +4,12 @@ source: https://www.bilibili.com/video/BV13a8d69EwB
 author: 晴天AI实战
 published: 2026-08-26
 ingested: 2026-08-28
-updated: 2026-08-28
+updated: '2026-09-07'
 tags:
-  - AI
-  - 评估工程
-  - 应用工程
-  - 资料摘要
+- AI
+- 评估工程
+- 应用工程
+- 资料摘要
 ---
 
 # 评估工程：第八期 AI 评估的最后一公里到底长什么样？

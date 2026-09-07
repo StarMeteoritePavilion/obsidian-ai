@@ -4,19 +4,19 @@ source: https://www.bilibili.com/video/BV18twWzuELh
 author: 唐国梁Tommy
 published: 2026-03-14
 ingested: 2026-09-03
-updated: 2026-09-03
+updated: '2026-09-07'
 tags:
-  - AI
-  - 应用工程
-  - 记忆工程
-  - Agent
-  - 强化学习
-  - 资料摘要
+- AI
+- 应用工程
+- 记忆工程
+- Agent
+- 强化学习
+- 资料摘要
 ---
 
 # Agent 记忆：MemRL 运行时强化学习
 
-原始资料：[[raw/sources/应用工程/AI Agent/AI Agent终于能边用边学了？MemRL这篇论文太有工程价值了！MemRL给出新解法，提出无参数化Runtime Learning|MemRL 无参数化 Runtime Learning]]
+原始资料：[[raw/sources/应用工程/AI Agent/AI Agent终于能边用边学了？MemRL这篇论文太有工程价值了！MemRL给出新解法，提出无参数化Runtime Learning|冻结权重的记忆效用学习：MemRL 无参数化 Runtime Learning]]
 
 ## 核心结论
 

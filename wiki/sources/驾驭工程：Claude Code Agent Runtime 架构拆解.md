@@ -4,19 +4,19 @@ source: https://www.bilibili.com/video/BV1zR9JBREua
 author: 唐国梁Tommy
 published: 2026-04-02
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: '2026-09-07'
 tags:
-  - AI
-  - Agent
-  - Agent Runtime
-  - Claude Code
-  - 驾驭工程
-  - 资料摘要
+- AI
+- Agent
+- Agent Runtime
+- Claude Code
+- 驾驭工程
+- 资料摘要
 ---
 
 # 驾驭工程：Claude Code Agent Runtime 架构拆解
 
-原始资料：[[raw/sources/应用工程/驾驭工程/Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？|Claude Code 源码架构拆解]]
+原始资料：[[raw/sources/应用工程/驾驭工程/Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？|Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？]]
 
 ## 核心判断
 

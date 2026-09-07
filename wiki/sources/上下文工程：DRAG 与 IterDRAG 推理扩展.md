@@ -4,20 +4,19 @@ source: https://www.bilibili.com/video/BV1gFBtYwEMG
 author: 唐国梁Tommy
 published: 2024-11-24
 ingested: 2026-09-03
-updated: 2026-09-05
+updated: '2026-09-07'
 tags:
-  - 上下文与知识工程
-  - AI
-  - 应用工程
-  - 上下文工程
-  - RAG
-  - 推理扩展
-  - 资料摘要
+- AI
+- 应用工程
+- 上下文工程
+- RAG
+- 推理扩展
+- 资料摘要
 ---
 
 # 上下文工程：DRAG 与 IterDRAG 推理扩展
 
-原始资料：[[raw/sources/应用工程/上下文与知识工程/Google发表最新推理Scaling研究，从DRAG到IterDRAG，大模型RAG性能更上一层楼|Google发表最新推理 Scaling 研究]]
+原始资料：[[raw/sources/应用工程/上下文与知识工程/Google发表最新推理Scaling研究，从DRAG到IterDRAG，大模型RAG性能更上一层楼|Google发表最新推理Scaling研究，从DRAG到IterDRAG，大模型RAG性能更上一层楼]]
 
 ## 核心结论
 
@@ -43,6 +42,6 @@ DRAG 热图中，100 篇文档和 32 个示例对应 EM 41.2、F1 50.8、准确�
 
 ## 关联
 
-- RAG 基础链路：[[wiki/sources/上下文工程：第四期 RAG 检索增强生成]]
+- RAG 基础链路：[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]]
 - 上下文工程综合：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
 - 推理执行优化：[[wiki/sources/模型推理优化：DSpark 投机解码]]

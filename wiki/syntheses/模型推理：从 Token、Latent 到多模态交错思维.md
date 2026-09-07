@@ -1,7 +1,7 @@
 ---
 title: 模型推理：从 Token、Latent 到多模态交错思维
 created: 2026-09-03
-updated: 2026-09-05
+updated: 2026-09-07
 tags:
   - AI
   - 模型原理
@@ -11,7 +11,7 @@ tags:
 
 # 模型推理：从 Token、Latent 到多模态交错思维
 
-模型推理不能只用“生成下一个 Token”或“在隐藏空间思考”概括。现有资料呈现出三种相互衔接、但不能混为一谈的表示层：离散 Token 是输入输出接口，Latent State 承担模型内部连续计算，ThinkMorph 的 Interleaved CoT 则把部分中间处理显式展开为交替的文本片段和图像片段。模型容量也不只有 Dense 与 MoE 两种组织方式：Engram 增加按输入地址选择参数化记忆表项的稀疏轴。表示机制之外还存在独立的测试时计算、执行与服务层：DRAG 和 IterDRAG 分配检索文档、演示与迭代步骤，DSpark 调整草稿怎样生成、验证多少位置以及算力怎样随负载分配，计算硬件资料区分参数搬运、并行计算与卡间通信，API 成本资料则把 Prefill、Decode、KV Cache、Prompt Caching 和 Batch 映射为计费与架构选择。（[[wiki/sources/大语言模型：Token 与两类 Embedding|Token 与两类 Embedding]]、[[wiki/sources/模型原理：Token Space 与 Latent Space|Token Space 与 Latent Space]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/模型架构：Engram 参数化记忆查找|Engram]]、[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]、[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|AI 计算硬件]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本]]）
+模型推理不能只用“生成下一个 Token”或“在隐藏空间思考”概括。现有资料呈现出三种相互衔接、但不能混为一谈的表示层：离散 Token 是输入输出接口，Latent State 承担模型内部连续计算，ThinkMorph 的 Interleaved CoT 则把部分中间处理显式展开为交替的文本片段和图像片段。模型容量也不只有 Dense 与 MoE 两种组织方式：Engram 增加按输入地址选择参数化记忆表项的稀疏轴。表示机制之外还存在独立的测试时计算、执行与服务层：DRAG 和 IterDRAG 分配检索文档、演示与迭代步骤，DSpark 调整草稿怎样生成、验证多少位置以及算力怎样随负载分配，计算硬件资料区分参数搬运、并行计算与卡间通信，API 成本资料则把 Prefill、Decode、KV Cache、Prompt Caching 和 Batch 映射为计费与架构选择。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与两类 Embedding]]、[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token Space 与 Latent Space]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/模型架构：Engram 参数化记忆查找|Engram]]、[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]、[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|AI 计算硬件]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本]]）
 
 ## 三层表示的职责
 
@@ -25,9 +25,9 @@ tags:
 
 ## Token ID、Token Embedding 与 RAG Embedding
 
-Tokenizer 把文字切分并映射为固定词表中的 Token ID；Token Embedding 再把离散编号映射为连续向量，并随大语言模型共同训练。前者是训练期间固定的预处理，后者是模型参数。One-Hot 乘以线性映射与直接查 Embedding 表在数学关系上相通，但工程实现不必显式构造完整 One-Hot 向量。（[[wiki/sources/大语言模型：Token 与两类 Embedding|Token 与两类 Embedding]]）
+Tokenizer 把文字切分并映射为固定词表中的 Token ID；Token Embedding 再把离散编号映射为连续向量，并随大语言模型共同训练。前者是训练期间固定的预处理，后者是模型参数。One-Hot 乘以线性映射与直接查 Embedding 表在数学关系上相通，但工程实现不必显式构造完整 One-Hot 向量。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与两类 Embedding]]）
 
-RAG Embedding 面向整段文本，训练目标是让相关文本靠近、无关文本远离，通常还需要 Pooling 汇总多个位置。它与大语言模型内部表示都属于连续向量，却不能因此直接等同：Token Embedding 服务于模型输入，下一个 Token 预测塑造生成模型；RAG Embedding 服务于语义检索，对比学习塑造文本距离。任意 LLM Hidden State 也不能未经单独训练和处理就视为可用的检索向量。（[[wiki/sources/大语言模型：Token 与两类 Embedding|Token 与两类 Embedding]]、[[wiki/sources/上下文工程：RAG 个人知识库基础架构|RAG 个人知识库]]）
+RAG Embedding 面向整段文本，训练目标是让相关文本靠近、无关文本远离，通常还需要 Pooling 汇总多个位置。它与大语言模型内部表示都属于连续向量，却不能因此直接等同：Token Embedding 服务于模型输入，下一个 Token 预测塑造生成模型；RAG Embedding 服务于语义检索，对比学习塑造文本距离。任意 LLM Hidden State 也不能未经单独训练和处理就视为可用的检索向量。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与两类 Embedding]]、[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索|RAG 个人知识库]]）
 
 ## Transformer 的三种基础路线
 
@@ -79,15 +79,15 @@ ViT 提供了从像素到视觉特征的基础入口。资料中的 $224\times22
 
 MCoT 的能力还取决于训练路线和数据质量。资料将其分为 Prompt 提示、SFT 长链训练和 RL 三阶段；最后一阶段只有在结果可以可靠验证时才容易形成有效奖励。数学、科学和代码可借助答案或执行结果验证，情感、创意和社会常识则缺少稳定的单一评分标准。ThinkMorph 展示的是统一模型怎样显式交替生成文本和图像，二者共同说明“推理表示”与“训练反馈”是两项相互作用但不可混同的设计选择。（[[wiki/sources/多模态模型：架构、数据、推理与检索|多模态技术地图]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
 
-《Thinking with Visual Primitives》进一步指出，视觉信息已经进入模型也不等于推理能够稳定引用它。自然语言中的“左边那个”或“他旁边的”在复杂场景中可能发生指代漂移；点和边界框可以作为中间推理变量，把语言概念绑定到可重复引用的图像坐标。它解决的是 Reference Gap，而非单纯增加感知分辨率。（[[wiki/sources/多模态推理：视觉原语与 Reference Gap|视觉原语专题]]）
+《Thinking with Visual Primitives》进一步指出，视觉信息已经进入模型也不等于推理能够稳定引用它。自然语言中的“左边那个”或“他旁边的”在复杂场景中可能发生指代漂移；点和边界框可以作为中间推理变量，把语言概念绑定到可重复引用的图像坐标。它解决的是 Reference Gap，而非单纯增加感知分辨率。（[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语专题]]）
 
-视觉原语要成为可靠推理变量，还需要数据、训练与验证共同约束。报告把 97,984 个原始数据源经过语义和视觉几何过滤缩减为 31,701 个，再采样、去重形成超过 4,000 万个样本；框与点分别训练专家后，通过 Unified RFT 和 OPD 合并。格式、质量和任务准确性三层奖励进一步检查坐标语法、原语—答案一致性、迷宫合法探索与双向路径匹配。表示形式因此只提供“可以怎样思考”的接口，训练信号才决定模型是否会稳定使用该接口。（[[wiki/sources/多模态推理：视觉原语的数据、训练与奖励|视觉原语训练专题]]）
+视觉原语要成为可靠推理变量，还需要数据、训练与验证共同约束。报告把 97,984 个原始数据源经过语义和视觉几何过滤缩减为 31,701 个，再采样、去重形成超过 4,000 万个样本；框与点分别训练专家后，通过 Unified RFT 和 OPD 合并。格式、质量和任务准确性三层奖励进一步检查坐标语法、原语—答案一致性、迷宫合法探索与双向路径匹配。表示形式因此只提供“可以怎样思考”的接口，训练信号才决定模型是否会稳定使用该接口。（[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语训练专题]]）
 
 ## 推理表示应跟随任务需要
 
 纯文本 CoT 适合抽象规划、逻辑计算和可审计表达，但难以直接验证局部视觉细节。Latent Reasoning 可以减少必须写成自然语言的中间步骤，却把解释和追责压力转移到 Decoder、Probe、SAE 或因果干预工具。Interleaved CoT 在文本与视觉空间同时搜索，适合需要裁剪、放大、定位或视觉重构的任务，但生成图像的成本明显更高。
 
-因此，表示方式应由信息需求决定：语言和已有视觉编码足以解决问题时，纯文本路径更短；必须产生新的视觉证据时，加入图像操作；需要压缩或并行保留多个内部方向时，才考虑更多 Latent 计算。ThinkMorph 的自主模式切换与 Token-Latent Hybrid 的设想都指向同一原则：保留可读接口，把额外计算放在确实能增加信息的表示空间中。（[[wiki/sources/模型原理：Token Space 与 Latent Space|Token 与 Latent]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
+因此，表示方式应由信息需求决定：语言和已有视觉编码足以解决问题时，纯文本路径更短；必须产生新的视觉证据时，加入图像操作；需要压缩或并行保留多个内部方向时，才考虑更多 Latent 计算。ThinkMorph 的自主模式切换与 Token-Latent Hybrid 的设想都指向同一原则：保留可读接口，把额外计算放在确实能增加信息的表示空间中。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与 Latent]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
 
 ## 可见思维链与内部计算不是同一对象
 
@@ -99,9 +99,9 @@ DataAlchemy 进一步从任务、长度和格式三个维度观察到：测试�
 
 不同表示方式消耗的资源不同。比较文本 CoT、Latent Reasoning 和 Interleaved CoT 时，至少需要同时记录可见 Token、图像 Token、隐藏步骤、FLOPs、实际延迟、准确率和审计能力。Best-of-N 的收益还必须结合采样数和选择器成本；少生成文本不代表总计算更少，多生成视觉步骤也不必然带来更高准确率。
 
-现有资料的实验数字分别来自不同模型、任务和论文设置，不能横向拼成统一排名。ThinkMorph 模式切换数据还存在讲解文字与论文图注的基准归属冲突，说明评估结论必须保留原始表格、评判器和适用条件，而不能只摘取提升比例。（[[wiki/sources/模型原理：Token Space 与 Latent Space|Token 与 Latent]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
+现有资料的实验数字分别来自不同模型、任务和论文设置，不能横向拼成统一排名。ThinkMorph 模式切换数据还存在讲解文字与论文图注的基准归属冲突，说明评估结论必须保留原始表格、评判器和适用条件，而不能只摘取提升比例。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与 Latent]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
 
-视觉原语实验也说明最终答案准确率不足以评价中间推理。DS_Maze_Navigation 和 DS_Path_Tracing 分别比所列 GPT-5.4 结果高 16.3 与 10.2 个百分点，但本文模型在 CountQA、CV-Bench 和 OmniSpatial 上仍略低于 Gemini 3 Flash；而且比较统一使用低推理预算。点和框的收益集中在需要精确引用与连续轨迹的任务，不构成模型整体能力排名。报告也没有提供标准消融表，无法把收益分别归因于视觉原语、框点分训、OPD 或 CSA。（[[wiki/sources/多模态推理：视觉原语与 Reference Gap|视觉原语上集]]、[[wiki/sources/多模态推理：视觉原语的数据、训练与奖励|视觉原语下集]]）
+视觉原语实验也说明最终答案准确率不足以评价中间推理。DS_Maze_Navigation 和 DS_Path_Tracing 分别比所列 GPT-5.4 结果高 16.3 与 10.2 个百分点，但本文模型在 CountQA、CV-Bench 和 OmniSpatial 上仍略低于 Gemini 3 Flash；而且比较统一使用低推理预算。点和框的收益集中在需要精确引用与连续轨迹的任务，不构成模型整体能力排名。报告也没有提供标准消融表，无法把收益分别归因于视觉原语、框点分训、OPD 或 CSA。（[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语上集]]、[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语下集]]）
 
 ## 表示机制、RAG 推理扩展与执行优化是三条轴
 
@@ -138,8 +138,8 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 ## 资料链
 
 - [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
-- [[wiki/sources/大语言模型：Token 与两类 Embedding]]
-- [[wiki/sources/模型原理：Token Space 与 Latent Space]]
+- [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
+- [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]]
 - [[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - [[wiki/sources/模型训练：梯度下降与均方误差]]
@@ -151,8 +151,8 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 - [[wiki/sources/多模态推理：ThinkMorph 交错思维链]]
 - [[wiki/sources/多模态模型：ViT 图像分块与编码]]
 - [[wiki/sources/多模态模型：架构、数据、推理与检索]]
-- [[wiki/sources/多模态推理：视觉原语与 Reference Gap]]
-- [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]]
+- [[wiki/sources/多模态推理：DeepSeek 视觉原语]]
+- [[wiki/sources/多模态推理：DeepSeek 视觉原语]]
 - [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
 - [[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]]
 - [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]

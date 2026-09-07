@@ -1,5 +1,5 @@
 ---
-title: ARLArena：4B小模型用SAMPO训练，Agent任务成功率碾压GPT-5.2
+title: ARLArena：多轮 Agent 强化学习的稳定性与 SAMPO
 source: https://www.bilibili.com/video/BV1vcPEzuERE
 author: 唐国梁Tommy
 created: 2026-03-02
@@ -11,9 +11,10 @@ tags:
   - Agent
   - ARLArena
   - SAMPO
+updated: 2026-09-07
 ---
 
-> 大模型后训练独立专题
+# ARLArena：多轮 Agent 强化学习的稳定性与 SAMPO
 
 Agentic Reinforcement Learning（ARL）训练可能在前期持续改善后突然崩塌：成功率归零、输出格式失控，换一个随机种子又得到完全不同的结果。这不是单轮推理训练中的局部波动，而是多轮 Agent 任务面临的系统性稳定性问题。
 
@@ -68,7 +69,7 @@ ARLArena 的对比表以 Qwen3-4B 的 SFT 版本为底座，覆盖四类多轮�
 - Sokoban：以视觉输入完成推箱子任务。
 - TIR Math：使用 Python 工具辅助求解 AIME 数学竞赛题。
 
-SAMPO 在 ALFWorld 上的成功率为 92.72%，GRPO 基线为 62.36%，相差 30.36 个百分点。在 Sokoban 上，CISPO 和 SAPO 的成功率分别为 26.02% 和 30.25%，GRPO 为 83.90%，SAMPO 为 88.86%。论文汇总表将 SAMPO 的平均结果记为 60.21，并标注平均提升 25.2%；但 SAMPO 行在 TIR Math 两列均为缺省值。资料旁白称 SAMPO“在四个任务上”全面超过对比方法，这一范围与论文官方表格不一致，不能据此补出 TIR Math 结果。已列出的结果只属于 Qwen3-4B 和论文训练设置，不能直接外推到其他环境。
+SAMPO 在 ALFWorld 上的成功率为 92.72%，GRPO 基线为 62.36%，相差 30.36 个百分点。在 Sokoban 上，CISPO 和 SAPO 的成功率分别为 26.02% 和 30.25%，GRPO 为 83.90%，SAMPO 为 88.86%。论文表3将 SAMPO 的平均列记为60.21，并标注相对GRPO平均提升25.2%；同一行TIR Math两列为缺省值，因此不能据此补出该任务结果。论文表注另将完整平均描述为59.55，两个口径没有在当前表格中形成同一个可复算定义，本文不把它们合并。已列出的结果只属于Qwen3-4B的SFT底座和论文训练设置，不能外推到其他环境。[^论文]
 
 资料还比较了同一 ALFWorld 任务上的闭源模型系统：GPT-5.2 单 Agent 成功率为 51.56%，o3 Multi-Agent 为 56.25%，专项训练的 Qwen3-4B SAMPO 为 92.72%。闭源模型没有针对该环境进行相同的专项训练，因此这不是同等训练条件下的模型能力比较。它能说明环境对齐的稳定强化学习在特定任务上具有明显价值，不能据此认定 4B 模型普遍超过 GPT-5.2 或 o3。
 
@@ -77,3 +78,12 @@ SAMPO 在 ALFWorld 上的成功率为 92.72%，GRPO 基线为 62.36%，相差 30
 ARLArena 把 Agentic RL 的训练稳定性还原为相互作用的策略梯度设计问题。资料将崩塌的主要来源归于负优势、低重要性采样比率的序列持续腐蚀梯度信号，并以序列级裁剪、步骤级优势和动态采样共同缓解这一问题。
 
 SAMPO 在论文表格给出结果的受控任务中实现稳定训练并超过对应对比方法，但真实开放式 Web Agent 的状态空间、工具噪声和任务长度更复杂。相同训练配方能否保持稳定，仍是需要独立实验回答的问题。
+
+## 来源与版本
+
+| 编号 | 准确标题 | 作者/机构 | 发布日期/版本 | URL | 定位与支持范围 |
+| --- | --- | --- | --- | --- | --- |
+| 原稿 | ARLArena：4B小模型用SAMPO训练 | 唐国梁Tommy | 2026-03-02 | [原视频](https://www.bilibili.com/video/BV1vcPEzuERE) | 原始讲解与案例归属 |
+| 论文 | ARLArena: A Unified Framework for Stable Agentic Reinforcement Learning | Xiaoxuan Wang等 | arXiv:2602.21534v3，2026-07-04 | [论文HTML](https://arxiv.org/html/2602.21534v3) | 表1：四设计维度；表3：Qwen3-4B任务结果；第5节：闭源系统比较；第6节：研究边界 |
+
+[^论文]: 原视频发布于论文v1之后，本文用于核查的是v3；表格差异必须保留版本和指标口径，不以新版数字静默替换旧版。

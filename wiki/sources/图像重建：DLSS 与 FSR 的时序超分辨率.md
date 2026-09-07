@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1U33Z6gENo
 author: 隔壁的程序员老王
 published: 2026-08-06
 ingested: 2026-09-04
-updated: 2026-09-05
+updated: 2026-09-07
 tags:
   - 视觉与多模态
   - AI

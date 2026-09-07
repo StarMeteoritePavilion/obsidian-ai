@@ -1,7 +1,7 @@
 ---
 title: AI Agent：从工具调用到可信行动
 created: 2026-09-04
-updated: 2026-09-05
+updated: 2026-09-07
 tags:
   - AI
   - AI Agent
@@ -11,13 +11,13 @@ tags:
 
 # AI Agent：从工具调用到可信行动
 
-AI Agent 不是“能调用工具的模型”这么简单。模型负责提出下一步行动，工具接口负责把意图转换为调用，Harness 管理上下文、权限、状态与恢复，Loop 决定何时继续，评估与验证器判断结果是否合格。缺少其中任一层，局部正确都可能在长链中累积成任务失败。（[[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP|AI Agent 基础]]、[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness|Agent Harness]]、[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程]]、[[wiki/syntheses/评估工程：从通用基准到业务质量门|评估工程]]）
+AI Agent 不是“能调用工具的模型”这么简单。模型负责提出下一步行动，工具接口负责把意图转换为调用，Harness 管理上下文、权限、状态与恢复，Loop 决定何时继续，评估与验证器判断结果是否合格。缺少其中任一层，局部正确都可能在长链中累积成任务失败。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|AI Agent 基础]]、[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness|Agent Harness]]、[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程]]、[[wiki/syntheses/评估工程：从通用基准到业务质量门|评估工程]]）
 
 ## 最小执行链
 
-Function Calling 连接模型与 Agent：模型返回结构化调用请求，Agent 执行本地函数并把结果送回模型。MCP 连接 Agent 与外部服务，可以暴露 Tool、Resource 与 Prompt。两者只解决接口问题，不自动提供权限控制、持久状态、独立验证或停止条件。（[[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP|AI Agent 基础]]）
+Function Calling 连接模型与 Agent：模型返回结构化调用请求，Agent 执行本地函数并把结果送回模型。MCP 连接 Agent 与外部服务，可以暴露 Tool、Resource 与 Prompt。两者只解决接口问题，不自动提供权限控制、持久状态、独立验证或停止条件。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|AI Agent 基础]]）
 
-Pydantic AI 示例进一步表明，工具注册与消息历史也是两件事。`tools` 决定模型能够调用哪些本地函数，`all_messages()` 和 `message_history` 负责跨调用恢复对话；该示例没有实现持久记忆、权限隔离、验证或恢复。（[[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史|Pydantic AI 实践]]）
+Pydantic AI 示例进一步表明，工具注册与消息历史也是两件事。`tools` 决定模型能够调用哪些本地函数，`all_messages()` 和 `message_history` 负责跨调用恢复对话；该示例没有实现持久记忆、权限隔离、验证或恢复。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|Pydantic AI 实践]]）
 
 ## 四类状态不能统称为记忆
 
@@ -67,8 +67,8 @@ LLM Wiki 的 Supersession 与 Retention／Forgetting 提供文档层治理：新
 
 ## 资料链
 
-- [[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP]]
-- [[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史]]
+- [[wiki/sources/AI Agent：工具调用、MCP 与最小实现]]
+- [[wiki/sources/AI Agent：工具调用、MCP 与最小实现]]
 - [[wiki/sources/AI Agent 框架选型：十大框架与五大范式]]
 - [[wiki/sources/Agent 记忆：MemRL 运行时强化学习]]
 - [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]]

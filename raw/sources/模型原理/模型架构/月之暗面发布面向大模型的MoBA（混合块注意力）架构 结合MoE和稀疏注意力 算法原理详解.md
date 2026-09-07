@@ -1,5 +1,5 @@
 ---
-title: 月之暗面发布面向大模型的MoBA（混合块注意力）架构 结合MoE和稀疏注意力 算法原理详解 | Transformer | Attention | LLM
+title: MoBA：面向长序列的混合块注意力
 source: https://www.bilibili.com/video/BV1gkPieREDw
 author: 唐国梁Tommy
 created: 2025-02-25
@@ -8,7 +8,10 @@ tags:
   - 模型架构
   - 注意力机制
   - MoBA
+updated: 2026-09-07
 ---
+
+# MoBA：面向长序列的混合块注意力
 
 > MoBA：面向长序列的混合块注意力
 
@@ -72,7 +75,7 @@ MoBA 支持稀疏注意力与全注意力模式切换。选择较少历史块时
 
 上述性能、召回和效率数字均来自论文的特定模型、硬件、块划分及 Top-k 设置，不能直接外推到其他部署。
 
-## 未来方向
+## 尚待验证的方向
 
 MoBA 的后续研究重点包括：
 
@@ -81,3 +84,10 @@ MoBA 的后续研究重点包括：
 - 检查复杂推理任务中的表现和泛化能力，确认稀疏选择是否遗漏关键的跨块依赖。
 
 MoBA 的核心价值不是简单删减注意力连接，而是把 MoE 的按需激活方式引入注意力层。它在保持 Transformer 架构与因果生成约束的同时，让长序列计算从全量 Token 交互转向动态选择少数相关块。
+
+## 来源与版本
+
+| 编号 | 标题 | 作者 | 发布日期 | URL | 支持范围 |
+| --- | --- | --- | --- | --- | --- |
+| 原始资料 | 月之暗面发布面向大模型的MoBA（混合块注意力）架构 结合MoE和稀疏注意力 算法原理详解 \\| Transformer \\| Attention \\| LLM | 唐国梁Tommy | 2025-02-25 | [原始链接](https://www.bilibili.com/video/BV1gkPieREDw) | 本文原始转述来源；不替代文中外部研究原件 |
+| 外部依据 | MoBA: Mixture of Block Attention for Long-Context LLMs | 论文作者 | arXiv版本以链接为准 | [arXiv:2502.13189](https://arxiv.org/abs/2502.13189) | MoBA架构；正文块路由、复杂度与实验数字仍需按全文逐项核对 |

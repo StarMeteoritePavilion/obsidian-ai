@@ -10,9 +10,10 @@ tags:
   - Agent
   - Harness
   - RLM
+updated: 2026-09-07
 ---
 
-> 大模型后训练独立专题
+# RLM Harness：短任务训练如何迁移到长任务与新领域
 
 大模型训练通常默认“想让模型掌握什么能力，就提供对应数据”：处理百万 Token 任务需要长文本训练样本，进入新领域需要新的领域环境。MIT 研究者 Alex Zhang 与 Omar Khattab 在《Language model harnesses are compositional generalizers》中提出了另一种路径：用强化学习训练 Recursive Language Model（RLM）的 Harness，使短任务中学到的分解方法迁移到更长任务和陌生领域。
 
@@ -100,8 +101,17 @@ Transformer 在组合泛化上的归纳偏置较弱。当前模型已经具备�
 
 因此，“泛化主要来自 Harness”是这组实验支持的研究结论，不是所有 Agent 和模型的普遍定律。Harness 与模型架构的边界可能逐渐模糊，但 RLM 的有效性仍取决于任务可分解性、训练能否找到通用路径、调用成本和基座模型。
 
+一个反例是需要在每一步联合满足全局约束的问题：若子任务各自选择一个局部最优方案，但共享资源、变量或证明前提必须同时一致，最后汇总时可能发现所有局部答案无法组合。此时仅靠把材料切块并隔离上下文会隐藏跨块依赖；Harness 需要显式维护共享约束、允许回溯，或者保留能容纳全局状态的求解器。这个反例用于说明可分解性的边界，不是作者实验覆盖的新增结果。
+
 ## 结论
 
 RLM 把后训练对象从孤立模型扩展为模型与 Harness 组成的系统。模型可靠性不仅取决于任务整体难度，也取决于每次调用看到什么；好的 Harness 通过 Context 卸载、程序化子调用和局部分布内约束，让模型反复处理熟悉的局部结构。
 
 泛化也不必全部发生在神经网络参数中。分解与调度逻辑可以存在于模型外部的程序层，并与模型共同接受训练，使短任务上的学习迁移到长任务，一个领域的学习迁移到另一个领域。
+
+## 来源与版本
+
+| 编号 | 准确标题 | 作者/机构 | 发布日期/版本 | URL | 定位与支持范围 |
+| --- | --- | --- | --- | --- | --- |
+| 原稿 | RLM Harness：短任务训练如何迁移到长任务与新领域 | 唐国梁Tommy | 2026-08-10 | [原视频](https://www.bilibili.com/video/BV1EGuZ6XEQC) | 原始讲解、实验数字与案例归属 |
+| 作者文章 | Language model harnesses are compositional generalizers | Alex L. Zhang | 页面读取日期：2026-09-06 | [作者原文](https://alexzhang13.github.io/blog/2026/harness/) | 局部分布内、Context Offloading、Programmatic Subcalls、150步训练、8～32倍长度扩展、1.5～3倍运行成本与实验边界 |

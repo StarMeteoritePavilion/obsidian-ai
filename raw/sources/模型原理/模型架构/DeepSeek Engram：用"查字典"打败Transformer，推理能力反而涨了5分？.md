@@ -10,7 +10,10 @@ tags:
   - Engram
   - MoE
   - Transformer
+updated: 2026-09-07
 ---
+
+# DeepSeek Engram：用"查字典"打败Transformer，推理能力反而涨了5分？
 
 > Engram 参数化记忆查找独立专题
 
@@ -77,3 +80,9 @@ Engram 的查表地址只依赖输入 Token，不依赖中间层计算结果。G
 视频提出两项工程启示。端侧设备通常拥有相对充足的系统内存而算力较弱，Engram 可以用内存容量换取部分动态计算；领域知识也可能通过外挂 Engram 表增强，而不重新训练主干。
 
 视频还提出两个研究方向：直接改写 Embedding 表项以实现低成本 Model Editing，以及把类似查表机制扩展到多模态向量 Patch，以降低部分视觉编码开销。这些内容是后续设想，不是本视频已经验证的结论。
+
+## 来源与版本
+
+| 编号 | 标题 | 作者 | 发布日期 | URL | 支持范围 |
+| --- | --- | --- | --- | --- | --- |
+| 原始资料 | DeepSeek Engram：用"查字典"打败Transformer，推理能力反而涨了5分？ | 唐国梁Tommy | 2026-03-15 | [原始链接](https://www.bilibili.com/video/BV1hLwMzwEVx) | 本文原始转述来源；不替代文中外部研究原件 |

@@ -4,22 +4,21 @@ source: https://www.bilibili.com/video/BV1NG9xBUEju
 author: 唐国梁Tommy
 published: 2026-04-29
 ingested: 2026-09-04
-updated: 2026-09-05
+updated: '2026-09-07'
 tags:
-  - 上下文与知识工程
-  - AI
-  - 应用工程
-  - 上下文工程
-  - LLM-Wiki
-  - RAG
-  - GraphRAG
-  - 知识工程
-  - 资料摘要
+- AI
+- 应用工程
+- 上下文工程
+- LLM-Wiki
+- RAG
+- GraphRAG
+- 知识工程
+- 资料摘要
 ---
 
 # 上下文工程：LLM Wiki 的摄取时编译与知识治理
 
-原始资料：[[raw/sources/应用工程/上下文与知识工程/RAG vs GraphRAG vs LLM Wiki 一次讲透：Karpathy引爆的LLM Wiki，是知识工程的下一次革命，还是又一个被高估的"自我进化"|RAG vs GraphRAG vs LLM Wiki 一次讲透]]
+原始资料：[[raw/sources/应用工程/上下文与知识工程/RAG vs GraphRAG vs LLM Wiki 一次讲透：Karpathy引爆的LLM Wiki，是知识工程的下一次革命，还是又一个被高估的"自我进化"|RAG vs GraphRAG vs LLM Wiki 一次讲透：Karpathy引爆的LLM Wiki，是知识工程的下一次革命，还是又一个被高估的"自我进化"]]
 
 ## 核心结论
 
@@ -57,8 +56,8 @@ Wiki 还可以通过 `llms.txt`、JSON-LD、GraphML 和 MCP Resources 分别向�
 
 ## 关联
 
-- 基础向量检索：[[wiki/sources/上下文工程：RAG 个人知识库基础架构]]
-- 生产 RAG：[[wiki/sources/上下文工程：第四期 RAG 检索增强生成]]
+- 基础向量检索：[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]]
+- 生产 RAG：[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]]
 - 图结构与分层检索：[[wiki/sources/上下文工程：GraphRAG 从知识图谱到分层检索]]
 - 上下文工程综合：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
 - Agent 记忆边界：[[wiki/sources/Agent 记忆：MemRL 运行时强化学习]]

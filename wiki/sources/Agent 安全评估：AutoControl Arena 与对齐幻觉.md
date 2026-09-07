@@ -4,15 +4,15 @@ source: https://www.bilibili.com/video/BV1AEd6BZEiB
 author: 隔壁的程序员老王
 published: 2026-04-30
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: '2026-09-07'
 tags:
-  - AI
-  - 应用工程
-  - 评估工程
-  - Agent
-  - AI安全
-  - AutoControl-Arena
-  - 资料摘要
+- AI
+- 应用工程
+- 评估工程
+- Agent
+- AI安全
+- AutoControl-Arena
+- 资料摘要
 ---
 
 # Agent 安全评估：AutoControl Arena 与对齐幻觉

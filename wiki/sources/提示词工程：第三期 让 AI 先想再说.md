@@ -4,12 +4,12 @@ source: https://www.bilibili.com/video/BV1hoTq65EFG
 author: 晴天AI实战
 published: 2026-07-01
 ingested: 2026-07-15
-updated: 2026-09-04
+updated: '2026-09-07'
 tags:
-  - AI
-  - 提示词工程
-  - 应用工程
-  - 资料摘要
+- AI
+- 提示词工程
+- 应用工程
+- 资料摘要
 ---
 
 # 提示词工程：第三期 让 AI 先想再说

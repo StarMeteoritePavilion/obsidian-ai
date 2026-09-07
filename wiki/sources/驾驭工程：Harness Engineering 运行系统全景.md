@@ -4,19 +4,19 @@ source: https://www.bilibili.com/video/BV1VBX9BrEon
 author: 唐国梁Tommy
 published: 2026-03-29
 ingested: 2026-09-04
-updated: 2026-09-05
+updated: '2026-09-07'
 tags:
-  - AI
-  - Agent
-  - Agent Harness
-  - Harness Engineering
-  - 驾驭工程
-  - 资料摘要
+- AI
+- Agent
+- Agent Harness
+- Harness Engineering
+- 驾驭工程
+- 资料摘要
 ---
 
 # 驾驭工程：Harness Engineering 运行系统全景
 
-原始资料：[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime|为什么你的Agent总翻车？Harness Engineering全拆解]]
+原始资料：[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime|为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime]]
 
 ## 核心结论
 
@@ -49,7 +49,7 @@ Harness 还可能放大风险。资料转述 Anthropic BrowseComp 复盘：非�
 官方“前沿论文与最新技术趋势洞察”合集将本文列为第 16 条，但官方标题、开场和结尾均没有期数标识，官方章节为空；正文完整介绍 Harness 的定义、行业案例、模块、旧技术重组和风险，因此定位为应用工程／驾驭工程独立全景专题，不把合集位置当作文章期数。
 
 - Harness 综合：[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]
-- Prompt、Context 与 Harness 边界：[[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界]]
+- Prompt、Context 与 Harness 边界：[[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界]]
 - Claude Code 运行时实例：[[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解]]
 - 可进化 Harness：[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]]
 - 循环工程：[[wiki/syntheses/循环工程：从逐轮操作到外部调度]]

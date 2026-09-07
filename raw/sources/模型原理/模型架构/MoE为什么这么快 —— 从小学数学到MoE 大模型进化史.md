@@ -1,5 +1,5 @@
 ---
-title: MoE为什么这么快 —— 从小学数学到MoE 大模型进化史
+title: 混合专家模型为何能降低活跃计算量
 source: https://www.bilibili.com/video/BV1CgZABxEcy
 author: 隔壁的程序员老王
 created: 2026-02-19
@@ -9,7 +9,10 @@ tags:
   - MoE
   - 混合专家
   - DeepSeek
+updated: 2026-09-07
 ---
+
+# 混合专家模型为何能降低活跃计算量
 
 > 模型架构／混合专家独立专题
 
@@ -85,3 +88,11 @@ MoE 的关键不是创造全知全能的单个专家，而是承认每个专家�
 MoE 的速度优势来自稀疏激活：模型可以保存大量专家参数，但一次推理只调用少数路由专家和固定共享专家。总参数决定可容纳的能力规模，激活参数更直接影响单次计算量，两者不能混为一谈。
 
 这种方法没有消除成本，只是把问题从“所有参数每次都计算”改为“保存更多专家，并为每个 Token 做正确路由”。最终取舍需要同时观察总参数、激活参数、专家选择和路由结果，不能只依据模型总参数判断。
+
+## 来源与版本
+
+| 编号 | 标题 | 作者 | 发布日期 | URL | 支持范围 |
+| --- | --- | --- | --- | --- | --- |
+| 原始资料 | MoE为什么这么快 —— 从小学数学到MoE 大模型进化史 | 隔壁的程序员老王 | 2026-02-19 | [原始链接](https://www.bilibili.com/video/BV1CgZABxEcy) | 本文原始转述来源；不替代文中外部研究原件 |
+| 外部依据 | Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer | 论文作者 | arXiv版本以链接为准 | [arXiv:1701.06538](https://arxiv.org/abs/1701.06538) | 稀疏门控MoE来源 |
+| 外部依据 | DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models | 论文作者 | arXiv版本以链接为准 | [arXiv:2401.06066](https://arxiv.org/abs/2401.06066) | DeepSeekMoE结构与实验表；正文数值仍需逐表核对 |

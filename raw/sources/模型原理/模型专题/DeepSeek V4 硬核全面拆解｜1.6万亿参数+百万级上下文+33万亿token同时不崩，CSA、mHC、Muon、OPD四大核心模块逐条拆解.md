@@ -10,7 +10,10 @@ tags:
   - DeepSeek-V4
   - 长上下文
   - MoE
+updated: 2026-09-07
 ---
+
+# DeepSeek V4 硬核全面拆解｜1.6万亿参数+百万级上下文+33万亿token同时不崩，CSA、mHC、Muon、OPD四大核心模块逐条拆解
 
 > DeepSeek V4 模型架构独立专题
 
@@ -95,3 +98,9 @@ Agent 评测也没有全面领先闭源模型。Terminal Bench 2.0、BrowseComp�
 复现难度来自模块间的深度耦合与配套系统。模型使用 DeepGEMM、TileLang、3FS、DeepSeek Elastic Compute（DSec）和 DualPipe 等基础设施；mHC、Muon、CSA 的归一化与 Attention 数值边界也相互依赖。任何单点简化都可能改变其他模块的稳定性前提。
 
 DeepSeek V4 证明了数学约束、稀疏计算和系统基础设施可以共同把百万上下文推向可用范围，但也留下一个开放问题：未来模型会继续走向深度耦合与显式数学约束，还是回到更易替换的模块化架构。当前结果说明这条路线能够工作，并没有消除精细检索、Agent 泛化、开放数学与工程复现的代价。
+
+## 来源与版本
+
+| 编号 | 标题 | 作者 | 发布日期 | URL | 支持范围 |
+| --- | --- | --- | --- | --- | --- |
+| 原始资料 | DeepSeek V4 硬核全面拆解｜1.6万亿参数+百万级上下文+33万亿token同时不崩，CSA、mHC、Muon、OPD四大核心模块逐条拆解 | 唐国梁Tommy | 2026-04-25 | [原始链接](https://www.bilibili.com/video/BV153oRBXEsG) | 本文原始转述来源；不替代文中外部研究原件 |

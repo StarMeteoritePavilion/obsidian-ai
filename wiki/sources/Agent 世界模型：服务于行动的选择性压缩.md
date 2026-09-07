@@ -4,18 +4,18 @@ source: https://www.bilibili.com/video/BV1AmNH6EENf
 author: 唐国梁Tommy
 published: 2026-07-10
 ingested: 2026-09-03
-updated: 2026-09-03
+updated: '2026-09-07'
 tags:
-  - AI
-  - 应用工程
-  - Agent
-  - 世界模型
-  - 资料摘要
+- AI
+- 应用工程
+- Agent
+- 世界模型
+- 资料摘要
 ---
 
 # Agent 世界模型：服务于行动的选择性压缩
 
-原始资料：[[raw/sources/应用工程/AI Agent/Agent 的“世界模型”到底是什么？从第一性原理，讲透它为什么总在同一个坑里栽倒｜AI Agent 深度解析|Agent 的“世界模型”到底是什么？]]
+原始资料：[[raw/sources/应用工程/AI Agent/Agent 的“世界模型”到底是什么？从第一性原理，讲透它为什么总在同一个坑里栽倒｜AI Agent 深度解析|Agent 的"世界模型"到底是什么? 从第一性原理，讲透它为什么总在同一个坑里栽倒｜AI Agent 深度解析]]
 
 ## 核心结论
 

@@ -1,6 +1,6 @@
 ---
 title: AI 知识索引
-updated: 2026-09-05
+updated: 2026-09-07
 tags:
   - AI
   - 索引
@@ -8,302 +8,172 @@ tags:
 
 # AI 知识索引
 
-本知识库收录 77 份资料摘要和 11 篇跨资料综合。AI 应用工程沿 Prompt、Context、Loop、Evaluation 四个阶段组织，目录涵盖提示词工程、上下文与知识工程、AI Agent、循环工程、驾驭工程和评估工程；模型原理按基础原理、模型架构、视觉与多模态、模型专题组织，模型工程按训练与后训练、推理与服务、计算基础设施组织。原始事实保存在 `raw/sources/`，本目录负责摘要、关联、冲突记录与综合判断。
+本知识库以 `raw/sources/` 中的 **68 篇原始资料**为事实来源，维护 **68 篇一一对应的资料摘要**与 **11 篇跨资料综合**。原始资料保持不变；摘要负责提炼证据与限制，综合页负责跨来源比较、冲突和长期结论。
 
 维护历史见 [[wiki/log|维护日志]]。
 
-## 归档规则
+尚缺一手原件的资料集中记录在 [[wiki/questions/原始资料待补证清单]]。
 
-- 独立文章按主要问题确定唯一目录，系列文章优先保留连续性；跨主题阅读由本索引与综合页提供，不复制原文。
-- 基础原理收数学、表示、生成与推理机制；模型架构收模块、连接、路由和状态访问机制；模型专题收整模型的跨机制介绍，不按标题中的厂商名称归类。
-- AI Agent 侧重基础、整体能力与框架选型，循环工程侧重跨轮调度与持续自治，驾驭工程侧重工具、权限、隔离、恢复和完整运行时。三者是阅读入口，不代表互斥的技术层级。
-- 上下文与知识工程同时覆盖窗口信息治理和长期知识组织；视觉与多模态也收视觉重建，但不把图像重建等同于多模态推理。
-- 训练与后训练关注参数和策略学习，推理与服务关注模型结果的执行与交付成本，计算基础设施关注资源和环境的提供、隔离、保存与调度。
-- 原始资料正文和 frontmatter 保持不变；wiki 页面标题与技术主题标签不必复刻目录名称。
+## 阅读入口
 
-## 总体主线
-
-| 阶段 | 核心问题 | 主要产物 | 综合入口 | 进入下一阶段的条件 |
-| --- | --- | --- | --- | --- |
-| Prompt | 当前任务怎样表达 | 指令、示例、推理方法、输出契约 | [[wiki/syntheses/提示词工程：从单轮指令到生产规范]] | 单条指令无法管理历史、知识和工具 |
-| Context | 当前轮次让模型看到什么 | 检索、压缩、分层、隔离和路由 | [[wiki/syntheses/上下文工程：有限窗口中的信息治理]] | 单轮信息需要跨轮触发、回写和停止 |
-| Loop | 系统跨轮次怎样继续 | 调度、持久状态、独立评判和停止机制 | [[wiki/syntheses/循环工程：从逐轮操作到外部调度]] | 循环需要业务标准证明能否继续或上线 |
-| Evaluation | 怎样证明系统满足业务要求 | 数据集、评分器、指标、治理和质量门禁 | [[wiki/syntheses/评估工程：从通用基准到业务质量门]] | 评估结果回流前三层，形成改进闭环 |
-
-四个阶段不是互相替代，而是逐层扩大工程对象：Prompt 管表达，Context 管信息，Loop 管决策流，Evaluation 管质量证据。Harness 横切前三层，为工具、权限、安全、隔离和恢复提供共同环境。
-
-## 综合导航
-
-| 领域 | 综合入口 | 主要边界 |
-| --- | --- | --- |
-| 提示词工程 | [[wiki/syntheses/提示词工程：从单轮指令到生产规范]] | 推理时表达，不修改模型权重 |
-| 上下文工程 | [[wiki/syntheses/上下文工程：有限窗口中的信息治理]] | 管理进入当前窗口的信息 |
-| 循环工程 | [[wiki/syntheses/循环工程：从逐轮操作到外部调度]] | 管理跨步骤与跨轮调度 |
-| 评估工程 | [[wiki/syntheses/评估工程：从通用基准到业务质量门]] | 提供独立质量证据与放行标准 |
-| Agent Harness | [[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]] | 管理模型与真实执行之间的运行系统 |
-| AI Agent | [[wiki/syntheses/AI Agent：从工具调用到可信行动]] | 串联工具、状态、世界模型、验证与恢复 |
-| 大模型后训练 | [[wiki/syntheses/大模型后训练：从模仿到行为选择]] | 区分示范、偏好、奖励、专家分训与统一蒸馏 |
-| 模型推理 | [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]] | 区分表示、计算、执行与服务成本 |
-| 长上下文架构 | [[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆]] | 对照模型内部共享、筛选、压缩、混合注意力与记忆 |
-| 训练稳定性 | [[wiki/syntheses/深层模型训练稳定性：残差、更新与路由]] | 区分梯度、残差、矩阵、路由与策略失稳 |
-| 多模态推理 | [[wiki/syntheses/多模态推理闭环：感知、指代、操作与验证]] | 串联视觉编码、指代、操作和验证 |
-
-## 按问题进入
-
-| 当前问题 | 优先阅读 |
+| 综合页面 | 核心问题 |
 | --- | --- |
-| 指令、格式或示例不稳定 | [[wiki/syntheses/提示词工程：从单轮指令到生产规范]] |
-| 需要区分 Prompt、Agent、Function Calling 与 MCP | [[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP]] |
-| 需要用 Pydantic AI 理解工具注册、同步调用与消息历史 | [[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史]] |
-| 需要理解 Prompt 怎样扩展为 Agent 上下文治理 | [[wiki/sources/上下文工程：从 Prompt 到 Agent 上下文治理]] |
-| 文档存在却答不到、历史过长或工具过多 | [[wiki/syntheses/上下文工程：有限窗口中的信息治理]] |
-| 需要理解个人知识库的基础向量 RAG 链路与局限 | [[wiki/sources/上下文工程：RAG 个人知识库基础架构]] |
-| 需要用实体关系与分层摘要同时支持局部和全局检索 | [[wiki/sources/上下文工程：GraphRAG 从知识图谱到分层检索]] |
-| 需要把 RAG 查询结果沉淀为可增量维护的长期知识资产 | [[wiki/sources/上下文工程：LLM Wiki 的摄取时编译与知识治理]] |
-| 需要在固定窗口预算下分配 RAG 文档、示例与迭代次数 | [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]] |
-| 需要定时运行、跨轮接力、独立验证或停止条件 | [[wiki/syntheses/循环工程：从逐轮操作到外部调度]] |
-| 不知道系统是否真的变好、能否上线或是否发生回退 | [[wiki/syntheses/评估工程：从通用基准到业务质量门]] |
-| 需要检验 Agent 在压力、诱惑和规则漏洞下是否仍然安全 | [[wiki/sources/Agent 安全评估：AutoControl Arena 与对齐幻觉]] |
-| 需要比较 Agent 框架或确定技术选型 | [[wiki/sources/AI Agent 框架选型：十大框架与五大范式]] |
-| 需要从工具、状态、检查器、世界模型和恢复理解 Agent 可信执行 | [[wiki/syntheses/AI Agent：从工具调用到可信行动]] |
-| 需要区分 Prompt、Context 与 Harness 的职责和重叠边界 | [[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界]] |
-| 需要理解 Harness 的行业案例、六个模块、工程边界与风险 | [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景]] |
-| 需要理解 Claude Code 的 ReAct 循环、压缩恢复、多 Agent、记忆与纵深安全 | [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解]] |
-| 需要判断 SFT 后是否使用 RL，或怎样选择 RLHF、DPO、GRPO、RLVR、OPD | [[wiki/syntheses/大模型后训练：从模仿到行为选择]] |
-| 需要理解 Agentic RL 的训练崩塌、重要性采样裁剪、步骤级优势与动态采样 | [[wiki/sources/大模型后训练：ARLArena 与 SAMPO 稳定 Agentic RL]] |
-| 需要区分预训练、SFT、全量微调与 LoRA，或理解低秩适配的显存构成 | [[wiki/sources/大模型微调：LoRA 低秩适配]] |
-| 需要保存、复制和恢复长时程 Agent 的沙箱环境 | [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]] |
-| 需要比较长序列记忆、召回与计算成本 | [[wiki/sources/长序列建模：Memory Caching]] |
-| 需要系统比较 GQA、稀疏注意力、压缩注意力、混合注意力与 Memory Caching | [[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆]] |
-| 需要理解 Transformer 的 Encoder—Decoder、Decoder-only 与 Encoder-only 分支 | [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]] |
-| 需要理解 Linear、Weight、Bias、Activation、FFN 与 MLP | [[wiki/sources/模型架构：Linear、Activation 与 MLP]] |
-| 需要用 PyTorch 理解张量形状、批量输入、MNIST 推理与 Softmax 维度 | [[wiki/sources/模型架构：PyTorch 手写数字识别]] |
-| 需要理解损失函数、梯度下降、学习率、Batch Size 与 MSE | [[wiki/sources/模型训练：梯度下降与均方误差]] |
-| 需要用 PyTorch 串联 Dataset、DataLoader、CrossEntropyLoss、反向传播和 Optimizer | [[wiki/sources/模型训练：PyTorch 手写数字识别实战]] |
-| 需要理解多头注意力、QKV、因果 Mask 与 Softmax | [[wiki/sources/模型架构：多头注意力与 QKV]] |
-| 需要理解标准残差、Attention Residuals 与跨层选择性聚合 | [[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]] |
-| 需要理解 MoE、Router、专家激活与总参数／激活参数差异 | [[wiki/sources/模型架构：MoE 稀疏专家路由]] |
-| 需要理解 Engram 怎样以参数化 N-gram 查找补充 MoE 稀疏计算 | [[wiki/sources/模型架构：Engram 参数化记忆查找]] |
-| 需要理解块级稀疏注意力与长上下文计算 | [[wiki/sources/模型架构：MoBA 混合块注意力]] |
-| 需要区分 GQA 的 KV Cache 压缩与 DSA／MSA 的稀疏注意力筛选 | [[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]] |
-| 需要理解 DeepSeek V4 怎样组合 CSA、HCA、mHC、Muon、Anticipatory Routing 与 OPD | [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]] |
-| 需要区分残差、矩阵更新、注意力、路由与策略优化的稳定性问题 | [[wiki/syntheses/深层模型训练稳定性：残差、更新与路由]] |
-| 需要区分 Tokenizer、Token Embedding 与 RAG Embedding | [[wiki/sources/大语言模型：Token 与两类 Embedding]] |
-| 需要理解 Tokenization、隐藏表示或 Latent Reasoning | [[wiki/sources/模型原理：Token Space 与 Latent Space]] |
-| 需要判断可见思维链是否忠实，以及任务、长度与格式变化怎样影响 CoT | [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]] |
-| 需要理解 Kimi K2 Thinking 的 MoE、MuonClip、Agent 训练与 INT4 | [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]] |
-| 需要理解 Qwen 3.5 的 MoE、混合注意力、原生多模态与 Cline 工作流 | [[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]] |
-| 需要理解 Claude Fable 5 与 Mythos 5 的能力关系、分层开放和 Agent 系统安全 | [[wiki/sources/Agent 安全治理：Claude Fable 5 与 Mythos 5 的分层开放]] |
-| 需要理解文本与图像怎样交错推理 | [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]] |
-| 需要串联多模态感知、指代、视觉操作与程序化验证 | [[wiki/syntheses/多模态推理闭环：感知、指代、操作与验证]] |
-| 需要理解图片怎样经图块、局部特征和 Transformer 编码器进入多模态模型 | [[wiki/sources/多模态模型：ViT 图像分块与编码]] |
-| 需要理解 DLSS／FSR 怎样利用低分辨率渲染、历史帧和运动信息重建高清画面 | [[wiki/sources/图像重建：DLSS 与 FSR 的时序超分辨率]] |
-| 需要梳理多模态模型的架构、数据、推理、CMR 与 RAG | [[wiki/sources/多模态模型：架构、数据、推理与检索]] |
-| 需要理解视觉推理中的指代漂移、框与点及视觉 Token 压缩 | [[wiki/sources/多模态推理：视觉原语与 Reference Gap]] |
-| 需要理解视觉原语的数据过滤、专家训练、OPD 与密集奖励 | [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]] |
-| 需要在保持输出分布的前提下提高模型生成速度 | [[wiki/sources/模型推理优化：DSpark 投机解码]] |
-| 需要理解 CPU、HBM、计算核心、卡间互联与软件生态怎样共同限制 AI 推理和训练 | [[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态]] |
-| 需要估算 API Token、长上下文、缓存与批处理的任务成本 | [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]] |
-| 需要让短任务训练迁移到长任务或新领域 | [[wiki/sources/大模型后训练：RLM Harness 组合泛化]] |
-| 需要让 Agent 冻结权重并从运行时反馈更新记忆 | [[wiki/sources/Agent 记忆：MemRL 运行时强化学习]] |
-| 需要理解 Agent 如何压缩环境、判断动作后果或选择检查器与模拟器 | [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]] |
+| [[wiki/syntheses/提示词工程：从单轮指令到生产规范]] | 怎样表达单轮任务并形成稳定输出契约 |
+| [[wiki/syntheses/上下文工程：有限窗口中的信息治理]] | 怎样选择、组织、压缩和隔离当前窗口信息 |
+| [[wiki/syntheses/循环工程：从逐轮操作到外部调度]] | 系统怎样跨步骤与跨轮继续、验证和停止 |
+| [[wiki/syntheses/评估工程：从通用基准到业务质量门]] | 怎样用独立证据判断系统能否上线 |
+| [[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]] | 怎样约束工具、权限、状态、恢复和审计 |
+| [[wiki/syntheses/AI Agent：从工具调用到可信行动]] | 怎样把模型、工具、状态、验证和环境连成执行链 |
+| [[wiki/syntheses/大模型后训练：从模仿到行为选择]] | 怎样区分示范、偏好、奖励、蒸馏与运行时学习 |
+| [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]] | 怎样区分输入输出表示、内部计算和外部执行 |
+| [[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆]] | 怎样权衡缓存、计算、召回和可增长状态 |
+| [[wiki/syntheses/深层模型训练稳定性：残差、更新与路由]] | 怎样分别处理梯度、残差、矩阵、路由与策略失稳 |
+| [[wiki/syntheses/多模态推理闭环：感知、指代、操作与验证]] | 怎样连接视觉编码、引用、操作和结果验证 |
 
 ## 资料摘要
 
-### 提示词工程
+### 应用工程
+
+#### AI Agent
 
 | 页面 | 内容 |
 | --- | --- |
-| [[wiki/sources/提示词工程：第一期 提示词工程入门]] | 提示词四要素、零样本提示、指令微调和基础能力边界 |
-| [[wiki/sources/提示词工程：第二期 少样本提示]] | 上下文学习、示例选择、格式一致性和多步推理限制 |
-| [[wiki/sources/提示词工程：第三期 让 AI 先想再说]] | CoT、零样本 CoT、Auto-CoT、ToT 的机制与代价 |
-| [[wiki/sources/提示词工程：第四期 多步编排]] | 自我一致性、链式提示、结构化中间结果和成本边界 |
-| [[wiki/sources/提示词工程：第五期 知识增强与工具调用]] | 生成知识、程序化推理、工具调用和 Agent 工作流 |
-| [[wiki/sources/提示词工程：第六期 Anthropic 工程规范]] | XML、system prompt、证据约束、长文排序和版本边界 |
+| [[wiki/sources/AI Agent 框架选型：十大框架与五大范式]] | Agent 框架没有脱离场景的统一最优解。选型应依次检查团队技术栈、核心使用场景、部署云平台和模型偏好，再把许可证之外的托管、解析、可观测性、权限与云服务成本纳入判断。 |
+| [[wiki/sources/AI Agent：工具调用、MCP 与最小实现]] | 模型负责提出回复或工具调用。 |
+| [[wiki/sources/Agent 记忆：MemRL 运行时强化学习]] | MemRL 在冻结语言模型权重的情况下，把环境反馈写入情景记忆的 Q-value，使 Agent 能在运行时调整未来的记忆选择。它针对的是静态语义检索无法区分“语义相关”与“功能有用”，以及持续 Fine-tuning 成本高、可能发生灾难性遗忘的问题。 |
+| [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]] | 资料采用宽泛工程定义，把 Agent 世界模型理解为一张用于判断“执行这一步后世界怎样变化”的压缩图。它不追求完整复制环境，而是按目标相关、可影响、失败后有助恢复、可验证复用四项标准选择信息。邮件服务器案例说明，Agent 即使持续修改配置。 |
+| [[wiki/sources/Agent 安全治理：Claude Fable 5 与 Mythos 5 的分层开放]] | 资料把 Claude Mythos 5 与 Fable 5 描述为同一高能力底座的两种开放形态。Mythos 5 面向经过审查的网络安全、关键基础设施与 Project Glasswing 合作方；Fable 5 面向普通用户和开发者。 |
 
-### 上下文与知识工程
-
-| 页面 | 内容 |
-| --- | --- |
-| [[wiki/sources/上下文工程：第一期 从 Prompt 到 Context]] | 提示、上下文、框架、记忆工程的边界与六类信息 |
-| [[wiki/sources/上下文工程：第二期 窗口与 Token]] | 窗口容量、Token 预算、KV 缓存、注意力和中间遗忘 |
-| [[wiki/sources/上下文工程：第三期 原则、策略、评估]] | 注意力预算、写入选择压缩隔离和三层评估 |
-| [[wiki/sources/上下文工程：从 Prompt 到 Agent 上下文治理]] | 两类 Prompt、工具循环膨胀、任务笔记、历史修剪、摘要与长返回外移 |
-| [[wiki/sources/上下文工程：RAG 个人知识库基础架构]] | 分块、Embedding、向量存储、相似片段检索及局部检索边界 |
-| [[wiki/sources/上下文工程：第四期 RAG 检索增强生成]] | 原始 RAG、分块、混合检索、查询增强和可追溯性 |
-| [[wiki/sources/上下文工程：第五期 上下文工程压缩]] | 四类压缩、锚点保护、Compaction 和 KV 缓存优化 |
-| [[wiki/sources/上下文工程：第六期 结构化与隔离]] | 分隔符、XML、JSON、任务隔离、沙箱和子上下文 |
-| [[wiki/sources/上下文工程：第七期 上下文是怎么坏掉的]] | 毒化、分心、混淆、冲突和 GraphRAG |
-| [[wiki/sources/上下文工程：第八期 2026 生产实践]] | Skills、混合压缩、路由、自主检索和工具管理 |
-| [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]] | DRAG 演示、IterDRAG 迭代检索、固定预算优化与推理扩展边界 |
-| [[wiki/sources/上下文工程：GraphRAG 从知识图谱到分层检索]] | 实体关系抽取、来源映射、Leiden 社区分层及 Local Search 与 Global Search |
-| [[wiki/sources/上下文工程：LLM Wiki 的摄取时编译与知识治理]] | 摄取时编译、Raw／Wiki／Schema、运行控制面、Save／Lint／Review 与幻觉回写风险 |
-
-### 循环工程
+#### 上下文与知识工程
 
 | 页面 | 内容 |
 | --- | --- |
-| [[wiki/sources/循环工程：先导篇 从 Prompt 到 Loop]] | 系列定义、路线、工程账目和人的位置迁移 |
-| [[wiki/sources/循环工程：第一期 什么是 Loop Engineering？]] | 三层递进、Harness 外壳、循环动作和失败放大 |
-| [[wiki/sources/循环工程：第二期 三大流派与四笔代价]] | 三种自治哲学、执行视界、盈亏平衡和四笔代价 |
-| [[wiki/sources/循环工程：第三期 Loop 该怎么搭？]] | 五个动作、六个组件、独立评判器和 Backpressure |
-| [[wiki/sources/循环工程：第四期 搭好 Loop ≠ 能上线？]] | 共用基础设施、五步路线和六项上线检查 |
+| [[wiki/sources/上下文工程：GraphRAG 从知识图谱到分层检索]] | GraphRAG 在原始文本切片与向量检索之外，增加实体、关系、描述、来源映射、社区和分层摘要。它用 Local Search 从底层实体扩展到原文与邻接关系，用 Global Search 从高层社区摘要向下追溯，分别处理细节定位和全局概括。 |
+| [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]] | RAG 的测试时扩展不能只增加检索文档。文档过多会引入噪声，演示过多会挤占有效证据空间，迭代过多也会扩大上下文与调用成本。资料介绍的 DRAG 和 IterDRAG 分别通过完整 RAG 演示与“子查询—检索—中间答案”迭代链。 |
+| [[wiki/sources/上下文工程：LLM Wiki 的摄取时编译与知识治理]] | LLM Wiki 把跨资料综合从查询阶段前移到摄取阶段：原始资料进入后立即编译为结构化、可导航、可持续更新的知识页面，后续查询复用已经建立的结论与链接。它不替代 RAG 或 GraphRAG，而是增加长期知识资产层；RAG 继续承担局部召回。 |
+| [[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]] | RAG 在生成前从外部资料中检索少量相关片段，使模型能使用可更新、可追溯的证据。基础链路是分块、Embedding、存储、查询编码、检索和生成；生产质量还取决于混合检索、重排序、查询增强、逐层评估和失败回退。 |
+| [[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界]] | Prompt 主要表达任务，Context 管理当前调用可见的信息，Harness 用模型外的工作流、权限和检查约束执行。三者可以共享实现载体，分类应看主要职责；这是一套整理框架，不是统一行业标准。 |
+| [[wiki/sources/上下文工程：第七期 上下文是怎么坏掉的]] | 上下文会因毒化、分心、混淆和冲突而退化：错误写回后自我强化，长历史压制新推理，无关信息消耗注意力，早期结论与新事实互相撕裂。治理目标不是填满窗口，而是维持最小、高信号、无冲突的信息集合。 |
+| [[wiki/sources/上下文工程：第三期 原则、策略、评估]] | 上下文设计的核心是注意力预算：只保留完成任务所需的最小高信号 Token 集。写入、选择、压缩和隔离构成信息流水线，检索、生成和端到端评估构成质量闭环。 |
+| [[wiki/sources/上下文工程：第二期 窗口与 Token]] | 上下文窗口是输入与输出共享的有限 Token 容量。标称窗口长度不等于稳定有效长度；位置编码、KV 缓存、注意力计算和“中间遗忘”共同限制长上下文的实际质量与成本。 |
+| [[wiki/sources/上下文工程：第五期 上下文工程压缩]] | 上下文压缩不是简单截断，而是在信息保真、任务导向和可理解性的约束下提高信息密度。对话历史应组合滑动窗口、选择性保留、摘要和冷热分层，并独立保护用户约束等锚点信息。 |
+| [[wiki/sources/上下文工程：第八期 2026 生产实践]] | 2026 年智能体的上下文工程不是选择单一技术，而是把技能按需加载、混合压缩、上下文路由、自主检索和工具管理分层叠加。共同目标是只让最小、高信号的 Token 集进入当前注意力窗口，同时保留完成任务和纠正错误所需的原始信号。 |
+| [[wiki/sources/上下文工程：第六期 结构化与隔离]] | 结构化解决同一上下文内部的信息身份与层级问题，隔离解决不同任务之间的约束、状态和结果污染。内容类型少时使用分隔符，复杂内容使用 XML，需要程序化处理时使用 JSON。 |
 
-### 评估工程
-
-| 页面 | 内容 |
-| --- | --- |
-| [[wiki/sources/Agent 安全评估：AutoControl Arena 与对齐幻觉]] | 逻辑—叙事解耦、压力与诱惑、对齐幻觉、场景化安全缩放及强弱模型的不同失误机制 |
-| [[wiki/sources/评估工程：第一期 排行榜遥遥领先，用起来怎么各种拉胯？]] | Benchmark 边界、黄金数据、评分方式和 CI/CD 路线 |
-| [[wiki/sources/评估工程：第二期 模型答对了，代码却判了错？]] | 精确匹配、集合匹配、结构化输出和失败分析闭环 |
-| [[wiki/sources/评估工程：第三期 让 AI 评价 AI，为什么能成立？]] | 领域化 LLM 裁判、五种偏见、多裁判和人工校准 |
-| [[wiki/sources/评估工程：第四期 评估场景，为什么不需要瑞士军刀？]] | SLM 裁判、LoRA 多指标、蒸馏量化和分层路由 |
-| [[wiki/sources/评估工程：第五期 能跑的评估和能放心用的评估，差在哪一层？]] | Ground Truth、SME 精炼、策略采样、双指标和治理 |
-| [[wiki/sources/评估工程：第六期 Agent 评估为什么比 LLM 评估难一个数量级？]] | Agent 状态评估、Capability、Regression、双指标和分型评分 |
-| [[wiki/sources/评估工程：第七期 从事后评估到生产护栏，差的是挡住还是知道？]] | 五组件、输入与输出护栏、误报级联、影子模式和渐进上线 |
-| [[wiki/sources/评估工程：第八期 AI 评估的最后一公里到底长什么样？]] | 合同驱动、Source-to-Claim、组合边界、输出卫生和企业治理 |
-
-### 驾驭工程
+#### 循环工程
 
 | 页面 | 内容 |
 | --- | --- |
-| [[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界]] | 怎么问、怎么记、怎么管的职责划分，工作流、权限、代码测试率与模型能力边界 |
-| [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景]] | Prompt—Context—Harness 嵌套关系、企业实践、六个模块、旧技术重组与四类风险 |
-| [[wiki/sources/驾驭工程：系列完结，下一步该往哪走？]] | Harness 工程系列收束、作者定义与观测、优化、安全三个后续方向 |
-| [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]] | Processor 生命周期、AEGIS、确定性闸门、变体隔离与 Cross-Harness GRPO |
-| [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解]] | ReAct 五阶段、七层恢复、四级压缩、投机执行、多 Agent、五层记忆与纵深安全 |
+| [[wiki/sources/循环工程：组件、搭建与上线检查]] | Loop 是发现、交付、验证、持久化和调度构成的闭环。能够反复运行只说明循环转起来；独立评判、隔离、预算、停止条件和人工接管决定它是否适合无人值守。 |
+| [[wiki/sources/循环工程：从 Prompt 到可持续 Loop]] | Loop Engineering 把逐轮触发、分工、反馈和推进交给系统。人的职责从循环内操作转为循环外设计目标、验证、停止、恢复和成本边界。 |
+| [[wiki/sources/循环工程：第二期 三大流派与四笔代价]] | 同一套循环能力可以承载三种不同的自治哲学。它们的分歧不是工具能否工作，而是人能从执行循环中退出多远。人工介入越少，验证债、理解腐烂、认知投降和 Token 失控越需要由外部机制约束。 |
 
-### AI Agent
+#### 提示词工程
 
 | 页面 | 内容 |
 | --- | --- |
-| [[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP]] | User Prompt、System Prompt、Agent、工具调用接口与 MCP 服务边界 |
-| [[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史]] | 本地工具注册、`run_sync()`、`all_messages()`、`message_history` 与最小 Harness 边界 |
-| [[wiki/sources/AI Agent 框架选型：十大框架与五大范式]] | MCP、A2A、五种架构范式、十大框架地图、四步选型与隐性成本 |
-| [[wiki/sources/Agent 记忆：MemRL 运行时强化学习]] | 冻结模型权重，以语义粗筛、Q-value 精排和环境反馈更新实现运行时情景记忆学习 |
-| [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]] | 环境、判断与知识三层结构，检查器和学习型世界模型两条路线，以及记忆过期与验证边界 |
-| [[wiki/sources/Agent 安全治理：Claude Fable 5 与 Mythos 5 的分层开放]] | Agentic Execution、百万 Token 上下文、网络安全门控、生命科学双重用途与系统治理 |
+| [[wiki/sources/提示词工程：第一期 提示词工程入门]] | 提示词工程是在不修改模型权重的前提下，通过组织指令、上下文、输入数据和输出指示，引导大模型稳定完成任务的方法。四要素按任务复杂度组合，不需要机械地全部填写。 |
+| [[wiki/sources/提示词工程：第三期 让 AI 先想再说]] | 思维链提示把少样本演示从“展示答案”扩展为“展示推理步骤”。零样本思维链用一句推理指令触发分步处理，自动思维链批量生成演示，思维树则通过多分支生成、评估、搜索和回溯处理更复杂的问题。 |
+| [[wiki/sources/提示词工程：第二期 少样本提示]] | 少样本提示在上下文中提供少量输入输出演示，让模型在不更新参数的情况下临时适配任务。它主要帮助模型识别任务结构、标签空间和输出格式，多步推理仍需显式展示推理过程。 |
+| [[wiki/sources/提示词工程：第五期 知识增强与工具调用]] | 大模型的知识与计算短板需要按类型补偿：生成知识提示显式唤起模型内部知识，编程语言推理把精确计算交给解释器，工具调用接入搜索、计算、翻译、日历等外部能力。 |
+| [[wiki/sources/提示词工程：第六期 Anthropic 工程规范]] | 生产提示应把不同类型的内容结构化分区，把稳定规则放入 system prompt，并通过长内容置顶、先引后答、正向输出指令和“先读后答”约束提升可迁移性与可验证性。 |
+| [[wiki/sources/提示词工程：第四期 多步编排]] | 自我一致性通过同一提示的多次独立采样和投票，降低单条推理链走偏的风险；链式提示把复杂任务拆成多个串行调用，使每一步目标更窄、中间结果可见且可调试。 |
 
-### 训练与后训练
-
-| 页面 | 内容 |
-| --- | --- |
-| [[wiki/sources/模型训练：梯度下降与均方误差]] | 线性回归、平方误差、参数梯度、学习率、Batch Size 与 MSE |
-| [[wiki/sources/模型训练：PyTorch 手写数字识别实战]] | Dataset、DataLoader、CrossEntropyLoss、训练循环、权重保存与 Adam |
-| [[wiki/sources/大模型微调：LoRA 低秩适配]] | 预训练与 SFT、全量微调显存、低秩矩阵、Rank 和缩放系数 |
-| [[wiki/sources/大模型后训练：强化学习如何选择反馈与算法]] | RLHF、RLAIF、RLVR、DPO、GRPO 的反馈条件，Agent RL 五个工程问题与奖励黑客 |
-| [[wiki/sources/大模型后训练：ARLArena 与 SAMPO 稳定 Agentic RL]] | 训练崩塌、序列级裁剪、步骤级优势、动态采样及专项训练比较边界 |
-| [[wiki/sources/大模型后训练：SKILLRL 技能增强强化学习]] | 轨迹到技能的蒸馏、冷启动 SFT、技能增强 RL、验证驱动进化及工程限制 |
-| [[wiki/sources/大模型后训练：RLM Harness 组合泛化]] | 局部分布内、Context 卸载、程序化子调用及跨长度与跨领域组合泛化 |
-
-### 模型架构
+#### 评估工程
 
 | 页面 | 内容 |
 | --- | --- |
-| [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]] | 原始 Encoder—Decoder 翻译架构、逐 Token 生成、监督与自监督训练，以及 GPT 与 BERT 分支 |
-| [[wiki/sources/模型架构：多头注意力与 QKV]] | Embedding 到 QKV 投影、缩放点积、因果 Mask、Softmax、Value 加权与多头拼接 |
-| [[wiki/sources/模型架构：MoBA 混合块注意力]] | 块级稀疏路由、可变长度 FlashAttention、online Softmax 及长上下文效率边界 |
-| [[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]] | GQA 共享 KV、DSA 的 Token 级筛选、MSA 的块级筛选及完整上下文打分成本 |
-| [[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]] | 标准残差的数值膨胀与信息稀释、pseudo-query、Full AttnRes、Block AttnRes 及资源取舍 |
-| [[wiki/sources/模型架构：MoE 稀疏专家路由]] | FFN 与 Dense 模型、Router、路由专家、共享专家、激活参数及 DeepSeekMoE 对比边界 |
-| [[wiki/sources/模型架构：Engram 参数化记忆查找]] | 参数化 N-gram 查找、多头哈希、上下文门控、CPU 预取及 MoE 记忆分工 |
-| [[wiki/sources/长序列建模：Memory Caching]] | 分段隐状态检查点、四种聚合策略及 RNN 长程召回与计算成本的连续权衡 |
+| [[wiki/sources/Agent 安全评估：AutoControl Arena 与对齐幻觉]] | AutoControl Arena 用可执行代码维护确定性状态，由模型生成开放叙事，再通过压力与诱惑的组合检验 Agent 是否绕过规则。九个模型的平均风险率从无压力、无诱惑时的 21.7% 升至两者同时存在时的 54.5%。正常条件下表现安全。 |
+| [[wiki/sources/评估工程：第一期 排行榜遥遥领先，用起来怎么各种拉胯？]] | 通用 Benchmark 衡量模型在统一任务上的能力，不能直接证明模型适合某项业务。评估工程的作用，是用真实业务输入、专家答案和可复现评分，把通用能力翻译成具体场景中的可用性。 |
+| [[wiki/sources/评估工程：第七期 从事后评估到生产护栏，差的是挡住还是知道？]] | 评估是回顾性的，回答模型已经做了什么；护栏是前瞻性的，在用户请求关键路径上决定是否放行、替换或拦截。离线得分较高的评估器不能直接变成生产护栏，还必须满足准确性、误报、延迟、回退和真实流量验证要求。 |
+| [[wiki/sources/评估工程：第三期 让 AI 评价 AI，为什么能成立？]] | LLM 裁判适合处理无法用确定性规则表达、但能够把质量标准写清楚的语义判断。它能规模化执行主观评估，却不是天然可靠的裁判；有效性来自领域化标准、偏见治理、多模型共识和人类校准。 |
+| [[wiki/sources/评估工程：第二期 模型答对了，代码却判了错？]] | 代码评分用确定性逻辑比较模型输出和黄金答案，速度快、成本低且可复现，但只适用于存在标准答案的任务。评分方式必须匹配答案结构：单值答案使用精确字符串匹配，无序多标签使用集合匹配。 |
+| [[wiki/sources/评估工程：第五期 能跑的评估和能放心用的评估，差在哪一层？]] | 通用裁判能够运行，不等于产品评估可以放心使用。领域场景需要把通用的礼貌、准确和完整标准，翻译成合规、公司政策、免责声明和权限边界等业务规则。 |
+| [[wiki/sources/评估工程：第八期 AI 评估的最后一公里到底长什么样？]] | 企业级 AI 的关键行为不能只由 Prompt 中的自然语言规则承担。合同驱动架构把来源资格、实体路由、事实声明、答案结构和输出验证迁移到代码拥有的工程制品中，LLM 只负责对已经验证的事实进行语言组合。 |
+| [[wiki/sources/评估工程：第六期 Agent 评估为什么比 LLM 评估难一个数量级？]] | LLM 评估主要检查单次输出文本，Agent 评估必须检查多轮工具调用最终改变了什么状态。表达正确不等于任务完成，真正的评估对象是文件、数据库、页面和后端等环境中的 Outcome。 |
+| [[wiki/sources/评估工程：第四期 评估场景，为什么不需要瑞士军刀？]] | 高流量、低延迟、边界稳定的分类评估不一定需要通用 LLM。SLM 裁判把模型容量集中到单一判断，能够以更低成本和延迟覆盖全部流量；代价是适应标准变化和分布外失败的能力较弱。 |
 
-### 推理与服务
-
-| 页面 | 内容 |
-| --- | --- |
-| [[wiki/sources/模型推理优化：DSpark 投机解码]] | 首 Token 容量、半自回归草稿、置信度调度、校准、无损早停及 DeepSeek-V4 线上结果 |
-| [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]] | Prefill 与 Decode、Reasoning Token、KV Cache、Prompt Caching、Batch、任务总成本与 Token FinOps |
-
-### 计算基础设施
+#### 驾驭工程
 
 | 页面 | 内容 |
 | --- | --- |
-| [[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态]] | CPU 与内存带宽、HBM、批量并行、模型与数据并行、NVLink／Infinity Fabric 及 CUDA／ROCm／OpenXLA 生态 |
-| [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]] | Partial Rollout、microVM 沙箱、暂停恢复、环境分岔、增量检查点与 Off-Policy 边界 |
+| [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]] | HarnessX 把 Prompt、工具、记忆、控制流和运行环境组成的 Agent Harness 从静态手工代码改造成可序列化、比较、替换和自动进化的一等对象。它以窄接口 Processor 和固定生命周期挂载点实现组合。 |
+| [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解]] | 原始资料：Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？。 |
+| [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景]] | 资料把 Harness Engineering 定义为模型外部运行系统的设计：它不只决定模型看到什么，还管理任务拆解、工具、权限、状态、验证、恢复、日志和人类接管。按照本资料的包含口径，Harness 包含 Context。 |
+| [[wiki/sources/驾驭工程：系列完结，下一步该往哪走？]] | 原始资料：驾驭工程 | 系列完结，下一步该往哪走？。 |
 
-### 基础原理
+### 模型原理
 
-| 页面 | 内容 |
-| --- | --- |
-| [[wiki/sources/大语言模型：Token 与两类 Embedding]] | Tokenizer、Token ID、Token Embedding、RAG Embedding、One-Hot 与对比学习 |
-| [[wiki/sources/模型原理：Token Space 与 Latent Space]] | Token 到隐藏表示再回到 Token 的生成路径、分词机制、模型可解释性与 Latent Reasoning |
-| [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]] | DataAlchemy、任务／长度／格式泛化、可见 CoT 与答案不一致及训练分布边界 |
-| [[wiki/sources/模型架构：Linear、Activation 与 MLP]] | 线性映射、权重与偏置、梯度下降、ReLU／Sigmoid／tanh／GELU、FFN 与示例 MLP |
-| [[wiki/sources/模型架构：PyTorch 手写数字识别]] | Linear 张量形状、MNIST 展平与缩放、三层网络推理、Logits 和 Softmax 维度 |
-
-### 模型专题
+#### 基础原理
 
 | 页面 | 内容 |
 | --- | --- |
-| [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]] | 1.04T MoE、MuonClip、Data Rephrasing、Agent SFT/RL、原生 INT4 与长程工具调用 |
-| [[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]] | 397B／17B 稀疏 MoE、混合注意力、原生多模态、视觉 Agent 与 Cline API 工作流 |
-| [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]] | CSA／HCA 两级压缩、mHC、Muon、Anticipatory Routing、OPD 及能力边界 |
+| [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]] | 资料解读的论文提出一种数据分布视角：可见思维链可能是模型从分布内数据中学到的结构化归纳偏置所生成的推理轨迹，其有效性受到训练数据与测试问题之间分布差异的约束。DataAlchemy 的可控实验为这一解释提供了任务、长度和格式三个维度的证据。 |
+| [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]] | 大语言模型以离散Token作为输入和输出接口，主要计算发生在连续表示中：Tokenizer把文本变为Token ID，Token Embedding提供初始向量，Transformer形成上下文化Hidden State。 |
+| [[wiki/sources/模型架构：Linear、Activation 与 MLP]] | Linear 用可训练的权重和偏置完成向量间的线性映射；多个 Linear 直接串联后仍然只能表示线性关系。在线性层之间加入 ReLU、Sigmoid、tanh 或 GELU 等非线性激活函数。 |
 
-### 视觉与多模态
-
-| 页面 | 内容 |
-| --- | --- |
-| [[wiki/sources/多模态推理：ThinkMorph 交错思维链]] | 文本规划与视觉操作交替推进、三种涌现能力、测试时扩展及适用边界 |
-| [[wiki/sources/多模态模型：ViT 图像分块与编码]] | 像素输入的规模与语义问题、图像分块、局部特征、Transformer 编码器和多模态输入链路 |
-| [[wiki/sources/多模态模型：架构、数据、推理与检索]] | 视觉编码、模态接口、数据工程、MCoT、跨模态检索与多模态 RAG 的完整链路 |
-| [[wiki/sources/多模态推理：视觉原语与 Reference Gap]] | Perception Gap 与 Reference Gap、框和点作为推理变量、类 LLaVA 架构及 7056× 工程压缩链路 |
-| [[wiki/sources/多模态推理：视觉原语的数据、训练与奖励]] | 两阶段数据过滤、框点专家训练、Unified RFT、OPD、三层奖励及拓扑评测边界 |
-| [[wiki/sources/图像重建：DLSS 与 FSR 的时序超分辨率]] | 单帧 Upscaling、亚像素抖动、运动矢量、渲染辅助参数，以及 DLSS／FSR 的 AI 与固定算法路线 |
-
-## 跨资料综合
+#### 模型专题
 
 | 页面 | 内容 |
 | --- | --- |
-| [[wiki/syntheses/大模型后训练：从模仿到行为选择]] | 从 SFT 模仿到偏好与强化学习的路线选择、专家分训与 OPD、轨迹训练、技能蒸馏和独立评测 |
-| [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]] | 离散 Token、内部连续表示与显式多模态交错思维的职责、成本和审计边界 |
-| [[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]] | Harness 的信息、行动、控制、安全、观测与训练职责，以及静态外壳到可进化对象的边界 |
-| [[wiki/syntheses/AI Agent：从工具调用到可信行动]] | 工具调用、四类状态、世界模型、长链可靠性与确定性放行 |
-| [[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆]] | GQA、稀疏筛选、CSA／HCA、混合注意力与 Memory Caching 的作用层和成本边界 |
-| [[wiki/syntheses/深层模型训练稳定性：残差、更新与路由]] | 梯度、残差、矩阵正交化、注意力幅度、MoE 路由与策略比率失稳 |
-| [[wiki/syntheses/多模态推理闭环：感知、指代、操作与验证]] | ViT、多模态接口、视觉原语、交错思维链与程序化奖励 |
+| [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]] | DeepSeek V4 不是依靠单个模块支持百万 Token 上下文与 1.6 万亿参数。 |
+| [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]] | Kimi K2 Thinking 把 1.04T 总参数、32B 激活参数的 MoE 基础模型，与 Agent SFT、强化学习、原生 INT4 和 Test-Time Scaling 组合为一条完整技术链。模型共有 384 个专家。 |
+| [[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]] | 资料把 Qwen 3.5 定位为面向 Agent 工作流的原生多模态模型。其架构以 397B 总参数、17B 激活参数的稀疏 MoE 分离容量与单 Token 计算，以 75% 线性注意力和 25% 全注意力的交替结构控制长上下文成本。 |
 
-## 当前来源边界
+#### 模型架构
 
-- 资料中的模型表现、价格、延迟、Token、准确率和硬件数字保留来源属性，不能脱离实验或案例条件外推。
-- AI 计算硬件资料中的 Llama 3.1 405B、EPYC 9965、DDR5、HBM、H100、B200／B300、MI355X、NVLink 与 Infinity Fabric 数字采用视频发布时的配置或教学估算，没有提供统一精度、批量、功耗、延迟和软件版本下的实测；开场“MI350 约 15,000 美元”与后文画面“MI355X 25,000 美元以上”不是同一精确型号和价格口径。
-- Claude、Codex、MCP 和其他工具的命令及 API 行为具有版本时效性，实际使用前需核对对应官方文档。
-- Claude Code Runtime 资料来自作者对其所称“网上流出的部分核心源码”的审计，但视频与简介没有提供源码仓库、Commit、版本号或可复核快照；1,884 个 TypeScript 文件、42 种以上工具及内部机制只保留为该资料对 2026 年 4 月 2 日所分析材料的描述，不能外推为其他版本的固定事实。
-- AI Agent 基础资料关于 Function Calling 厂商差异与开源模型支持情况的判断对应 2025 年 5 月；模型负责提出工具调用，Agent 或应用负责执行工具这一职责边界不随具体接口名称改变。
-- Prompt 到上下文治理资料关于网页产品内置推理、消息角色和 Agent 实现的描述对应 2025 年 8 月；实际应用需要按当前 API、模型和状态管理方式重新核对。
-- 评估工程系列共八期，当前知识库已经完整收录；第八期以合同驱动架构收束从代码评分到企业治理的演进。
-- 驾驭工程收尾篇采用作者的宽泛 Harness 定义；其术语范围与本库此前“Harness 作为 Prompt、Context 与 Loop 共同外壳”的来源表述并存，不合并为统一定义。
-- Prompt、Context 与 Harness 对照资料采用“怎么问、怎么记、怎么管”的窄口径；作者关于未发布模型直接超过其 AI 系统的经历没有公开模型、任务、评测方式或具体差距，只能支持持续比较工程收益与基础模型升级，不能证明 Harness 必然失效。
-- Harness Engineering 全景资料中的 OpenAI、Anthropic、Google DeepMind、Vercel、Stripe 与 Manus 案例对应不同组织、系统和评测条件；百万行代码、移除 80% 工具、Aletheia 成绩及 BrowseComp 的 0.24%／0.87% 不能合并为统一效果证明。资料采用 Harness 包含 Context、Context 包含 Prompt 的运行系统口径，与库内其他来源口径并存。
-- Agent 框架资料反映 2026 年 3 月的版本、生态与商业模式；实际选型前需要重新核对官方文档。视频内 Dify Star 数存在旁白与画面差异，Agno 也未获得与其余框架同等篇幅的分析。
-- 当前大模型后训练综合由 LoRA、强化学习路线总览、DeepSeek V4、视觉原语后训练、ARLArena、Kimi K2 Thinking、SKILLRL、RLM Harness、HarnessX、MemRL 与 Kimi K3 AgentENV 共同支撑；其中数字来自各自模型、任务、论文和基础设施设置，不构成统一数据集上的效果排名或其他 Agent 的收益保证。ARLArena 中 GPT-5.2、o3 与 Qwen3-4B SAMPO 没有接受相同的环境专项训练，不能据此形成通用模型能力排名。V4 明示 Reverse KL，视觉原语资料没有给出同等 KL 目标，二者不能合并为同一配方。
-- LoRA 资料中的 26GB 全量微调与 8GB LoRA 显存账单来自 `DeepSeek-R1-Distill-Qwen-1.5B`、FP16 参数、FP32 AdamW 状态、$r=8$ 和资料采用的简化假设；不能外推为其他模型、精度、序列长度、批量或训练框架的固定结果。资料对 LoRA 有效性的解释属于侧面理解，不是严格证明。
-- Memory Caching 的实验数字来自资料转述的特定模型、规模和任务；其模型架构层记忆机制不等同于应用层上下文治理。
-- MoBA 的复杂度、百万 Token 召回及约 6.5 倍计算时间改进来自资料转述的 Llama-8B-1M、块划分、Top-k 与对应硬件设置；不能外推为其他模型和部署的保证。
-- GQA 资料中的 1/16 KV 缓存来自 64 个 Query Head、4 个 KV 组的教学配置；打分注意力比主注意力小几十倍也是来源概括，不能外推为其他模型的固定资源比例。DSA 与 MSA 的筛选效果仍受 Top-N、分块、训练和任务长程依赖影响。
-- 多头注意力资料中的“语法表”“需求表”“内容矩阵”和可读 Attention Head 均为教学类比，不代表真实隐向量维度可以逐项命名；1600、7168 与商业模型上万维的表述保留来源对应模型和推测边界。
-- Linear 与 MLP 资料中的 GPT-2 XL `1600→50257`、示例 MLP `1→128→256→1`、33537 个参数和 2000 条数据来自对应模型与教学实验；“从0开始一起学大模型”合集顺序不等于视频正式标注的期数。
-- 梯度下降资料中的 $y=1.5x+2.5$、1000 条数据、Batch Size 100、Learning Rate 0.01、1000 次训练及 $y=1.4994x+2.4845$ 均属于线性回归教学实验；批量和超参数不构成其他模型的默认配置或收敛保证。
-- PyTorch 训练实战中的 Batch Size 50、Epoch 5、Learning Rate 0.01、`784→256→128→10` 模型和训练集第 90 条样本结果属于对应 MNIST 教学实验；训练集样本预测不能替代独立测试集上的泛化评估。
-- Attention Residuals 资料只讲解机制与开销，没有介绍论文实验成绩；人物识别层与关系层属于教学类比，不能据此认定真实模型各层具有可直接命名的固定分工。
-- MoE 资料中的 256 个路由专家与每次选择 8 个专家属于 DeepSeek-V3 配置；144.6B／22.2B、67.4B、585.6T／2057.5T 和 Pile Loss 来自 DeepSeekMoE 对比设置，不能直接外推为其他模型的速度或 Token 价格。
-- Engram 的 26.7B／3.8B 等预算对照、5.7B 记忆参数、75%～80% MoE 配比、100B CPU 内存查表和 2.8% 吞吐下降均来自资料转述的对应模型、任务、H800 与预取流水线；“20% 记忆、80% 动态计算”是作者对实验曲线的解释，不构成其他领域的固定比例。
-- Tokenization、SuperBPE、T-Free、SAE、Coconut 和 Soft Thinking 的性能或节省数字来自资料转述的对应研究设置；不能据此外推到其他模型、语言和任务。Latent 表示也不构成模型具有意识或主观体验的证据。
-- Kimi K2 Thinking 的架构参数、15.5T Token 稳定训练、INT4 约 2 倍生成速度、200～300 次连续工具调用和评测数字来自资料对应的模型、硬件、工具与预算设置；不能外推为其他部署的收益或长程可靠性保证。
-- Qwen 3.5 资料中的 397B／17B、512 个专家、75%／25% 混合注意力、20,000 个并行环境、60% 成本下降、8 倍吞吐、长上下文最高 19 倍和 201 种语言均采用视频口径；视频没有提供完整基准协议。100 万 Token 免费额度、640GB 本地显卡需求和小模型开放状态对应 2026 年 2 月 20 日，实际使用前需要重新核对。
-- Claude Fable 5 与 Mythos 5 资料中的上下文、价格、漏洞利用、越狱、蛋白设计和大代码库迁移数字来自 2026 年 6 月的厂商材料与对应评测，不能外推为其他环境的固定能力或安全保证。官方视频标题写有“被美国政府紧急叫停”，但正文、简介和画面没有提供可核实的机构、命令、日期或措施，本库不把该说法作为事实结论。
-- DeepSeek V4 资料中的 1.6T／49B、33T 训练 Token、百万 Token 上下文、27% 单 Token FLOPs、10% KV Cache、4.6GB／15GB／31GB 对照、0.00089 美元估算及各项评测均对应视频和技术报告采用的模型、精度、模式、预算与 Serving 口径；不能外推为其他部署的固定成本或所有任务上的能力排名。
-- ThinkMorph 的实验数字来自 BAGEL-7B、24,990 条训练轨迹及对应基准；模式切换的 5.3% 在讲解文字与论文图注中分别归于 MMVP 和 Chart Refocus，本库保留该来源冲突。
-- 多模态技术地图中的架构提升、训练数据、推理成绩、检索指标和延迟来自资料转述的不同论文设置；不能合并为统一排行榜或外推为其他模型、任务和部署的普遍规律。
-- 视觉原语资料的 7,056× 是原始像素数与视觉 KV Cache 条目数之间的工程比值；90 个缓存条目与 77.2 平均分来自论文指定分辨率和七项选定评测，不代表模型整体能力。
-- 视觉原语下集的 4,000 万样本、66.9% 迷宫导航和 56.7% 路径追踪结果来自报告的特定数据、低推理预算与评测协议；报告没有标准消融表，不能分别量化视觉原语、框点分训、OPD 和 CSA 的贡献。
-- RLM Harness 的组合泛化结果只验证了一个 30B 底座和适合切块的任务；训练样本耗时为直接训练的 1.5～3.0 倍，不能外推为所有模型或高度耦合任务的通用结论。
-- DSpark 的接受长度、草稿接受率和 60%～85% 单用户生成速度提升来自资料转述的对应实验及 DeepSeek-V4 线上负载；不能外推到其他模型、硬件、批量或流量结构。
-- Token API 资料中的价差、输入输出倍率、长上下文分档、缓存节省上限和 Batch 折扣反映视频发布时的平台规则概括；实际采购需核对具体模型、区域、服务等级和当前官方价格页。
-- MemRL 的 3.8 个百分点平均提升、探索密集型任务 6.2 个百分点提升与约零额外推理成本来自资料转述的四项实验；不能外推为其他 Agent 的效果或成本保证。
-- RAG 个人知识库资料中的 1536 维与 3072 维分别对应 `text-embedding-3-small` 和 `text-embedding-3-large`；Pinecone、ChromaDB 及 PostgreSQL 配合 pgvector 只是来源列举的存储选择，不构成固定架构要求。
-- LLM Wiki 资料中的八至九类页面、单来源触达 8～15 页、八步 Ingest、Thesis Mode 的 5～10 个 Agent、约 100 个来源规模与运行控制文件均采用视频对 2026 年 4 月公开实现的归纳，不构成统一规范。GraphRAG-Bench、Token 与延迟结论也只能用于资料所述条件。
-- DRAG 与 IterDRAG 的平均准确率、CoT 对比和参数热图来自资料转述的 Gemini 1.5 Flash、四项基准及对应配置空间；不能外推为其他 RAG 系统的固定参数或收益保证。
-- Kimi K3 AgentENV 的沙箱、镜像、最低检查点与恢复延迟、98% 等待占比和最高 6.5 倍内存超配来自对应训练与评估工作负载；不能外推为其他集群的容量、延迟或资源利用保证。
-- Agent 世界模型资料中的 78%、90%、约 4%、71% 和 94% 来自对应下棋与易犯规游戏设置；合成世界训练略微超过真实环境训练也只属于 Qwen-AgentWorld 的对应实验，不能外推为所有 Agent 或训练环境的收益。
+| 页面 | 内容 |
+| --- | --- |
+| [[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]] | 长上下文同时增加单步解码的注意力计算和 KV Cache 显存。GQA 让多组 Query Head 共享较少的 KV Head，主要压缩缓存；Sparse Attention 先筛选高贡献 Token 或块，再让主注意力精算。 |
+| [[wiki/sources/模型架构：Engram 参数化记忆查找]] | Engram 在 Transformer 中增加参数化 N-gram 查找通道，把局部模式召回与 MoE 的动态计算分开。词表投影统一大小写和前导空格等表面形式，资料称词表规模因此压缩约 23%；多尺度 N-gram 与多头哈希降低单次碰撞影响。 |
+| [[wiki/sources/模型架构：MoE 稀疏专家路由]] | MoE 用多个较小 FFN 替换一个大型稠密 FFN，再由 Router 为每个 Token 选择少量路由专家并加权汇总。总参数决定模型可容纳的专家容量，激活参数更直接决定单次计算量；稀疏激活让模型扩大总容量，而不必让全部参数参与每个 Token 的计算。 |
+| [[wiki/sources/长序列建模：Memory Caching]] | Transformer 通过 Attention 和随上下文增长的 KV Cache 保留完整历史，但需要承担较高显存与平方级计算代价；线性 RNN 将历史压缩到固定大小的隐状态，推理高效。 |
+| [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]] | 原始 Transformer 以 Encoder—Decoder 结构处理翻译：Encoder 把完整输入转换为内部表示，Decoder 结合这组表示和已经生成的目标 Token。 |
+| [[wiki/sources/模型架构：多头注意力与 QKV]] | 多头注意力让同一组词元表示经过多组独立的 Query、Key 和 Value 投影，在不同 Attention Head 中计算上下文关系，再拼接各头结果。它不是为每个头预先指定“语法”或“语义”。 |
+| [[wiki/sources/模型架构：MoBA 混合块注意力]] | 原始资料：月之暗面 MoBA 算法原理详解。 |
+| [[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]] | 标准残差连接以固定单位权重累加各层输出，随着深度增加可能出现隐藏表示数值膨胀和单层信息被累计总和稀释。Attention Residuals（AttnRes）借用 Attention 的选择性聚合思想。 |
+
+#### 视觉与多模态
+
+| 页面 | 内容 |
+| --- | --- |
+| [[wiki/sources/图像重建：DLSS 与 FSR 的时序超分辨率]] | DLSS 和 FSR 用较低分辨率渲染、跨帧信息积累和图像重建替代直接渲染目标分辨率。DLSS 1.0 只依据单帧低分辨率画面预测高清结果。 |
+| [[wiki/sources/多模态推理：DeepSeek 视觉原语]] | 《Thinking with Visual Primitives》把点和边界框写入推理链，用可解析坐标减少模型看见对象后无法稳定再次指代的Reference Gap。边界框适合对象集合与区域。 |
+| [[wiki/sources/多模态推理：ThinkMorph 交错思维链]] | ThinkMorph 以 BAGEL-7B 为基座，使用 24,990 条高质量轨迹进行微调，使统一模型在文本规划、图像生成或操作、视觉验证和文本回答之间交替推进。资料认为文本与图像是互补模态：前者负责抽象规划与逻辑计算，后者负责精确定位和视觉验证。 |
+| [[wiki/sources/多模态模型：架构、数据、推理与检索]] | 多模态系统是一条连续工程链：视觉编码器保留图像信息，模态接口完成视觉与语言表示对齐，数据工程控制监督质量，MCoT 组织跨模态中间步骤，CMR 与多模态 RAG 从外部视觉资料中检索目标或证据。任何单层优化都不能代替其余层级。 |
+| [[wiki/sources/多模态模型：ViT 图像分块与编码]] | Vision Transformer（ViT）先把图片切成固定大小的图块，把每块像素转换为特征表示，再通过 Transformer 编码器让各图块关联全图信息。多模态大语言模型随后同时接收文字与视觉特征，使图片也成为可参与后续计算的输入表示。 |
+
+### 模型工程
+
+#### 推理与服务
+
+| 页面 | 内容 |
+| --- | --- |
+| [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]] | API成本应分别计算输入、输出、缓存写入、缓存读取、批处理与重试，比较时固定平台、模型、日期和调用条件。 |
+| [[wiki/sources/模型推理优化：DSpark 投机解码]] | DSpark用深层并行草稿模型提高首Token质量，再以轻量串行模块恢复后续位置连贯性。 |
+
+#### 计算基础设施
+
+| 页面 | 内容 |
+| --- | --- |
+| [[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态]] | CPU可以执行模型运算；单请求大模型推理常先受参数读取带宽限制，批量增大后计算吞吐的重要性上升。 |
+| [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]] | AgentENV以Firecracker microVM管理文件系统、进程、内存和依赖等外部环境状态，提供暂停、恢复、复制与快照。 |
+
+#### 训练与后训练
+
+| 页面 | 内容 |
+| --- | --- |
+| [[wiki/sources/大模型后训练：ARLArena 与 SAMPO 稳定 Agentic RL]] | ARLArena 在统一测试台中把策略梯度拆成损失聚合、重要性采样裁剪、优势函数设计和动态采样四个维度。资料将训练崩塌的主要来源归于负优势、低重要性采样比率的序列持续参与更新：容忍型裁剪在重要性采样比率越界后仍保留梯度。 |
+| [[wiki/sources/大模型后训练：SKILLRL 技能增强强化学习]] | SKILLRL 把冗长的成功和失败轨迹蒸馏为结构化技能，再通过冷启动 SFT、技能增强 RL 和验证驱动热更新，让模型参数与外部技能库协同演化。它针对的是 Agent 无法复用高层经验，以及原始轨迹检索带来的噪声、上下文和训练负担。 |
+| [[wiki/sources/大模型后训练：RLM Harness 组合泛化]] | 《Language model harnesses are compositional generalizers》把强化学习对象从孤立模型扩展为模型与 Harness 组成的系统。RLM Harness 通过 Context Offloading 和 Prog。 |
+| [[wiki/sources/大模型微调：LoRA 低秩适配]] | LoRA冻结原权重 $W_0$，训练低秩增量 $BA$，输出为 $W_0x+(\alpha/r)BAx$；可训练参数量为 $r(d+k)$。 |
+| [[wiki/sources/大模型后训练：强化学习如何选择反馈与算法]] | RLHF、RLAIF、RLVR描述反馈或奖励来源；PPO、GRPO描述在线策略优化方法；DPO使用离线偏好对直接优化。它们不属于同一层互斥菜单。 |
+| [[wiki/sources/模型训练：梯度下降与均方误差]] | 梯度下降先用损失函数衡量模型输出与训练目标的差距，再根据损失对参数的梯度确定更新方向，并由学习率控制每次更新的距离。模型参数来自数据训练，Learning Rate 与 Batch Size 则是人为设置的超参数。 |
+| [[wiki/sources/模型训练：PyTorch 手写数字识别实战]] | MNIST图片展平为784维，网络为`784→256→128→10`；输出是Logits，`CrossEntropyLoss`直接接收Logits。 |
+
+## 维护边界
+
+- 每篇摘要只对应一个当前原始资料文件；多来源合并文章仍作为一个资料单元。
+- 事实性结论以摘要链接的 `raw/sources/` 原文为准；外部论文、产品页和实验条件按各摘要记录的来源边界理解。
+- 不同资料的数字不得直接组成统一排名；版本、任务、模型、硬件、数据集和评测协议不同的结果分别保留。
+- 需要新增资料时按 `AGENTS.md` 的 Ingest 流程逐篇处理，并同步更新摘要、相关综合、索引与日志。

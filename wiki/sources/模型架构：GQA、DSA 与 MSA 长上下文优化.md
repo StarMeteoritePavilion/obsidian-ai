@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1BY4o6cEXE
 author: 隔壁的程序员老王
 published: 2026-09-03
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-07
 tags:
   - AI
   - 模型原理

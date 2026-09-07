@@ -4,18 +4,17 @@ source: https://www.bilibili.com/video/BV1r5MH6QEgD
 author: 晴天AI实战
 published: 2026-07-09
 ingested: 2026-07-15
-updated: 2026-09-05
+updated: '2026-09-07'
 tags:
-  - 上下文与知识工程
-  - AI
-  - 上下文工程
-  - 应用工程
-  - 资料摘要
+- AI
+- 上下文工程
+- 应用工程
+- 资料摘要
 ---
 
 # 上下文工程：第二期 窗口与 Token
 
-原始资料：[[raw/sources/应用工程/上下文与知识工程/第二期：窗口与token|第二期：窗口与 Token]]
+原始资料：[[raw/sources/应用工程/上下文与知识工程/第二期：窗口与token|第二期：窗口与token]]
 
 ## 核心结论
 
@@ -33,5 +32,5 @@ tags:
 
 - GQA、DSA 与 MSA：[[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]]
 - 系列综述：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
-- 上一篇：[[wiki/sources/上下文工程：第一期 从 Prompt 到 Context]]
+- 上一篇：[[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界]]
 - 下一篇：[[wiki/sources/上下文工程：第三期 原则、策略、评估]]

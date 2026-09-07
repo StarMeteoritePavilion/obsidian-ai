@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1GHP4zZESk
 author: 唐国梁Tommy
 published: 2026-03-06
 ingested: 2026-09-02
-updated: 2026-09-04
+updated: 2026-09-07
 tags:
   - AI
   - 模型架构

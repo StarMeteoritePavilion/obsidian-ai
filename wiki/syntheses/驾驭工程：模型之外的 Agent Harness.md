@@ -1,6 +1,6 @@
 ---
 title: 驾驭工程：模型之外的 Agent Harness
-updated: 2026-09-04
+updated: 2026-09-07
 tags:
   - AI
   - Agent
@@ -17,7 +17,7 @@ Agent Harness 是模型输出与真实执行之间的工程外壳。它决定模
 
 本库资料对 Harness 的范围采用五种相关但不完全相同的表述：
 
-1. Prompt、Context 与 Harness 对照资料采用较窄的教学口径：Prompt 解决“怎么问”，Context 解决“怎么记”，Harness 通过预设工作流、权限和质量检查解决“怎么管”。（[[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界|三者边界专题]]）
+1. Prompt、Context 与 Harness 对照资料采用较窄的教学口径：Prompt 解决“怎么问”，Context 解决“怎么记”，Harness 通过预设工作流、权限和质量检查解决“怎么管”。（[[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界|三者边界专题]]）
 2. 循环工程将 Harness 定义为包住 Prompt、Context 与 Loop 的共同外壳，横切工具、权限、安全、隔离和恢复。（[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程综合]]）
 3. 驾驭工程收尾篇采用更宽的作者定义，把模型之外的治理、优化和编排全部归入 Harness Engineering，并明确该术语没有统一定义。（[[wiki/sources/驾驭工程：系列完结，下一步该往哪走？|驾驭工程收尾篇]]）
 4. HarnessX 把范围落实为可序列化的一等运行时对象：模型配置与九维行为配置通过 Processor 和固定生命周期挂载点组成可执行 Agent，并可以接受自动进化。（[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness|HarnessX 专题]]）
@@ -48,11 +48,11 @@ OpenAI 案例进一步把版本化代码库知识、确定性 Linter／结构测
 
 ## 模型调用与工具连接
 
-最小 Agent 链路包含两个不同接口。Agent 通过 System Prompt 中的格式约定或 Function Calling 向模型声明工具，模型返回调用请求；Agent 再直接执行本地函数，或作为 MCP Client 调用 MCP Server 暴露的 Tool。工具结果由 Agent 交回模型，模型据此继续判断或生成最终回复。（[[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP|AI Agent 基础]]）
+最小 Agent 链路包含两个不同接口。Agent 通过 System Prompt 中的格式约定或 Function Calling 向模型声明工具，模型返回调用请求；Agent 再直接执行本地函数，或作为 MCP Client 调用 MCP Server 暴露的 Tool。工具结果由 Agent 交回模型，模型据此继续判断或生成最终回复。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|AI Agent 基础]]）
 
-Function Calling 解决模型与 Agent 之间的结构化调用，MCP 解决 Agent 与外部服务之间的连接。MCP 还可以暴露 Resource 与 Prompt，并不绑定具体模型。这些接口构成 Harness 的行动层，但不会自动提供权限、安全、验证、持久状态、停止或恢复机制。（[[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP|AI Agent 基础]]）
+Function Calling 解决模型与 Agent 之间的结构化调用，MCP 解决 Agent 与外部服务之间的连接。MCP 还可以暴露 Resource 与 Prompt，并不绑定具体模型。这些接口构成 Harness 的行动层，但不会自动提供权限、安全、验证、持久状态、停止或恢复机制。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|AI Agent 基础]]）
 
-Pydantic AI 的最小文件管理示例展示了静态 Harness 的最小闭环：`tools` 暴露 `read_file`、`list_files` 与 `rename_file`，`run_sync()` 组织模型和工具调用，应用再保存 `resp.all_messages()` 并通过 `message_history` 重建后续上下文。工具注册没有自动产生跨调用记忆；消息历史也没有提供持久化、权限、验证或恢复。这两部分分别属于行动接口与信息治理，不能合并为一个模糊的“Agent 会记住并执行”。（[[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史|Pydantic AI 实践]]）
+Pydantic AI 的最小文件管理示例展示了静态 Harness 的最小闭环：`tools` 暴露 `read_file`、`list_files` 与 `rename_file`，`run_sync()` 组织模型和工具调用，应用再保存 `resp.all_messages()` 并通过 `message_history` 重建后续上下文。工具注册没有自动产生跨调用记忆；消息历史也没有提供持久化、权限、验证或恢复。这两部分分别属于行动接口与信息治理，不能合并为一个模糊的“Agent 会记住并执行”。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|Pydantic AI 实践]]）
 
 Qwen 3.5 的 Cline 演示提供了另一条最小链路：`qwen3.5-plus` 负责理解需求与生成内容，Cline 通过 OpenAI Compatible 接口连接 DashScope，并在 Act 模式下管理项目文件和执行步骤。模型具备视觉 Agent 与工具规划能力，不等于模型本身承担了 API 密钥、文件权限、执行环境和结果验证；这些仍是外部 Harness 的职责。投篮视频在不同运行中出现“五次”与“七次”的差异，也说明工作流不能把单次模型回答直接当作已验证结果。（[[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示|Qwen 3.5 专题]]）
 
@@ -108,7 +108,7 @@ RLM Harness 证明，Context Offloading 和 Programmatic Subcalls 可以让长�
 
 ## 工程收益需要与模型升级比较
 
-Prompt、Context 与 Harness 对照资料记录了一次作者经验：一套使用多种工程技巧、实际效果不错的 AI 系统，被某个未发布模型在没有这些技巧时直接超过。资料没有公开模型、任务、评测方法和具体差距，因此不能据此认定 Harness 必然失效；它只说明工程投资应持续与更强基础模型的直接结果比较。（[[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界|三者边界专题]]）
+Prompt、Context 与 Harness 对照资料记录了一次作者经验：一套使用多种工程技巧、实际效果不错的 AI 系统，被某个未发布模型在没有这些技巧时直接超过。资料没有公开模型、任务、评测方法和具体差距，因此不能据此认定 Harness 必然失效；它只说明工程投资应持续与更强基础模型的直接结果比较。（[[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界|三者边界专题]]）
 
 作者以“小马、马鞍与汽车”表达模型跨代升级可能淘汰局部技巧的判断，并用 The Bitter Lesson 指代这一现象。该资料没有展开概念定义，知识库只保留来源观点，不补写外部解释。即使模型提升减少提示或编排需求，权限、真实执行、审计和独立验证仍属于系统边界，不能仅凭这则未公开案例判定其价值消失。
 
@@ -122,7 +122,7 @@ Harness Engineering 全景资料中的组织案例主要由 OpenAI、Anthropic�
 
 ## 资料链
 
-- [[wiki/sources/驾驭工程：Prompt、Context 与 Harness 的边界]]
+- [[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界]]
 - [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景]]
 - [[wiki/sources/驾驭工程：系列完结，下一步该往哪走？]]
 - [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]]
@@ -131,8 +131,8 @@ Harness Engineering 全景资料中的组织案例主要由 OpenAI、Anthropic�
 - [[wiki/sources/大模型后训练：SKILLRL 技能增强强化学习]]
 - [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]]
 - [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]]
-- [[wiki/sources/AI Agent 基础：Prompt、Function Calling 与 MCP]]
-- [[wiki/sources/AI Agent 实践：Pydantic AI 工具调用与消息历史]]
+- [[wiki/sources/AI Agent：工具调用、MCP 与最小实现]]
+- [[wiki/sources/AI Agent：工具调用、MCP 与最小实现]]
 - [[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]]
 - [[wiki/sources/Agent 安全治理：Claude Fable 5 与 Mythos 5 的分层开放]]
 - [[wiki/syntheses/AI Agent：从工具调用到可信行动]]

@@ -4,12 +4,13 @@ source: https://www.bilibili.com/video/BV1URui6CEBT
 author: 晴天AI实战
 published: 2026-08-11
 ingested: 2026-08-11
-updated: 2026-08-23
+updated: '2026-09-07'
 tags:
-  - AI
-  - 评估工程
-  - 应用工程
-  - 资料摘要
+- AI
+- 评估工程
+- 应用工程
+- Agent
+- 资料摘要
 ---
 
 # 评估工程：第六期 Agent 评估为什么比 LLM 评估难一个数量级？

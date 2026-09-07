@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1SFCqBFEfC
 author: 唐国梁Tommy
 published: 2025-11-17
 ingested: 2026-09-03
-updated: 2026-09-05
+updated: 2026-09-07
 tags:
   - 视觉与多模态
   - AI
@@ -40,4 +40,4 @@ ThinkMorph 以 BAGEL-7B 为基座，使用 24,990 条高质量轨迹进行微调
 ## 关联
 
 - 推理表示综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
-- Token 与内部连续表示：[[wiki/sources/模型原理：Token Space 与 Latent Space]]
+- Token 与内部连续表示：[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]

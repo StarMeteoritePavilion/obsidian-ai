@@ -4,14 +4,13 @@ source: https://www.bilibili.com/video/BV1zoKuzoENM
 author: 隔壁的程序员老王
 published: 2025-06-26
 ingested: 2026-09-04
-updated: 2026-09-05
+updated: '2026-09-07'
 tags:
-  - 上下文与知识工程
-  - AI
-  - GraphRAG
-  - 上下文工程
-  - 应用工程
-  - 资料摘要
+- AI
+- GraphRAG
+- 上下文工程
+- 应用工程
+- 资料摘要
 ---
 
 # 上下文工程：GraphRAG 从知识图谱到分层检索
@@ -40,8 +39,8 @@ GraphRAG 在原始文本切片与向量检索之外，增加实体、关系、�
 
 ## 关联
 
-- 向量 RAG 基础：[[wiki/sources/上下文工程：RAG 个人知识库基础架构]]
-- 现代 RAG 管道：[[wiki/sources/上下文工程：第四期 RAG 检索增强生成]]
+- 向量 RAG 基础：[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]]
+- 现代 RAG 管道：[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]]
 - GraphRAG 与 Context Rot：[[wiki/sources/上下文工程：第七期 上下文是怎么坏掉的]]
 - RAG、GraphRAG 与长期知识资产层：[[wiki/sources/上下文工程：LLM Wiki 的摄取时编译与知识治理]]
 - 综合：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]

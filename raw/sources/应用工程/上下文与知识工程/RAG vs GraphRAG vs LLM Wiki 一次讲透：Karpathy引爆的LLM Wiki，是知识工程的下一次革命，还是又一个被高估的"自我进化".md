@@ -11,7 +11,10 @@ tags:
   - RAG
   - GraphRAG
   - 知识工程
+updated: 2026-09-07
 ---
+
+# RAG vs GraphRAG vs LLM Wiki 一次讲透：Karpathy引爆的LLM Wiki，是知识工程的下一次革命，还是又一个被高估的"自我进化"
 
 > 应用工程／上下文工程独立专题
 
@@ -172,3 +175,9 @@ LLM Wiki 适合资料持续进入、结论需要长期沉淀和反复复用的�
 LLM Wiki 的价值不在某一次回答听起来多聪明，而在于让每一次 Ingest、Query 和 Research 都成为对同一份知识资产的增量投资。可以把这套系统理解为：LLM 是编译器，Chat 是入口，Wiki 是产品，Graph 是导航层，Schema 是操作系统，Review 是刹车，Log 是审计轨迹。
 
 这套方法尝试把 LLM 从每次重新开始的回答器，转变为持续积累、可追溯并可由人审阅的知识运行时。它能否真正“越用越值钱”，取决于来源不可变、增量编译、冲突处理、人工审核和生命周期治理是否同时成立。
+
+## 来源与版本
+
+| 编号 | 标题 | 作者 | 发布日期 | URL | 支持范围 |
+| --- | --- | --- | --- | --- | --- |
+| 原始资料 | RAG vs GraphRAG vs LLM Wiki 一次讲透：Karpathy引爆的LLM Wiki，是知识工程的下一次革命，还是又一个被高估的"自我进化" | 唐国梁Tommy | 2026-04-29 | [原始链接](https://www.bilibili.com/video/BV1NG9xBUEju) | 本文原始转述来源；不替代文中外部研究原件 |

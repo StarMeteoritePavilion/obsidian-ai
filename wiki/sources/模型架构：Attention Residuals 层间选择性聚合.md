@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1MRX2B2ECg
 author: 隔壁的程序员老王
 published: 2026-04-02
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-07
 tags:
   - AI
   - 模型架构
@@ -41,6 +41,6 @@ DeepSeek V4 的 mHC 是另一条残差改造路线：它把残差流扩成多通
 - Linear、Activation 与 FFN：[[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - Token 间注意力：[[wiki/sources/模型架构：多头注意力与 QKV]]
 - FFN 与 MoE：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
-- Residual Stream 与内部表示：[[wiki/sources/模型原理：Token Space 与 Latent Space]]
+- Residual Stream 与内部表示：[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - 多通道约束残差：[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
 - 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

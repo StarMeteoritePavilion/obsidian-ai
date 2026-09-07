@@ -1,5 +1,5 @@
 ---
-title: KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent
+title: Kimi K2 Thinking：MoE 预训练、Agent 后训练与 INT4 部署
 source: https://www.bilibili.com/video/BV1sJCnBGESj
 author: 唐国梁Tommy
 created: 2025-11-12
@@ -10,125 +10,85 @@ tags:
   - Kimi-K2-Thinking
   - MoE
   - Agent
+updated: 2026-09-07
 ---
 
-> Kimi K2 Thinking 独立专题
+# Kimi K2 Thinking：MoE 预训练、Agent 后训练与 INT4 部署
 
-Moonshot AI 推出的 Kimi K2 系列以万亿参数级 Mixture-of-Experts（MoE）架构为基础。Kimi K2 Base 提供基础模型能力，Kimi K2 Thinking 则通过后训练把函数调用变成推理中的原生动作，使模型按照“思考—行动—再思考”的方式与工具和环境交互。
+Kimi K2 Thinking 是 Moonshot AI 在 Kimi K2 基础上发布的推理与工具调用模型。理解它需要分清两组资料：Kimi K2 技术报告解释基础模型的预训练、数据与 Agent 后训练；Kimi K2 Thinking 模型卡和发布页说明 Thinking 版本的架构摘要、INT4 部署、长程工具调用与评测。本文不把基础模型报告中的全部训练方法自动归为 Thinking 版本新增设计。
 
-这套路线同时处理六类问题：MuonClip 保持万亿参数训练稳定；Data Rephrasing 提高高质量数据的 Token 效率；大规模 Agent 数据合成提供工具使用轨迹；原生 INT4 降低部署成本；长程训练支持 200～300 次连续工具调用；Test-Time Scaling 在推理阶段增加思考与工具调用预算。
+## 架构摘要
 
-资料展示了三个应用案例：构建复杂前端编辑窗口、动态解释梯度下降，以及模拟病毒攻击血液细胞的生物过程。这些案例用于说明模型不仅生成文本，也能组合代码、交互界面和任务规划。
+官方模型卡给出的 Kimi K2 Thinking 配置如下：
 
-## 1.04T MoE 架构
+| 项目 | 官方模型卡数值 |
+| --- | ---: |
+| 总参数 | 1T |
+| 每个 Token 激活参数 | 32B |
+| 层数 | 61，包含1个Dense层 |
+| Attention Hidden Dimension | 7168 |
+| 注意力头 | 64 |
+| 专家数 | 384 |
+| 每个Token选择的专家数 | 8 |
+| 共享专家数 | 1 |
+| 词表 | 160K |
+| 上下文 | 256K |
+| 注意力机制 | MLA |
+| 激活函数 | SwiGLU |
 
-资料给出的 Kimi K2 架构包含 1.04T 总参数，每个 Token 激活 32B 参数。模型共有 384 个专家，每次由路由器选择 8 个专家，并加入 1 个共享专家共同处理。第一个 Transformer Block 使用标准密集 FFN，从第二个 Block 开始引入 MoE。
+Kimi K2技术报告正文把基础模型写为1.04T总参数，模型卡用1T作摘要，两种写法属于精确值与取整值的差异。32B激活参数表示一次前向只使用稀疏专家中的一部分，不能据此直接推出端到端速度或显存按相同比例下降；权重加载、专家通信、KV Cache和内核实现仍会影响部署成本。
 
-更早使用 MoE、增加专家数量并保持较低激活参数量，使模型容量和单次推理成本分离。更多、小型的专家用于形成更细的知识分工，但每个 Token 只调用其中一小部分。
+## 基础模型如何稳定完成预训练
 
-词表规模为 160K，资料将其作用概括为提高多语言和专业术语的编码效率。Kimi K2 Thinking 支持 256K 上下文。注意力机制采用 Multi-head Latent Attention（MLA），通过潜在表示压缩 Key-Value 状态，减少 KV Cache 占用。
+Kimi K2技术报告第2.1节介绍MuonClip。它把Muon、权重衰减、更新量RMS匹配和QK-Clip组合起来。QK-Clip读取前向计算中已经得到的各注意力头最大logit；当某头超过阈值时，缩放产生该头logit的相关Query和Key权重。报告在完整训练中使用阈值 $\tau=100$，并称Kimi K2在15.5T Token预训练中没有出现Loss Spike。
 
-## 与 DeepSeek R1 的架构取舍
+这里的结论属于Kimi K2基础模型训练记录。它说明Thinking版本所继承的基座怎样训练，不证明任何使用MuonClip的模型都能避免训练不稳定。
 
-资料将 Kimi K2 Thinking 与 DeepSeek R1 作了结构对比：
+## Data Rephrasing提高高质量数据利用率
 
-| 配置 | Kimi K2 Thinking | DeepSeek R1 |
-| --- | ---: | ---: |
-| 总参数量 | 1T | 671B |
-| 词表规模 | 160K | 129K |
-| 注意力头 | 64 | 128 |
-| MoE 专家 | 384 | 256 |
-| 激活参数量 | 32B | 37B |
-| 非 MoE 层 | 第 1 个 Block | 前 3 个 Block |
+技术报告第2.2节把知识数据改写拆成三步：多风格和多视角提示、长文档分块自回归改写、原文与改写结果的一致性检查。报告用早期K2检查点比较三种训练设置：
 
-这组设计减少注意力头、增加专家数量、更早引入 MoE，并把单 Token 激活参数控制在 32B。资料据此将 Kimi K2 的取舍概括为：用更大的总容量追求性能上限，同时降低每次推理实际动用的参数量。表中数字对应资料采用的模型版本，不能外推为所有 Kimi 与 DeepSeek 版本的固定差异。
+| 改写次数 | Epoch | SimpleQA准确率 |
+| ---: | ---: | ---: |
+| 0，原始Wiki文本 | 10 | 23.76 |
+| 1 | 10 | 27.39 |
+| 10 | 1 | 28.94 |
 
-## MuonClip：兼顾 Token 效率与训练稳定性
+这些数字来自技术报告Table 1，只证明该检查点、数据和训练设置下的结果。报告同时说明，大规模知识语料实际最多改写两次，因此不能把“改写10次”当成生产配方。
 
-万亿参数预训练面对两个问题：有限高质量数据应产生更高的有效学习信号，大规模训练还必须避免数值不稳定。Kimi K2 使用 Muon 优化器提高 Token 效率，但 Muon 扩展到大模型时可能引发 Attention Logit 爆炸。Logit 在 Softmax 之前由 Query 与 Key 的点积产生；数值过大时，Softmax 会接近 One-hot 分布，梯度可能爆炸或消失，最终造成 Loss Spike 甚至训练发散。
+## Agent数据合成
 
-两种常见方案各有局限。Logit Soft-Cap 直接限制最终 Logit，但 Query 与 Key 的点积在限制前已经变大；QK-Norm 通过归一化 Query 和 Key 控制点积，却难以直接适配 MLA 中没有完整物化的 Key 表示。
+技术报告第3.1.1节给出三阶段数据流：先建立真实与合成工具规范库，再为抽样工具组合生成Agent和带成功标准的任务，最后生成并过滤多轮工具调用轨迹。
 
-### QK-Clip 从权重端限制 Logit
+真实工具部分来自GitHub上的3000多个MCP工具；合成部分通过领域层级扩展生成20000多个工具。每项任务带明确Rubric；User Simulation生成多轮请求，Tool Execution Environment维护工具执行后的状态，Judge Agent按Rubric判断轨迹是否成功。编码等需要真实执行反馈的任务会把模拟器与真实沙箱结合。MCP是工具规范来源之一，不能概括为全部Agent训练数据。
 
-QK-Clip 不直接修改 Logit，而是在优化器完成权重更新后，根据各注意力头当前 Batch 的最大 Logit 判断是否干预。Kimi K2 使用阈值 $\tau=100$：未超过阈值时权重保持不变；超过阈值时，仅按头缩放产生 Logit 的 Query 与 Key 投影权重。
+## 强化学习机制的证据边界
 
-这种机制不改变当前训练步骤的前向和反向传播，只把已经观测到的最大 Logit 作为事后监控信号。按头干预而不是缩放整层，可以减少对正常注意力头的影响。适配 MLA 时，非共享组件按相应比例缩放，共享组件保持不变，避免一个注意力头的异常影响其他头。
+Kimi K2技术报告第3.2节描述的是K2基础模型的联合强化学习：可验证任务使用结果检查器，开放式任务使用Self-Critique Rubric Reward。训练还通过按任务设置最大Token预算、辅助PTX Loss和温度衰减，分别控制输出成本、缓解遗忘并在训练后期减少随机性。
 
-MuonClip 把原始 Muon、Weight Decay、Consistent RMS Matching 和 QK-Clip 组合为一个优化器。资料引用的训练曲线显示，普通 Muon 的最大 Attention Logit 会超过 1,000；MuonClip 在达到 100 后执行限制，随后 Logit 回落到稳定范围。Kimi K2 据此完成 15.5T Token 的预训练，资料称全程没有 Loss Spike。
+Kimi K2 Thinking官方发布页没有逐项声明这些基础模型方法在Thinking后训练中的配置。因此，这些内容只用于解释模型家族已有的训练基础；不能把它们写成Thinking版本独有的完整训练配方。
 
-## Data Rephrasing：改写比机械重复更有效
+## 原生INT4部署
 
-高质量人类数据日益稀缺，机械重复同一数据会增加过拟合风险。Data Rephrasing 在保持事实内容的前提下，生成不同风格和视角的表达，提高每个 Token 提供的有效学习信号。
+Thinking发布页说明，后训练阶段对MoE组件应用INT4 Weight-only量化感知训练。官方称低延迟模式下生成速度约提高2倍，并将发布页中的全部基准结果标为INT4精度。这个数字是官方发布口径，依赖其推理服务、硬件和基线，不能外推到任意本地量化方案。
 
-数据改写分为三步：
+## 长程工具调用与测试时扩展
 
-1. 通过 Prompt Engineering 引导大模型从多种风格和视角忠实改写原文。
-2. 将长文档分块，自回归地逐块改写，再重新拼接以保持全局连贯。
-3. 比较改写段落与原文的语义一致性，执行 Fidelity Verification。
+官方把Kimi K2 Thinking描述为能交错执行推理和函数调用，并称其可以连续完成200至300次工具调用。该说法来自模型卡和发布页的厂商测试，不是任意任务上的可靠性保证。
 
-资料引用的早期 K2 Checkpoint 在 SimpleQA 上得到以下结果：原始 Wiki 文本训练 10 个 Epoch 的准确率为 23.76；改写 1 次并训练 10 个 Epoch 为 27.39；改写 10 次、每份训练 1 个 Epoch 为 28.94。该实验说明，在对应数据与早期 Checkpoint 上，多样化改写比机械重复提供了更高的准确率，不代表任意数据经过更多改写都会持续提升。
+发布页的Agent评测设定更具体：HLE配备搜索、代码解释器和网页浏览工具，最大120步，每步48K推理Token预算；Agent Search任务最大300步，每步24K推理Token预算。输入超过256K时，评测会隐藏之前的工具输出。这些条件说明“长程”能力依赖工具、步数预算和上下文管理，不能只看调用次数。
 
-## Kimi K2 Thinking 的 Agent SFT
+## 评测应按设置阅读
 
-Kimi K2 Thinking 的后训练首先通过 SFT 教模型使用工具。真实世界的工具调用轨迹成本高、隐私约束多，也难以大规模获取，因此训练使用三阶段 Agent 数据合成系统。
+官方发布页报告Kimi K2 Thinking在HLE工具设置为44.9、BrowseComp为60.2、SWE-bench Verified为71.3。Heavy Mode先并行生成8条轨迹，再反思汇总最终结果，因此Heavy分数不能与单轨迹默认模式直接比较。编码任务使用官方内部评测Harness，结果为5次独立运行的平均值；部分对照分数由官方在相同条件下重测并用星号标出。
 
-### 工具规范生成
+这些结果用于描述特定版本在公开基准与官方Harness中的表现，不足以证明它在所有搜索、编程或工具调用任务上优于其他模型。
 
-工具库包含 3,000 多个真实世界工具规范，以及 20,000 多个合成工具规范。真实工具来自 GitHub、MCP 等来源，合成工具用于扩展不同专业领域和使用场景。
+## 来源与版本
 
-### Agent 与任务生成
-
-系统从工具库中抽取工具组合，生成数千个具有不同能力、领域和行为模式的 Agent，再为它们设计从简单到复杂的任务。每项任务都带有明确的成功标准 Rubric，为后续筛选提供依据。
-
-### 轨迹生成与过滤
-
-轨迹生成系统包含三个组件：User Agent 模拟不同沟通风格的用户；Tool Simulator 执行工具调用并返回反馈；Judge Agent 根据预设 Rubric 评估交互轨迹，只保留成功轨迹用于训练。
-
-模拟环境便于扩展，但真实性有限。编码和软件工程等领域因此采用 Hybrid Approach，把模拟工具与真实执行沙箱结合，让模型接触真实执行结果和失败反馈。
-
-## 强化学习的两类奖励
-
-SFT 之后的强化学习用于提高 Token 效率和泛化能力，特别是主观偏好任务与复杂推理任务。奖励分为两类。
-
-第一类是具有明确对错标准的 Verifiable Rewards“Gym”（RLVR），覆盖数学与 STEM、编码与软件工程，以及 Faithfulness。数学可核对答案，代码可运行测试，忠实性可用专门模型判断回答是否得到来源支持。
-
-第二类是 Self-Critique Rubric Reward，适用于创意写作等没有唯一答案的主观任务。K2 同时扮演 Actor 和 Critic：Actor 生成多个回答，Critic 按清晰度、客观性和避免 Sycophancy 等 Rubric 比较、排序并产生偏好信号。Critic 又持续使用 Verifiable Rewards“Gym”的客观信号校准，使主观判断建立在部分可验证反馈上。
-
-强化学习还采用三项改进：Budget Control 惩罚过长回答，鼓励简洁生成；PTX Loss 在强化学习目标中加入预训练损失，降低灾难性遗忘；Temperature Decay 让训练逐步从探索转向利用并促进收敛。
-
-经过 SFT 与 RL，函数调用成为模型推理流程中的原生动作。训练对象不只是最终答案，还包括怎样规划、调用工具、读取环境反馈并继续思考。
-
-## 原生 INT4 与推理架构
-
-Kimi K2 Thinking 在后训练阶段采用 Quantization-Aware Training（QAT），对 MoE 组件进行 Weight-only INT4 量化。资料称原生 INT4 使生成速度提高约 2 倍，显著降低 GPU 显存占用，同时性能接近无损；引用的公开评测结果也以 INT4 精度运行。该收益取决于资料对应的模型、硬件和推理实现，不能直接外推到其他部署。
-
-架构侧继续通过两个选择降低推理成本：注意力头由对比模型的 128 个减少到 64 个，从而降低长上下文中的注意力计算和 KV Cache；MoE 从第二个 Block 开始，使更多计算进入稀疏专家路径。
-
-## Test-Time Scaling 与长程工具调用
-
-Kimi K2 Thinking 不只在训练时扩大参数和数据，也在推理阶段增加思考时间与工具调用预算。资料将这种 Test-Time Scaling 描述为：随着允许的推理时间和调用次数增加，复杂任务表现可以继续提高。
-
-长程 Agent 任务的关键是维持目标和上下文一致性。资料称，一些对比模型在 30～50 步工具调用后开始性能下降或偏离目标，而 Kimi K2 Thinking 可以完成 200～300 次连续工具调用。它由此能够执行网页浏览、知识检索、编程等多步骤组合任务。这一范围来自对应演示和评测设置，不是任意任务上的可靠性保证。
-
-## 评测结果及其边界
-
-资料从推理、Agent Search 和编码三类任务比较 Kimi K2 Thinking、GPT-5 与 Claude Sonnet 4.5。
-
-推理任务中，HLE 使用工具时，Kimi K2 Thinking 为 44.9，GPT-5 为 41.7，Claude Sonnet 4.5 为 32.0；Heavy 设置下，Kimi K2 Thinking 为 51.0，GPT-5 为 42.0。AIME 2025 的 Heavy 设置中，Kimi K2 Thinking 与 GPT-5 都为 100.0。
-
-Agent Search 中，BrowseComp 分别为 60.2、54.9 和 24.1，Seal-0 分别为 56.3、51.4 和 53.4；但 BrowseComp-ZH 上 Kimi K2 Thinking 为 62.3，略低于 GPT-5 的 63.0，高于 Claude Sonnet 4.5 的 42.4。因此，不能把 Agent Search 结果概括为 Kimi K2 Thinking 在每一项都领先。
-
-编码任务中，Kimi K2 Thinking 在 SWE-bench Verified 为 71.3，低于 GPT-5 的 74.9 和 Claude Sonnet 4.5 的 77.2；SWE-bench Multilingual 为 61.1，高于资料所列 GPT-5 的 55.3；SciCode 为 44.8，略高于 GPT-5 的 42.9 和 Claude Sonnet 4.5 的 44.7。
-
-这些数字来自资料引用的具体工具、推理预算和评测协议，只能用于理解对应设置下的能力分布，不能代表模型在所有任务中的普遍排名。
-
-## API 演示留下的身份边界
-
-作者通过后台配置的 Kimi K2 Thinking API 询问模型身份。模型回答自己属于 Kimi 系列，却没有进一步准确说出 Kimi K2 Thinking。这个简单案例不构成能力评测，但说明模型的自我报告不能代替调用端保存的模型标识和请求配置。
-
-## 结论
-
-Kimi K2 Thinking 的技术链不是单一架构创新，而是把大容量 MoE、稳定预训练、数据改写、Agent 轨迹合成、强化学习、量化部署和测试时扩展组合起来。MoE 分离总容量与激活成本，MuonClip 支撑 15.5T Token 稳定训练，Data Rephrasing 提高高质量数据的利用率，SFT 与 RL 则把工具调用训练成推理中的原生行为。
-
-这种组合使模型更接近可执行长程任务的 Agent 核心，但 200～300 步调用能力、INT4 收益和评测优势都依赖具体环境、工具、预算与验证协议。真正的工程价值不只是模型能够长时间思考，而是每次行动都有明确工具接口、真实环境反馈、成功标准和独立检查。
+| 来源 | 版本与定位 | 支持范围 |
+| --- | --- | --- |
+| [Kimi K2 Thinking官方模型卡](https://huggingface.co/moonshotai/Kimi-K2-Thinking) | 2026-09-07核查；“Key Features”“Model Summary” | 架构摘要、INT4、200至300次工具调用 |
+| [Kimi K2 Thinking官方发布页](https://moonshotai.github.io/Kimi-K2/thinking.html) | 2026-09-07核查；“Inference Efficiency”“Full Evaluations”及脚注 | INT4范围、评测数字、工具和预算设置、Heavy Mode |
+| [Kimi K2技术报告](https://arxiv.org/html/2507.20534v2) | arXiv:2507.20534v2，2026-02-03；第2.1、2.2、2.3、3.1.1、3.2节 | 基础模型MuonClip、数据改写、架构、Agent数据合成与RL；不冒充Thinking版本新增方法 |
+| [原视频](https://www.bilibili.com/video/BV1sJCnBGESj) | 唐国梁Tommy，2025-11-12 | 文章主题和讲解线索；关键数字以以上官方资料为准 |

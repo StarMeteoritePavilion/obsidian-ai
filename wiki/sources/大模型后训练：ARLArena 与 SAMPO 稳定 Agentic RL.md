@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1vcPEzuERE
 author: 唐国梁Tommy
 published: 2026-03-02
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-07
 tags:
   - AI
   - 模型工程
@@ -18,7 +18,7 @@ tags:
 
 # 大模型后训练：ARLArena 与 SAMPO 稳定 Agentic RL
 
-原始资料：[[raw/sources/模型工程/训练与后训练/ARLArena：4B小模型用SAMPO训练，Agent任务成功率碾压GPT-5.2|ARLArena：4B 小模型用 SAMPO 训练]]
+原始资料：[[raw/sources/模型工程/训练与后训练/ARLArena：4B小模型用SAMPO训练，Agent任务成功率碾压GPT-5.2|ARLArena：多轮 Agent 强化学习的稳定性与 SAMPO]]
 
 ## 核心结论
 

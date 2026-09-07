@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1k6yWBEEmH
 author: 隔壁的程序员老王
 published: 2025-10-30
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-07
 tags:
   - AI
   - 模型架构
@@ -50,6 +50,6 @@ Decoder 每一步都为词表中的 Token 计算分数或概率，再通过解�
 
 - 下一条：[[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - 注意力内部机制：[[wiki/sources/模型架构：多头注意力与 QKV]]
-- Token 与隐藏表示：[[wiki/sources/模型原理：Token Space 与 Latent Space]]
+- Token 与隐藏表示：[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - Prefill、Decode 与 API 成本：[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
 - 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

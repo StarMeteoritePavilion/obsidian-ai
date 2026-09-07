@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1hLwMzwEVx
 author: 唐国梁Tommy
 published: 2026-03-15
 ingested: 2026-09-04
-updated: 2026-09-04
+updated: 2026-09-07
 tags:
   - AI
   - 模型架构
@@ -44,5 +44,5 @@ Engram-40B 把记忆表扩展到 18.5B 参数，总参数为 39.5B，激活参�
 
 - MoE 的稀疏计算：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - Token、Attention 与模型内部表示：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
-- 外部非参数化检索：[[wiki/sources/上下文工程：第四期 RAG 检索增强生成]]
+- 外部非参数化检索：[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]]
 - HBM、DDR5、PCIe 与参数搬运：[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态]]
