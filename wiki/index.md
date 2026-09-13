@@ -1,6 +1,6 @@
 ---
 title: AI 知识索引
-updated: 2026-09-07
+updated: 2026-09-13
 tags:
   - AI
   - 索引
@@ -8,7 +8,7 @@ tags:
 
 # AI 知识索引
 
-本知识库以 `raw/sources/` 中的 **68 篇原始资料**为事实来源，维护 **68 篇一一对应的资料摘要**与 **11 篇跨资料综合**。原始资料保持不变；摘要负责提炼证据与限制，综合页负责跨来源比较、冲突和长期结论。
+本知识库以 `raw/sources/` 中的 **71 篇原始资料**为事实来源，维护 **71 篇一一对应的资料摘要**与 **11 篇跨资料综合**。原始资料保持不变；摘要负责提炼证据与限制，综合页负责跨来源比较、冲突和长期结论。
 
 维护历史见 [[wiki/log|维护日志]]。
 
@@ -97,6 +97,8 @@ tags:
 
 | 页面 | 内容 |
 | --- | --- |
+| [[wiki/sources/Codex：禁用 WebSocket 解决重复重连]] | Codex 的 Responses API 可以使用 WebSocket 或 HTTPS Streaming。HTTPS 可用而 WebSocket 链路不稳定时，可在保持 Responses API 和 OpenAI 身份验证的同时，将模型提供方的 `supports_websockets` 设为 `false`，直接进入 HTTPS Streaming 路径。 |
+| [[wiki/sources/Codex：请求结构、服务端通信与 Token 计量]] | Codex 的完整请求不只包含用户问题，还包含基础规则、运行时注入、项目上下文和工具定义。单次抓包中，1 Token 的 `hello` 最终形成 14,708 Token 用量。 |
 | [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]] | HarnessX 把 Prompt、工具、记忆、控制流和运行环境组成的 Agent Harness 从静态手工代码改造成可序列化、比较、替换和自动进化的一等对象。它以窄接口 Processor 和固定生命周期挂载点实现组合。 |
 | [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解]] | 原始资料：Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？。 |
 | [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景]] | 资料把 Harness Engineering 定义为模型外部运行系统的设计：它不只决定模型看到什么，还管理任务拆解、工具、权限、状态、验证、恢复、日志和人类接管。按照本资料的包含口径，Harness 包含 Context。 |
@@ -108,6 +110,7 @@ tags:
 
 | 页面 | 内容 |
 | --- | --- |
+| [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE]] | Tokenizer 把文字切成 Token 并映射为数字 ID；Token ID 再经 Embedding 进入 Transformer。Word-based、Character-based 与 Subword 分别在词表规模、序列长度、语义完整性和未知文本覆盖之间取舍，BPE 通过反复合并高频相邻单元形成固定词表与规则。 |
 | [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]] | 资料解读的论文提出一种数据分布视角：可见思维链可能是模型从分布内数据中学到的结构化归纳偏置所生成的推理轨迹，其有效性受到训练数据与测试问题之间分布差异的约束。DataAlchemy 的可控实验为这一解释提供了任务、长度和格式三个维度的证据。 |
 | [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]] | 大语言模型以离散Token作为输入和输出接口，主要计算发生在连续表示中：Tokenizer把文本变为Token ID，Token Embedding提供初始向量，Transformer形成上下文化Hidden State。 |
 | [[wiki/sources/模型架构：Linear、Activation 与 MLP]] | Linear 用可训练的权重和偏置完成向量间的线性映射；多个 Linear 直接串联后仍然只能表示线性关系。在线性层之间加入 ReLU、Sigmoid、tanh 或 GELU 等非线性激活函数。 |

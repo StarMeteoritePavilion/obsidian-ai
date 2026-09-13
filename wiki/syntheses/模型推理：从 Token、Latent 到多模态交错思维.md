@@ -1,7 +1,7 @@
 ---
 title: 模型推理：从 Token、Latent 到多模态交错思维
 created: 2026-09-03
-updated: 2026-09-07
+updated: 2026-09-13
 tags:
   - AI
   - 模型原理
@@ -26,6 +26,10 @@ tags:
 ## Token ID、Token Embedding 与 RAG Embedding
 
 Tokenizer 把文字切分并映射为固定词表中的 Token ID；Token Embedding 再把离散编号映射为连续向量，并随大语言模型共同训练。前者是训练期间固定的预处理，后者是模型参数。One-Hot 乘以线性映射与直接查 Embedding 表在数学关系上相通，但工程实现不必显式构造完整 One-Hot 向量。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与两类 Embedding]]）
+
+Tokenizer 的切分粒度需要在词表规模、序列长度、语义完整性和未知文本覆盖之间取舍。Word-based 切分保留完整词义和短序列，却会产生 OOV／`[UNK]` 并扩大词表；Character-based 使用小词表组合新词，却拉长序列并把词义拆散；Subword 则保留高频大单元、把罕见词拆成小片。BPE 通过反复合并高频相邻单元建立词表，并在推理时按固定规则顺序重放合并，是这类折中的一种实现。（[[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE|Tokenizer 与 BPE]]）
+
+可见文本重新分词也不等于 API 的输出计量。Codex 抓包中的三个 GPT-5.5 响应分别出现 `15→19`、`11→15` 和 `4→8`，作者将差值解释为系统开销；这三个样本来自同一次对话，只能证明该次响应的 `usage.output_tokens` 比可见文本重新分词多 4，不能推出跨模型、跨版本的固定差值。（[[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE|Codex Tokenizer 案例]]）
 
 RAG Embedding 面向整段文本，训练目标是让相关文本靠近、无关文本远离，通常还需要 Pooling 汇总多个位置。它与大语言模型内部表示都属于连续向量，却不能因此直接等同：Token Embedding 服务于模型输入，下一个 Token 预测塑造生成模型；RAG Embedding 服务于语义检索，对比学习塑造文本距离。任意 LLM Hidden State 也不能未经单独训练和处理就视为可用的检索向量。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与两类 Embedding]]、[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索|RAG 个人知识库]]）
 
@@ -139,6 +143,7 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 
 - [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
 - [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
+- [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE]]
 - [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]]
 - [[wiki/sources/模型架构：Linear、Activation 与 MLP]]

@@ -903,3 +903,31 @@
 - 核对68篇摘要、11篇综合和1篇问题页均进入知识网络：索引无缺项，知识页面均有出链和来自其他知识页的入链。
 - Obsidian未解析链接为0；未发现重复frontmatter标题、未闭合代码围栏、缺失脚注定义或Markdown空白错误。
 - Obsidian报告的无入链文件仅为`AGENTS.md`、`LICENSE`、`README.md`和`raw/README.md`，均属于规范或仓库入口，不是孤立知识页面。
+
+## [2026-09-13] ingest | Codex 重复重连与 HTTPS 传输配置
+
+- 导入“Codex工作原理”官方合集“正片”首个视频《如何修复Codex总是重新连接Reconnecting》，保存正式原始文章并创建资料摘要。
+- 官方视频时长 281 秒；本地字幕共 121 条，时间范围为 00:00:00.000—00:04:40.440。原始音轨时长 280.520 秒，主题顺序和主要内容对应；未发现重复段落或旁白缺失，没有删除任何时间段。
+- 依据原始音轨、关键画面和官方简介校正 Codex、OpenAI、Responses API、WebSocket、HTTPS Streaming、HTTP POST、SSE、`codex-rs`、`client.rs`、`stream()`、`responses_websocket_enabled()`、`wire_api`、`supports_websockets`、`disable_websockets`、`requires_openai_auth`、`config.toml` 与 Chat Completions API 等转写错误。
+- 将 API 语义、身份验证和传输协议的配置边界整合进[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，同步更新索引。字幕、音视频、抽帧和辅助转写文件均未进入知识库。
+
+## [2026-09-13] ingest | Codex 请求结构、服务端通信与 Token 计量
+
+- 用户提供的 121 条 SRT 字幕覆盖 00:00:00.000—00:04:40.440，SHA-256 为 `e9c15ddb374427f6fcb08426c0a56f526738cf6092e07895df2b9afa910c14e6`。它的内容与时长都对应合集上一条《如何修复Codex总是重新连接Reconnecting》，与指定视频 `BV1VJ7j6jE4L` 不对应，本次整体排除。
+- 官方接口确认标题为《解密Codex命令行和OpenAI服务器后端如何通信》，作者为“张司机在路上”，发布于 2026-06-26，单 P，官方时长 459 秒；官方字幕轨和官方章节均为空。
+- 对照 458.733 秒原始音轨、全片辅助转写、关键画面与官方简介完成核验，核验级别为原始音轨。有效旁白覆盖 00:00:00.000—00:07:38.640，最大相邻语音间隔为 0.6 秒；未发现重复播放、正文缺失或越过视频结尾的内容，未删除任何目标视频时间段。
+- 官方“Codex工作原理”合集将本视频列为“正片”第 2 条；开头直接解析请求，并承接上一条的 HTTPS 传输配置，结尾预告后续缓存机制，因此定位为该系列第 2 篇正片。
+- 依据原始音轨、关键画面和官方简介校正 `claude-tap`、`phistory.cc`、`cchistory`、Pi Agent、Mario Zechner、Codex CLI、Claude Code、`instructions`、`input`、`developer`、`user`、`permissions_instructions`、`collaboration_mode`、`skills_instructions`、`plugins_instructions`、`environment_context`、`tools`、`shell_command`、`request_user_input`、`apply_patch`、`view_image`、`reasoning.effort`、`store`、`prompt_cache_key`、`output`、`function_call`、`usage`、`cached_tokens`、Anthropic、Claude Opus 4.8、GPT-5.5 与 `cache_control` 等转写错误或格式。
+- 保留 14,694 输入 Token、2,432 缓存命中 Token、14 输出 Token 和 14,708 总 Token 的完整案例口径；同时标记抓包页与旁白所称 16 个工具与结构图所标 14 个工具定义互相冲突，不将任一数字写为 Codex 固定工具数。
+- 将原始音轨内容改写为正式博客文章，删除口播自指、听众互动、视频载体提示和无意义转场；完整保留抓包工具、请求四块内容、关键参数、响应结构、Token 用量、定价对比、作者的 To B／To C 解释及其边界。
+- 新建资料摘要，将完整请求成本与 Harness 职责分层整合进[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，并更新内容索引。用户错配 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 70 篇原始资料、70 篇资料摘要和 11 篇跨资料综合，当前系列无期数冲突。
+
+## [2026-09-13] ingest | Codex Tokenizer、Token ID 与 BPE
+
+- 官方接口确认标题为《Codex里token是啥？文字是如何变成token的》，作者为“张司机在路上”，发布于 2026-07-06，单 P，官方时长 488 秒；官方字幕轨和官方章节均为空。
+- 正确 SRT 的 SHA-256 为 `a6a82e0db60638ee38a0bb11f6eb4b44fa6e49dbafabeebfbcce555d74f811c9`，共 241 条，覆盖 00:00:00.000—00:08:07.760。对照 487.782 秒原始音轨、关键画面和官方简介完成原始音轨核验；未发现重复播放、正文缺失或越过视频结尾的内容，未删除任何时间段。
+- 官方“Codex工作原理”合集将本视频列为“正片”第 3 条；正文完整讲解 Tokenizer、Token ID、Embedding、词表粒度、Subword 与 BPE，定位为系列第 3 篇正片。
+- 依据音轨、画面和官方简介校正 Codex、GPT-5.5、Tokenizer、Token ID、Embedding、Transformer、Vocabulary、Word-based、Character-based、Out of Vocabulary、OOV、`[UNK]`、Unknown Token、Subword、`unpredictable`、`un`、`predict`、`able`、Byte Pair Encoding、BPE、`tiktoken`、Claude Code 与 GitHub 等转写错误或格式。
+- 保留同一次 Codex 对话中可见文本重新分词与 `usage.output_tokens` 的三组差值：`15→19`、`11→15`、`4→8`；明确它们只是本次抓包样本，不构成所有模型和版本固定增加 4 Token 的规则。
+- 将内容改写为正式博客文章，删除口播自指、听众互动和载体提示，完整保留分词示例、编码／解码链路、三种词表粒度、BPE 训练与推理过程、模型绑定关系及限定条件。
+- 新建资料摘要，将切分粒度、BPE 和 API 输出计量边界整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]，并与前两篇 Codex 系列摘要及既有 Token／Embedding 摘要互链。字幕、原始音视频和关键帧均未进入知识库；写入后共有 71 篇原始资料、71 篇资料摘要和 11 篇跨资料综合，当前系列无期数冲突。

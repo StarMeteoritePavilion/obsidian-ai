@@ -8,7 +8,7 @@ author:
   - 唐国梁Tommy
 published: 2026-01-08
 ingested: 2026-09-03
-updated: 2026-09-07
+updated: 2026-09-13
 tags:
   - 基础原理
   - AI
@@ -44,6 +44,7 @@ Coconut和Soft Thinking把部分中间步骤保留在连续状态中，但隐藏
 
 ## 关联
 
+- [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE]]
 - [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
 - [[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - [[wiki/sources/模型架构：多头注意力与 QKV]]

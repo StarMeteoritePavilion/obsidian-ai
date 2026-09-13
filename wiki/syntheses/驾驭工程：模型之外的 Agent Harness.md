@@ -1,6 +1,6 @@
 ---
 title: 驾驭工程：模型之外的 Agent Harness
-updated: 2026-09-07
+updated: 2026-09-13
 tags:
   - AI
   - Agent
@@ -51,6 +51,10 @@ OpenAI 案例进一步把版本化代码库知识、确定性 Linter／结构测
 最小 Agent 链路包含两个不同接口。Agent 通过 System Prompt 中的格式约定或 Function Calling 向模型声明工具，模型返回调用请求；Agent 再直接执行本地函数，或作为 MCP Client 调用 MCP Server 暴露的 Tool。工具结果由 Agent 交回模型，模型据此继续判断或生成最终回复。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|AI Agent 基础]]）
 
 Function Calling 解决模型与 Agent 之间的结构化调用，MCP 解决 Agent 与外部服务之间的连接。MCP 还可以暴露 Resource 与 Prompt，并不绑定具体模型。这些接口构成 Harness 的行动层，但不会自动提供权限、安全、验证、持久状态、停止或恢复机制。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|AI Agent 基础]]）
+
+传输能力同样属于 Harness 的运行配置。Codex 重连资料展示了一项局部调整：`wire_api` 仍为 `responses`，OpenAI 身份验证也保持启用，只把模型提供方的 `supports_websockets` 设为 `false`，便可让请求绕过 WebSocket 并直接进入 HTTPS Streaming。它说明 API 语义、身份验证和传输协议是不同配置维度，故障定位时不能把三者混成“接口不可用”。这项处理仅适用于 HTTPS 可用而 WebSocket 链路不稳定的情况，并受视频所示 Codex 版本约束。（[[wiki/sources/Codex：禁用 WebSocket 解决重复重连|Codex 重连处理]]）
+
+同系列的下一个抓包案例继续展示请求边界：`instructions` 承载基础规则，`developer` 消息注入权限、协作模式、Skill 和插件清单，`user` 消息承载项目规范、环境、历史和当前问题，`tools` 定义行动能力。这些内容分别属于信息治理、安全边界和行动接口，却在一次模型请求中共同消耗上下文。资料对工具数量的 16 与 14 两种标注彼此冲突，因此只支持“工具 schema 是可观测成本”，不支持将某个数量当作 Codex 的固定能力。（[[wiki/sources/Codex：请求结构、服务端通信与 Token 计量|Codex 请求解剖]]）
 
 Pydantic AI 的最小文件管理示例展示了静态 Harness 的最小闭环：`tools` 暴露 `read_file`、`list_files` 与 `rename_file`，`run_sync()` 组织模型和工具调用，应用再保存 `resp.all_messages()` 并通过 `message_history` 重建后续上下文。工具注册没有自动产生跨调用记忆；消息历史也没有提供持久化、权限、验证或恢复。这两部分分别属于行动接口与信息治理，不能合并为一个模糊的“Agent 会记住并执行”。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|Pydantic AI 实践]]）
 
@@ -127,6 +131,8 @@ Harness Engineering 全景资料中的组织案例主要由 OpenAI、Anthropic�
 - [[wiki/sources/驾驭工程：系列完结，下一步该往哪走？]]
 - [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]]
 - [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解]]
+- [[wiki/sources/Codex：禁用 WebSocket 解决重复重连]]
+- [[wiki/sources/Codex：请求结构、服务端通信与 Token 计量]]
 - [[wiki/sources/大模型后训练：RLM Harness 组合泛化]]
 - [[wiki/sources/大模型后训练：SKILLRL 技能增强强化学习]]
 - [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]]
