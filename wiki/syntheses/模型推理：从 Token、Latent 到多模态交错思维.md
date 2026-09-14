@@ -1,7 +1,7 @@
 ---
 title: 模型推理：从 Token、Latent 到多模态交错思维
 created: 2026-09-03
-updated: 2026-09-13
+updated: 2026-09-14
 tags:
   - AI
   - 模型原理
@@ -39,6 +39,14 @@ RAG Embedding 面向整段文本，训练目标是让相关文本靠近、无关
 
 三种路线共享 Transformer 的分层参数计算，却不能只用“理解”与“生成”两个拟人化标签区分。实际差异还包括注意力可见范围、是否接收独立 Encoder 输出、训练目标和解码方式。资料中的“含义矩阵”适合作为内部表示的教学类比，不代表模型形成了可直接读取、与人类概念一一对应的语义表。
 
+## 位置编码怎样进入注意力点积
+
+最朴素的 Attention 没有单独读取 Token 位置。前序 Token 换序时，Key 的分数项与对应 Value 一起换序，加权求和仍然不变；位置编码由此负责把顺序注入输入表示。原始 Transformer 使用成对的正弦与余弦，角频率为 $\omega_i=1/10000^{2i/d}$：低维组转得快，高维组转得慢，编码只依赖绝对位置而不依赖序列总长。（[[wiki/sources/模型架构：正弦位置编码与注意力的顺序缺口|正弦位置编码]]）
+
+正弦位置编码自身可以通过旋转矩阵从 $PE(pos)$ 得到 $PE(pos+k)$，两个位置编码的点积也只保留位置差；但把它与 Embedding 相加后再投影，Query／Key 点积会产生语义与单个位置的交叉项，投影矩阵也会作用于位置编码。RoPE 改在投影后对 Query、Key 的二维分量组执行旋转，利用 $RoPE(m)^TRoPE(n)=RoPE(n-m)$，让点积直接表示为未旋转 Query、Key 与相对位置 $n-m$ 的函数。（[[wiki/sources/模型架构：RoPE 相对位置与旋转点积|RoPE 相对位置]]）
+
+这一结论比较的是资料所写两种注入方式的代数结构，不是跨模型性能排名。资料只列举 DeepSeek V3、GLM-4.5 与 Qwen3 作为发布时实例，没有提供准确率、上下文外推或运行效率实验，因此不能从公式直接推出统一收益。
+
 ## Linear、Activation 与 MLP 提供基础变换
 
 Linear 通过 $y=Wx+b$ 把一个向量映射为另一个向量，Weight 与 Bias 由训练数据确定。多个 Linear 直接复合仍然是线性函数；ReLU、Sigmoid、tanh 和 GELU 等 Activation 在层间引入非线性，使 FFN／MLP 能够拟合更复杂的关系。Transformer 的 Feed Forward 模块建立在这类结构上。（[[wiki/sources/模型架构：Linear、Activation 与 MLP|Linear、Activation 与 MLP]]）
@@ -55,6 +63,8 @@ Token 进入 Transformer 后先映射为 Embedding，再分别投影为 Query、
 
 多头结构让多组独立投影并行学习不同关系，再拼接各头结果。资料用“语法表”“需求表”和“内容矩阵”解释 Key、Query 与 Value，但明确这些只是教学类比；真实隐向量维度与 Attention Head 通常不能直接命名为可读概念。这条链路解释 Latent State 怎样吸收上下文，不意味着人类能够逐维读出模型内部含义。
 
+多头计算也会直接变成 Decode 阶段的存储成本。MHA 为每个 Query Head 保存独立 Key 和 Value；MQA 让所有 Query Head 共享一套 KV；GQA 则在组内共享。因此 KV Cache 公式中决定 Head 方向存储量的是 KV Head 数 $h_{kv}$，而不是 Query Head 数本身。资料对 MHA、MQA 与 GQA 表达能力的排序没有提供评测数字，只能作为教学性取舍描述。（[[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA|KV Cache 显存公式]]）
+
 ## Attention Residuals 沿深度选择表示
 
 标准残差连接让原始输入与各模块输出沿深度连续相加，为训练信号提供直通路径；固定单位权重也会使深层隐藏表示的数值持续累积，并稀释单层贡献。Attention Residuals（AttnRes）把 Attention 的动态聚合从 Token 维度移到层深度：当前层使用可训练 pseudo-query 生成 Softmax 权重，再选择性汇总此前表示。（[[wiki/sources/模型架构：Attention Residuals 层间选择性聚合|Attention Residuals]]）
@@ -64,6 +74,8 @@ Full AttnRes 访问所有此前层输出，提供细粒度选择，但需要保�
 ## MoE 把容量与活跃计算分开
 
 Attention 形成上下文表示后，FFN 负责继续变换每个位置。Dense 模型让所有 FFN 参数处理每个 Token；MoE 把大型 FFN 拆为多个专家，由 Router 为当前 Token 选择少量路由专家，再与共享专家的结果加权组合。总参数因而表示模型容纳的专家容量，激活参数则更接近单次 Token 实际使用的计算规模。（[[wiki/sources/模型架构：MoE 稀疏专家路由|MoE 稀疏专家路由]]）
+
+路由的完整数据流还包含打分、Dispatch、Expert 计算与加权、Combine。Top-K 选出多个 Expert 后，需要归一化选中分数再混合输出；增加 Expert 总数不要求同步提高每个 Token 的 Top-K。资料所示 Auxiliary Loss 用 Router 平均概率 $P_i$ 与实际选择频率 $f_i$ 的乘积约束负载，但没有给出真实模型的训练消融，不能由教学示例推出统一系数或收益。（[[wiki/sources/模型架构：MoE 路由、Top-K 与负载均衡|MoE 路由与负载均衡]]）
 
 DeepSeekMoE 对比中，145B MoE 有 144.6B 总参数、22.2B 激活参数，每 4K Token FLOPs 为 585.6T；67B Dense 的总参数和激活参数均为 67.4B，对应 2057.5T FLOPs。资料据此概括 MoE 的计算优势，但该表没有直接测量端到端延迟或 API Token 价格，不能用 FLOPs 代替这两项指标。
 
@@ -96,6 +108,8 @@ MCoT 的能力还取决于训练路线和数据质量。资料将其分为 Promp
 ## 可见思维链与内部计算不是同一对象
 
 可见 CoT 是模型在 Token Space 中生成的文本，内部计算则发生在不可直接读取的 Latent State 中。前者可以帮助人检查步骤，却不能自动成为后者的忠实记录。1776 年案例中，模型正确叙述闰年规则后给出相反结论；DataAlchemy 的任务泛化实验还出现了错误推理过程与正确答案并存的情况，后者可由两种变换在实验设置中的可交换性解释。（[[wiki/sources/大语言模型：思维链的模式匹配与泛化边界|思维链泛化边界]]）
+
+Claude Code 的 Thinking 抓包补充了运行时链路：请求使用 `thinking: adaptive` 与 `effort: high`，响应先生成 Thinking Block，再生成 Text Block；按自回归机制，前一段 Token 会成为后一段的上下文。TTL 缓存案例中，两块内容分别承担根因定位与修复说明。这证明当次可见中间文本参与了后续生成，但单个案例没有关闭 Thinking 的同题对照，也不能证明可见文本完整反映模型内部计算。（[[wiki/sources/Claude Code：Thinking 模式、Adaptive 与 Effort|Claude Code Thinking 模式]]）
 
 DataAlchemy 进一步从任务、长度和格式三个维度观察到：测试分布偏离训练分布时，可见推理链会变得脆弱。该结果支持思维链受到训练数据分布约束的解释，但不能据此断言全部大模型内部都不存在抽象推理。评估时应同时检查最终答案、可见步骤、二者的一致性以及任务所处的分布范围。
 
@@ -131,17 +145,27 @@ Kimi K2 Thinking 的 Test-Time Scaling 又增加了第四项变量：推理时�
 
 模型的计算量只有映射到实际硬件数据流后，才会变成吞吐与延迟。CPU 可以执行模型所需运算，但单请求自回归生成可能先受参数读取带宽限制；HBM 提高带宽，批量请求复用参数后，瓶颈又会移向并行计算核心。模型超过单卡显存时，推理主要沿模型分片传递中间激活；大规模训练还需跨并行组同步与参数同量级的梯度，因此需要 NVLink、Infinity Fabric 等高速互联。峰值 FLOPs、显存容量、内存带宽和互联带宽回答的是不同问题，不能互相替代。（[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|AI 计算硬件]]）
 
+FlashAttention 把“计算量”和“执行数据流”进一步分开：它仍计算标准 Attention 的全部 $n\times n$ 分数，却通过 Kernel Fusion 避免在阶段间把完整中间矩阵写回 HBM；Online Softmax 用修正因子递推最大值、分母和输出，使稳定 Softmax 可以边扫描边计算；Tiling 再把单行递推扩展为多行小块，利用 SRAM 与 Tensor Core。它优化的是精确 Attention 的 HBM I/O，不等于 GQA 的 KV 共享、PagedAttention 的物理分页或 Sparse Attention 的分数筛选。（[[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling|FlashAttention]]）
+
 硬件执行还受到软件栈约束。PyTorch 经 cuBLAS、cuDNN 等中间层调用 CUDA 内核，长期算法适配把硬件优势放大为生态优势；ROCm 尝试兼容既有路径，TPU／OpenXLA 则另建计算、互联和软件体系。这些路线说明，推理优化不仅是模型算法问题，也受算子覆盖、框架集成、部署工具和迁移成本影响。
 
 Prefill 与 Decode 的计算形态解释了输入和输出 Token 为什么常被区别定价。Prefill 面对完整输入，可以较为并行地建立中间状态；Decode 按自回归顺序逐 Token 生成，每一步都需要新的计算和调度。Reasoning Token、图像 Token 和音频 Token 则把用户不可见的内部生成或非文本输入继续折算为计量单位。（[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本专题]]）
 
 KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保存当前请求已经计算的 Key 与 Value，用显存换取历史状态复用；Prompt Caching 识别跨请求重复的稳定前缀，把重复上下文变成低成本输入；Batch 允许延后请求并合并调度，用等待时间换取 GPU 利用率。三者不能互相替代，也不能只用“减少 Token 数”概括。
 
+KV Cache 与 Prompt Cache 的教学资料进一步说明，两者复用的都不是历史答案。Prefill 为输入前缀批量建立 K／V，Decode 让新 Query 读取历史 K／V 并追加新状态；KV Cache 保留当前请求已经处理的 Token，Prompt Cache 则把完全相同前缀的 Prefill K／V 延伸到后续请求。资料所写 $O(n^2)\rightarrow O(n)$ 与命中 Prefill $O(n^2)\rightarrow O(1)$ 只表示对应重复计算被跳过，不等于端到端延迟按相同比例下降。（[[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级|KV Cache 与 Prompt Cache]]）
+
+PagedAttention 继续处理 KV Cache 在 GPU 中怎样分配和共享：固定大小的物理 Block 减少连续预留造成的内部碎片和动态空洞造成的外部碎片；Block Table 把逻辑顺序映射到分散物理块；链式 Block Hash 与全局映射按完整前缀寻找已有 KV；`ref_cnt` 保护仍在共享的块。当引用计数归零时，块返回空闲队列，但数据在被重新分配和覆盖前仍可命中。这是 vLLM 资料中的执行层实现，不能由 Codex 抓包的 512 Token 递增直接推断 OpenAI 使用相同 Block 大小或后端。（[[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐|PagedAttention]]）
+
+Codex 抓包进一步展示了跨请求前缀复用：短对话第二轮的 22,878 个输入 Token 中，22,400 个被报告为缓存命中；长文本实验的命中数按 `22400 → 22912 → 23424 → 23936` 增长。资料用 vLLM Automatic Prefix Caching 的 Block、链式哈希和 KV Cache 哈希表解释 512 Token 的跳变，但这是机制类比，不是 OpenAI 内部实现证明。截至 2026-09-14，OpenAI 官方文档称 GPT-5.5 及更早模型的 `cached_tokens` 按 128 的倍数向下取整，因此 512 只能视为该次实验观察到的递增间隔，不能直接等同于物理 Block 大小。（[[wiki/sources/模型推理优化：Codex 自动前缀缓存|Codex 自动前缀缓存]]）
+
 推理性能最终还要落到任务经济性。每百万 Token 单价忽略了重试、延迟、错误、人工稽核、运维和成功率；便宜模型若反复失败，完成任务的总成本可能更高。模型路由、缓存友好的 Prompt 结构和 Token FinOps 因此属于推理服务架构，而不只是采购或提示词技巧。
 
 ## 资料链
 
 - [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
+- [[wiki/sources/模型架构：正弦位置编码与注意力的顺序缺口]]
+- [[wiki/sources/模型架构：RoPE 相对位置与旋转点积]]
 - [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE]]
 - [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
@@ -150,8 +174,10 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 - [[wiki/sources/模型训练：梯度下降与均方误差]]
 - [[wiki/sources/模型训练：PyTorch 手写数字识别实战]]
 - [[wiki/sources/模型架构：多头注意力与 QKV]]
+- [[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA]]
 - [[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]
 - [[wiki/sources/模型架构：MoE 稀疏专家路由]]
+- [[wiki/sources/模型架构：MoE 路由、Top-K 与负载均衡]]
 - [[wiki/sources/模型架构：Engram 参数化记忆查找]]
 - [[wiki/sources/多模态推理：ThinkMorph 交错思维链]]
 - [[wiki/sources/多模态模型：ViT 图像分块与编码]]
@@ -159,12 +185,17 @@ KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保�
 - [[wiki/sources/多模态推理：DeepSeek 视觉原语]]
 - [[wiki/sources/多模态推理：DeepSeek 视觉原语]]
 - [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
+- [[wiki/sources/Claude Code：Thinking 模式、Adaptive 与 Effort]]
 - [[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]]
 - [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]
 - [[wiki/sources/模型推理优化：DSpark 投机解码]]
 - [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
 - [[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态]]
+- [[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling]]
 - [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
+- [[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级]]
+- [[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐]]
+- [[wiki/sources/模型推理优化：Codex 自动前缀缓存]]
 - [[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆]]
 - [[wiki/syntheses/深层模型训练稳定性：残差、更新与路由]]
 - [[wiki/syntheses/多模态推理闭环：感知、指代、操作与验证]]

@@ -1,6 +1,6 @@
 ---
 title: AI 知识索引
-updated: 2026-09-13
+updated: 2026-09-14
 tags:
   - AI
   - 索引
@@ -8,7 +8,7 @@ tags:
 
 # AI 知识索引
 
-本知识库以 `raw/sources/` 中的 **71 篇原始资料**为事实来源，维护 **71 篇一一对应的资料摘要**与 **11 篇跨资料综合**。原始资料保持不变；摘要负责提炼证据与限制，综合页负责跨来源比较、冲突和长期结论。
+本知识库以 `raw/sources/` 中的 **91 篇原始资料**为事实来源，维护 **91 篇一一对应的资料摘要**与 **11 篇跨资料综合**。原始资料保持不变；摘要负责提炼证据与限制，综合页负责跨来源比较、冲突和长期结论。
 
 维护历史见 [[wiki/log|维护日志]]。
 
@@ -99,6 +99,18 @@ tags:
 | --- | --- |
 | [[wiki/sources/Codex：禁用 WebSocket 解决重复重连]] | Codex 的 Responses API 可以使用 WebSocket 或 HTTPS Streaming。HTTPS 可用而 WebSocket 链路不稳定时，可在保持 Responses API 和 OpenAI 身份验证的同时，将模型提供方的 `supports_websockets` 设为 `false`，直接进入 HTTPS Streaming 路径。 |
 | [[wiki/sources/Codex：请求结构、服务端通信与 Token 计量]] | Codex 的完整请求不只包含用户问题，还包含基础规则、运行时注入、项目上下文和工具定义。单次抓包中，1 Token 的 `hello` 最终形成 14,708 Token 用量。 |
+| [[wiki/sources/Claude Code：请求结构、SSE 与缓存 Token 计量]] | Claude Code 会把 Hook、延迟工具清单、MCP 指南、Skill、项目规范、系统规则和工具定义与用户消息一起发送；单次 `hello` 抓包的三个输入计量项合计 30,986 Token，响应以 SSE 事件增量返回。 |
+| [[wiki/sources/Claude Code：多轮对话的前缀缓存与 Token 成本]] | Claude Code 多轮请求仍携带完整历史，但稳定前缀可以跨轮复用；三轮抓包的缓存读取量从 0 增至 48,654、48,678 Token，后两轮只新增写入 24、29 Token。 |
+| [[wiki/sources/Claude Code：tool_use、tool_result 与客户端工具闭环]] | Opus 先返回包含工具名、ID 与参数的 `tool_use`，Claude Code 本地执行 Bash 并用同一 ID 返回 `tool_result`，模型再解释结果并以 `end_turn` 结束。 |
+| [[wiki/sources/Claude Code：WebSearch 子 Agent、服务端搜索与攻击面隔离]] | Claude Code 的一次 WebSearch 抓包由 Opus 决策、Haiku 搜索、Opus 回答三次请求组成；搜索原始结果留在只有 `web_search` 的子上下文，主 Agent 只接收链接与摘要。 |
+| [[wiki/sources/Claude Code：cache_control 断点与 20 Block 前缀回溯]] | Claude Code 在两个固定 System 位置和最新用户消息上设置 Explicit Breakpoint；每个断点写入累积前缀，读取 Miss 后最多向前回溯 20 个 Block。 |
+| [[wiki/sources/Claude Code：Thinking 模式、Adaptive 与 Effort]] | Thinking 模式在正式答案前生成中间推理；当次抓包使用 `thinking: adaptive` 与 `effort: high`，TTL 缓存案例中的 Thinking Block 先定位根因，Text Block 再给出 Lazy Eviction 修复。 |
+| [[wiki/sources/Claude Code：模型、工具、注入与 TTL 的缓存命中边界]] | Claude Code 的模型切换、MCP 工具集合、Skill 与 `CLAUDE.md` 注入以及 TTL 分别从模型边界、请求前缀和缓存生命周期影响命中；任务开始前稳定左侧配置可以减少整段重建。 |
+| [[wiki/sources/Claude Code：第三方 API 的 cch 缓存失效与 Attribution Header]] | Claude Code 的 `x-anthropic-billing-header` 把每轮变化的 `cch` 放在 System Prompt 开头，可能使不识别该约定的第三方代理失去全部缓存断点；关闭前必须先抓包确认适用范围。 |
+| [[wiki/sources/Claude Code：ToolSearch 延迟加载与缓存保持]] | ToolSearch 先暴露 Deferred Tool 名称，再按需加载完整 Schema；`defer_loading` 与 `tool_reference` 让新工具追加到历史末尾，同时保持原有 Prompt Cache 前缀。 |
+| [[wiki/sources/Claude Code：compact 上下文压缩与工作现场恢复|Claude Code：/compact 上下文压缩与工作现场恢复]] | `/compact` 先把长对话改写为九节 Summary，再用 MessagesToKeep 和 Attachments 恢复近期消息、工具配对与工作文件；压缩不是只保留一段自由摘要。 |
+| [[wiki/sources/Claude Code：权限规则、Permission Mode 与本地放行]] | Claude 模型提出工具调用，Claude Code 本地客户端再按工具类型、`allow`／`ask`／`deny` 与 Permission Mode 决定放行；聊天约束不能替代硬权限，`bypassPermissions` 只适合隔离环境。 |
+| [[wiki/sources/Claude Code：Skill 渐进式披露与第三方执行边界]] | Claude Code 启动时只暴露 Skill 名称与描述，模型点名后才加载处理过的 `SKILL.md`，参考文件和脚本继续按需读取；渐进式披露减少初始上下文，但不消除第三方执行风险。 |
 | [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]] | HarnessX 把 Prompt、工具、记忆、控制流和运行环境组成的 Agent Harness 从静态手工代码改造成可序列化、比较、替换和自动进化的一等对象。它以窄接口 Processor 和固定生命周期挂载点实现组合。 |
 | [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解]] | 原始资料：Claude Code源码曝光 底层技术硬核拆解：1884个文件背后，Anthropic如何构建Agent Runtime？。 |
 | [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景]] | 资料把 Harness Engineering 定义为模型外部运行系统的设计：它不只决定模型看到什么，还管理任务拆解、工具、权限、状态、验证、恢复、日志和人类接管。按照本资料的包含口径，Harness 包含 Context。 |
@@ -128,8 +140,12 @@ tags:
 | 页面 | 内容 |
 | --- | --- |
 | [[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]] | 长上下文同时增加单步解码的注意力计算和 KV Cache 显存。GQA 让多组 Query Head 共享较少的 KV Head，主要压缩缓存；Sparse Attention 先筛选高贡献 Token 或块，再让主注意力精算。 |
+| [[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA]] | KV Cache 大小由 Token 数、Head Dimension、KV Head 数、Decoder 层数和数据精度共同决定。MHA、MQA 与 GQA 通过不同的 KV 共享粒度取舍表达能力与显存占用。 |
 | [[wiki/sources/模型架构：Engram 参数化记忆查找]] | Engram 在 Transformer 中增加参数化 N-gram 查找通道，把局部模式召回与 MoE 的动态计算分开。词表投影统一大小写和前导空格等表面形式，资料称词表规模因此压缩约 23%；多尺度 N-gram 与多头哈希降低单次碰撞影响。 |
 | [[wiki/sources/模型架构：MoE 稀疏专家路由]] | MoE 用多个较小 FFN 替换一个大型稠密 FFN，再由 Router 为每个 Token 选择少量路由专家并加权汇总。总参数决定模型可容纳的专家容量，激活参数更直接决定单次计算量；稀疏激活让模型扩大总容量，而不必让全部参数参与每个 Token 的计算。 |
+| [[wiki/sources/模型架构：MoE 路由、Top-K 与负载均衡]] | MoE 的前向链路包含路由打分、Dispatch、Expert 计算与概率加权、Combine。Top-K 让多个高分专家参与同一 Token；Auxiliary Loss 用平均路由概率与实际选择频率约束专家负载。 |
+| [[wiki/sources/模型架构：正弦位置编码与注意力的顺序缺口]] | 最朴素的 Attention 对前序 Token 换序不敏感；正弦位置编码用多组不同角频率的正弦与余弦把绝对位置注入 Embedding，同时保持值域固定、变化连续且不依赖序列总长。 |
+| [[wiki/sources/模型架构：RoPE 相对位置与旋转点积]] | 正弦位置编码在投影前与 Embedding 相加，Query／Key 点积会产生绝对位置交叉项；RoPE 在投影后旋转 Query 和 Key，使两个绝对旋转合并为只依赖 $n-m$ 的相对旋转。 |
 | [[wiki/sources/长序列建模：Memory Caching]] | Transformer 通过 Attention 和随上下文增长的 KV Cache 保留完整历史，但需要承担较高显存与平方级计算代价；线性 RNN 将历史压缩到固定大小的隐状态，推理高效。 |
 | [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]] | 原始 Transformer 以 Encoder—Decoder 结构处理翻译：Encoder 把完整输入转换为内部表示，Decoder 结合这组表示和已经生成的目标 Token。 |
 | [[wiki/sources/模型架构：多头注意力与 QKV]] | 多头注意力让同一组词元表示经过多组独立的 Query、Key 和 Value 投影，在不同 Attention Head 中计算上下文关系，再拼接各头结果。它不是为每个头预先指定“语法”或“语义”。 |
@@ -152,6 +168,10 @@ tags:
 
 | 页面 | 内容 |
 | --- | --- |
+| [[wiki/sources/模型推理优化：Codex 自动前缀缓存]] | Codex 会复用请求开头保持不变的渲染前缀。资料所测短对话第二轮有 22,400／22,878 个输入 Token 命中缓存；长文本实验呈现 512 Token 的递增间隔，但该现象不能证明 OpenAI 的物理缓存 Block 固定为 512。 |
+| [[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级]] | KV Cache 在单次请求内复用已经处理 Token 的 K／V，Prompt Cache 则跨请求复用完全相同前缀的 Prefill K／V；命中缓存不会直接返回历史答案。 |
+| [[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐]] | PagedAttention 用固定大小的物理 Block 和请求级 Block Table 管理 KV Cache；完整前缀可以共享同一物理块，引用归零后的内容在被重新分配前仍可命中。 |
+| [[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling]] | FlashAttention 不减少标准 Attention 的分数计算，而是用算子融合、在线 Softmax 和 Tiling 避免在 HBM 中保存完整中间矩阵，并减少 HBM 与 SRAM 之间的数据搬运。 |
 | [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]] | API成本应分别计算输入、输出、缓存写入、缓存读取、批处理与重试，比较时固定平台、模型、日期和调用条件。 |
 | [[wiki/sources/模型推理优化：DSpark 投机解码]] | DSpark用深层并行草稿模型提高首Token质量，再以轻量串行模块恢复后续位置连贯性。 |
 

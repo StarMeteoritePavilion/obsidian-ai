@@ -931,3 +931,234 @@
 - 保留同一次 Codex 对话中可见文本重新分词与 `usage.output_tokens` 的三组差值：`15→19`、`11→15`、`4→8`；明确它们只是本次抓包样本，不构成所有模型和版本固定增加 4 Token 的规则。
 - 将内容改写为正式博客文章，删除口播自指、听众互动和载体提示，完整保留分词示例、编码／解码链路、三种词表粒度、BPE 训练与推理过程、模型绑定关系及限定条件。
 - 新建资料摘要，将切分粒度、BPE 和 API 输出计量边界整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]，并与前两篇 Codex 系列摘要及既有 Token／Embedding 摘要互链。字幕、原始音视频和关键帧均未进入知识库；写入后共有 71 篇原始资料、71 篇资料摘要和 11 篇跨资料综合，当前系列无期数冲突。
+
+## [2026-09-14] ingest | KV Cache 显存公式与 MHA、MQA、GQA
+
+- 完整读取用户提供的 205 条 SRT 字幕，覆盖 00:00:00.000—00:07:54.300，SHA-256 为 `51ea07cd4eaed20779fec260448fa7f6a4d61aad9e3bc22fc75a7c1ef365d877`。字幕主题、顺序和时间轴与 `BV1reKb6PEnw` 的原始音轨对应，但存在自动转写错误。
+- 官方接口确认标题为《KV Cache真正在GPU上占用多少显存？多头注意力是什么？》，作者为“张司机在路上”，发布于 2026-07-21，单 P，官方时长 475 秒；官方字幕轨和官方章节均为空。
+- 对照 474.314 秒原始音轨、全片辅助转写、关键画面和官方简介完成核验，核验级别为原始音轨。字幕最大相邻空档为 0.591 秒；未发现重复播放、旁白缺失或越过视频结尾的内容，未删除任何时间段。
+- 官方“Codex工作原理”合集将本视频列为“正片”第 5 条；正文完整讲解 KV Cache、MHA、MQA、GQA 和显存计算，因此定位为该系列第 5 篇正片。官方第 4 条当前尚未导入本库，不构成期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 Prompt Cache、KV Cache、Transformer、Attention、Token、Embedding、Query、Key、Value、Softmax、Decode、`bytes per element`、FP16、Multi-Head Attention（MHA）、Decoder、Masked Multi-Head Attention、Feed Forward、Add & Norm、Multi-Query Attention（MQA）、Grouped-Query Attention（GQA）、KV Head、Head Dimension、LMCache、`Qwen/Qwen3-8B`、BF16 与 GiB 等转写错误或格式。
+- 保留最终公式 $2\times n\times d\times h_{kv}\times L\times\text{bytes per element}$ 及完整变量归属。复核 `Qwen/Qwen3-8B` 案例的 36 层、32 个 Attention Head、8 个 KV Head、128 Head Dimension、100,000 Token 和 BF16；确认 7,372,800,000 个元素、14,745,600,000 字节与页面所示 13.7329 GB。页面使用 $1024^3$ 换算，因此摘要同时标明其二进制单位对应 GiB。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、视频载体提示和无意义转场；完整保留 KV 用途、Attention 计算、MHA 拼接、Decoder 逐层状态、MQA／GQA 共享关系、最终公式、计算案例和原来的限定强度。
+- 新建资料摘要，将 KV Head 存储粒度和显存公式整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]与[[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆]]，并更新内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 72 篇原始资料、72 篇资料摘要和 11 篇跨资料综合。
+
+## [2026-09-14] ingest | Codex 自动前缀缓存与块级复用
+
+- 完整读取用户提供的 213 条 SRT 字幕，覆盖 00:00:00.040—00:08:10.440，SHA-256 为 `3c80cc3d9338d57235fc8608b1adf9d7773a237ca16f4be8c132a5a45d5272de`。字幕主题、顺序和时间轴与 `BV17wN16MEUG` 的原始音轨对应，但存在自动转写错误。
+- 官方接口确认标题为《揭秘Codex是如何帮你省token的》，作者为“张司机在路上”，发布于 2026-07-13，单 P，官方时长 491 秒；官方字幕轨和官方章节均为空。
+- 对照 490.452 秒原始音轨和关键画面完成核验，核验级别为原始音轨。字幕仅有一处 3.9 秒相邻空档，对应画面转场；未发现重复播放、旁白缺失或越过视频结尾的内容。两处“说话又好听”分别属于机制示例的首次定义与新请求复用说明，不是重复段落，未删除任何时间段。
+- 官方“Codex工作原理”合集将本视频列为“正片”第 4 条；正文承接前三篇的请求结构与 Token 概念，完整讲解 Prompt Caching 的稳定前缀、抓包现象和块级复用类比，因此定位为该系列第 4 篇正片。
+- 依据原始音轨和关键画面校正 Codex、Claude Code、Thariq、*Prompt Cache is Everything*、`input_tokens`、`cached_tokens`、*Unrolling the Codex agent loop*、*Prompt Caching 201*、Erika Kettleson、`instructions`、`tools`、`developer`、`user`、`AGENTS.md`、`environment_context`、vLLM、Automatic Prefix Caching、Block、Hash、Prefill 与 KV Cache 等转写错误或格式。
+- 保留短对话三轮 `input_tokens`／`cached_tokens` 的 `22852／4480`、`22878／22400`、`22901／22400`，并将长文本实验校正为 `22400 → 22912 → 23424 → 23936`。明确 512 是该次抓包的观测间隔，不能证明 OpenAI 物理 Block 大小；当前 OpenAI 文档对 GPT-5.5 及更早模型说明的是 `cached_tokens` 向下取整为 128 的倍数。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、载体提示和无意义转场；完整保留两组实验、五段前缀结构、Claude Code 对比、链式哈希、哈希表读写、KV Cache 复用与实现边界。
+- 新建资料摘要，将前缀稳定性、Prefill 复用和官方文档版本边界整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]与[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]，并更新相关摘要和内容索引。用户 SRT、原始音视频、关键帧和接口响应均未进入知识库；写入后共有 73 篇原始资料、73 篇资料摘要和 11 篇跨资料综合，当前系列无期数冲突。
+
+## [2026-09-14] ingest | MoE 路由、Top-K 与负载均衡
+
+- 完整读取用户提供的 268 条 SRT 字幕，覆盖 00:00:00.080—00:09:40.160，SHA-256 为 `607169a4ff80563ed338e193c1877457d4c9ba9bc2f139f0b01c69cc91ae3f63`。字幕主题、顺序和绝大部分时间轴与 `BV1HW4X6QEuh` 原始音轨对应，但存在自动转写错误和两处内容缺失。
+- 官方接口确认标题为《MoE混合专家架构如何让模型参数越做越大》，作者为“张司机在路上”，发布于 2026-08-30，单 P，官方时长 581 秒；官方字幕轨和官方章节均为空。
+- 对照 580.174 秒原始音轨与关键画面完成核验，核验级别为原始音轨。未发现重复播放或越过视频结尾的内容；补回 00:04:16.849—00:04:20.520 的“路由打分输出 6×4 矩阵”和 00:06:07.400—00:06:11.880 的“Kimi-K3 从 896 个专家中选 16 个”，没有删除任何时间段。
+- 官方“Codex工作原理”合集将本视频列为“正片”第 8 条；正文完整讲解 Dense FFN、Sparse Model、Router、Dispatch／Combine、Top-K、Expert Collapse 与 Auxiliary Loss，因此定位为该系列第 8 篇正片。当前库尚未导入合集第 7 篇，不构成期数冲突。
+- 依据原始音轨和关键画面校正 Scaling Law、Mixture of Experts（MoE）、DeepSeek、Qwen、Kimi、Transformer Decoder、Masked Multi-Head Attention、Feed-Forward Network（FFN）、Dense Model、Sparse Model、Router、Softmax、Dispatch、Combine、MapReduce、Top-K、DeepSeek-V4、Kimi-K3、Load Balance、Expert Collapse、Auxiliary Loss、$P_i$ 与 $f_i$ 等转写错误或格式。
+- 保留 $n\times d$、$d\times d_{ff}$、$d_{ff}\times d$ 的 FFN 形状，六个 Token 的完整分发示例，`0.45／0.31 → 0.59／0.41` 的 Top-2 归一化，以及不均衡 `2.33`、均衡 `1.00` 的 Auxiliary Loss 示例；将“训练和推理时间几乎不变”保留为固定活跃专家数下的来源概括，不外推为端到端性能保证。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、载体提示和无意义转场；完整保留 Dense／Sparse 对比、Router 梯度路径、前向五步、Top-K 权重、专家坍塌、负载均衡公式、模型示例及原有限定强度。
+- 新建资料摘要，将活跃计算、路由数据流和 Auxiliary Loss 整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]与[[wiki/syntheses/深层模型训练稳定性：残差、更新与路由]]，并更新相关摘要和内容索引。用户 SRT、原始音视频、关键帧和接口响应均未进入知识库；写入后共有 75 篇原始资料、75 篇资料摘要和 11 篇跨资料综合，当前系列无期数冲突。
+
+## [2026-09-14] ingest | PagedAttention 分页、前缀共享与驱逐
+
+- 完整读取用户提供的 319 条 SRT 字幕，覆盖 00:00:00.080—00:12:23.880，SHA-256 为 `ecf36a15adf01576aee516d10c4f91036a6d8138d4e55eb829edd250499627c3`。字幕主题、顺序和时间轴与 `BV1go836fECf` 原始音轨对应，但存在自动转写错误。
+- 官方接口确认标题为《PagedAttention帮vLLM把分页机制搬进大模型》，作者为“张司机在路上”，发布于 2026-08-18，单 P，官方时长 744 秒；官方字幕轨和官方章节均为空。
+- 对照 743.898 秒原始音轨、全片辅助转写、关键画面和官方简介完成核验，核验级别为原始音轨。辅助转写连续覆盖 00:00:00.000—00:12:23.880，未发现旁白缺失、越过结尾或重复播放，未删除任何时间段。字幕两次出现“再乘以 number of KV heads”，分别用于枚举单块 Tensor 形状和总元素公式，不是重复片段。
+- 官方“Codex工作原理”合集将本视频列为“正片”第 6 条；正文完整讲解显存碎片、分页映射、KV 物理块、前缀哈希、引用计数、回收和驱逐，因此定位为该系列第 6 篇正片。当前库已收录合集第 1—6 和第 8 条，第 7 条尚未导入，没有期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 PagedAttention、vLLM、KV Cache、Prompt Caching、Internal Fragmentation、External Fragmentation、Paging、Block、`block_size`、Block Table、`free_block_queue`、`KVCacheBlock`、`block_id`、`ref_cnt`、`_block_hash`、`prev_block`、`next_block`、`num_blocks`、`num_kv_heads`、`head_dim`、Block Hash、`BlockHashToBlockMap`、`req_to_blocks`、Prefill、Miss、Hit、Evict 与 GPU 等转写错误或格式。
+- 保留 `KVCacheBlock` 四类元数据、$[2,\text{block\_size},\text{num\_kv\_heads},\text{head\_dim}]$ 的单层块 Tensor 形状、链式哈希公式，以及三个请求在时刻 0—4 的完整分配、命中、共享、回收与驱逐顺序。明确空闲块返回队列不等于 KV 作废，只有重新分配并覆盖旧数据时才驱逐旧哈希。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、视频载体提示和无意义转场；完整保留内外碎片、操作系统分页类比、CPU／GPU 数据结构、哈希与映射、逐时刻案例和实现边界。
+- 新建资料摘要，将 PagedAttention 的物理分页、前缀共享和驱逐语义整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]，补充[[wiki/sources/模型推理优化：Codex 自动前缀缓存]]的后续关联，并更新内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 75 篇原始资料、75 篇资料摘要和 11 篇跨资料综合。
+
+## [2026-09-14] ingest | RoPE 相对位置与旋转点积
+
+- 完整读取用户提供的 290 条 SRT 字幕，覆盖 00:00:00.040—00:11:37.580，SHA-256 为 `0e253ca939ffc756eca2f3e349fe8299f3a9da2df619cd326ce1e31f5ccd5d4c`。字幕主题、顺序和时间轴与 `BV1kqYe6DEvF` 原始音轨对应，但存在自动转写错误。
+- 官方接口确认标题为《RoPE 旋转位置编码比正弦位置编码好在哪里》，作者为“张司机在路上”，发布于 2026-09-13，单 P，官方时长 698 秒；官方字幕轨和官方章节均为空。
+- 对照 697.597 秒原始音轨和关键公式画面完成核验，核验级别为原始音轨。字幕连续覆盖旁白，没有明显空档、内容缺失或越过结尾；两次“对不对”和两次“是不是”分别位于不同推导步骤，只是口头填充，不是重复播放，未删除任何事实时间段。
+- 官方“Codex工作原理”合集将本视频列为“正片”第 10 条；开头承接正弦位置编码，正文完整推导相对位置、加法交叉项与 RoPE 旋转点积，因此定位为该系列第 10 篇正片。当前库尚未导入合集第 7、9 篇，不构成期数冲突。
+- 依据原始音轨和关键画面校正 DeepSeek V3、GLM-4.5、Qwen3、RoPE（Rotary Position Embedding）、Transformer、Attention Score、Embedding、Query、Key、$W_Q$、$W_K$、Position Encoding、旋转矩阵、点积、转置、单位矩阵、$\omega_i$、$R_i(k)$ 与 $RoPE(n-m)$ 等转写错误或格式。
+- 保留正弦位置编码的指针与点积推导、$q_m^Tk_n$ 的四项展开、两项绝对位置交叉项、投影矩阵对位置编码的影响、RoPE 按二维分组旋转，以及 $RoPE(m)^TRoPE(n)=RoPE(n-m)$ 的完整逻辑。把“更好”限定为本资料推导中的 Attention 点积结构，不外推为所有模型和任务的固定性能优势。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、复习提示和无意义转场；完整保留例句、公式、因果关系、两种编码的注入位置、运算差异、几何解释及来源原有的结论强度。
+- 新建资料摘要，将位置编码与 Query／Key 点积整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]，并更新 Transformer、QKV 摘要和内容索引。用户 SRT、原始音视频、关键帧和接口响应均未进入知识库；写入后共有 76 篇原始资料、76 篇资料摘要和 11 篇跨资料综合，当前系列无期数冲突。
+
+## [2026-09-14] ingest | 正弦位置编码与注意力的顺序缺口
+
+- 完整读取用户提供的 285 条 SRT 字幕，覆盖 00:00:02.840—00:10:13.900，SHA-256 为 `65aafdf683ace124a7f8a4249d14ec9dd8221cbaa8c161fd1bb137e8b8925085`。字幕主体主题、顺序和时间轴与 `BV1DLbj6ME1e` 原始音轨对应，但存在自动转写错误，并漏掉开场一句。
+- 官方接口确认标题为《Transformer为什么需要位置编码》，作者为“张司机在路上”，发布于 2026-09-05，单 P，官方时长 614 秒；官方字幕轨和官方章节均为空。
+- 对照 613.912 秒原始音轨、全片辅助转写、关键公式画面和官方简介完成核验，核验级别为原始音轨。补回 00:00:00.000—00:00:02.840 的开场问题“为什么 Transformer 分不清‘狗咬人’和‘人咬狗’”；字幕末尾与音轨结尾相差 0.012 秒，未发现重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Codex工作原理”合集将本视频列为“正片”第 9 条；正文完整讲解 Attention 的顺序缺口、三种直接位置编码方案、正弦位置编码公式、波长与钟表指针类比，因此定位为该系列第 9 篇正片。当前库已收录合集第 1—6 条与第 8—10 条，第 7 条尚未导入，没有期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 Transformer、Attention、Token、Embedding、Query、Key、Value、Decode、Softmax、$d_k$、Position Encoding、`24 = 011000₂`、`23 = 010111₂`、正弦、余弦、$PE(pos,2i)$、$PE(pos,2i+1)$、$10000^{2i/d}$、$\lambda_i$ 与 $\omega_i$ 等转写错误或格式；将“欧米伽等于编码的分母”“取了导数”等错字按画面校正为分母的倒数。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、复习提示、视频载体描述和无意义转场；完整保留两组换序例句、绝对值／分数／二进制方案的取舍、正弦位置编码公式、$d=8$ 波长示例、底数 10000 的来源解释和多指针类比，并把“六万个 Token”保留为资料的教学口径。
+- 新建资料摘要，将顺序缺口、正弦位置编码与后续 RoPE 的关系整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]，更新 QKV、RoPE 摘要和内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 77 篇原始资料、77 篇资料摘要和 11 篇跨资料综合，当前系列无期数冲突。
+
+## [2026-09-14] ingest | Claude Code 请求结构、SSE 与缓存 Token 计量
+
+- 完整读取用户提供的 285 条 SRT 字幕，覆盖 00:00:00.000—00:09:21.820，SHA-256 为 `0cf1ed46800b5bfab1334e047ac9c283543fcd4496578c419c5651205b573217`。字幕主题、顺序和时间轴与 `BV1G2o5BqELx` 原始音轨对应，但存在大量自动转写错误。
+- 官方接口确认标题为《解密Claude Code和Anthropic后端是如何通信》，作者为“张司机在路上”，发布于 2026-04-24，单 P，官方时长 563 秒；官方字幕轨和官方章节均为空。
+- 对照 562.155 秒原始音轨、全片辅助转写、关键请求与响应画面及官方简介完成核验，核验级别为原始音轨。字幕从音轨开头连续覆盖到距结尾 0.335 秒处；五处 0.98—1.49 秒空档均为自然停顿，未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 5 条；正文完整拆解 Claude Code 请求、系统提示词、工具定义、推理参数、SSE 事件与 Token 用量，因此定位为该合集第 5 篇正片。知识库此前未以该合集期数导入其他资料，没有期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 Claude Code、Anthropic、`claude-trace`、Mario Zechner、`cchistory`、Monkey Patch、`fetch`、`--include-all-requests`、`messages`、Content Block、`<system-reminder>`、SessionStart Hook、Superpowers、`ToolSearch`、MCP、Context7、Skill、`CLAUDE.md`、`cache_control`、`ephemeral`、`ttl`、`system`、`Agent`、`Bash`、`Edit`、`Glob`、`Grep`、`Read`、`ScheduleWakeup`、`thinking.type`、`adaptive`、`output_config.effort` 与 SSE 事件名等转写错误或格式。
+- 从抓包画面确认 `input_tokens=6`、`cache_creation_input_tokens=14145`、`cache_read_input_tokens=16835`，三个输入项合计 30,986 Token；`message_start` 初始记录 4 个输出 Token，`message_delta` 最终更新为 15，总计量为 31,001 Token。画面明确显示 `output_config.effort: high`，旁白却称默认是 `xhigh`，正式文章保留这项来源内部冲突，不将旁白外推为固定配置。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、画面操作提示和无意义转场；完整保留抓包工具、六个消息块、四个系统文本块、10 个工具定义、缓存切割点、Thinking／Effort、SSE 顺序、Token 构成和价格口径，并将个人 Hook、MCP、Skill 与项目配置明确限定为作者实例。
+- 新建资料摘要，将 Claude Code 与 Codex 的请求分层、工具加载和流式返回差异整合进[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]与[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]，更新 Codex 通信摘要和内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 78 篇原始资料、78 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | FlashAttention 算子融合、在线 Softmax 与 Tiling
+
+- 完整读取用户提供的 `a.srt`，SHA-256 为 `001cf55c0e3dd889ca6fab6e0b6d759c2ddda17de26435271e24ed89064c30c3`。文件不是标准 SRT 字幕块，而是 224 行“秒级时间戳＋文本”，覆盖 00:00:00—00:13:55；按实际格式逐行解析，没有将全文误判为单条字幕。
+- 官方接口确认标题为《FlashAttention为什么又快又节省GPU显存？》，作者为“张司机在路上”，发布于 2026-08-23，单 P，官方时长 837 秒；官方字幕轨和官方章节均为空。
+- 对照 836.081 秒原始音轨、全片辅助转写、关键公式与代码画面及官方简介完成核验，核验级别为原始音轨。字幕从音轨开头连续覆盖，00:13:55 的最后一句延续到片尾；未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Codex工作原理”合集将本视频列为“正片”第 7 条；正文完整讲解 GPU 存储层级、Attention 三步、Kernel Fusion、Safe Softmax、Online Softmax、输出递推和 Tiling，因此定位为该系列第 7 篇正片。导入后合集第 1—10 条在知识库中连续完整，没有期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 FlashAttention、Benchmark、GPT-2、Hugging Face、NVIDIA Megatron-LM、PyTorch 2、vLLM、GPU、A100、SM、SRAM、HBM、DRAM、KV Cache、Attention、Query、Key、Value、Head Dimension、Tensor Core、Kernel Fusion、Safe Softmax、Online Softmax、Tiling、Tile、Scale、Rescale、$m_i$、$d_i'$ 与 $o_i'$ 等术语、变量和公式格式。
+- 保留 Hugging Face 10 天、Megatron-LM 5 天、FlashAttention 2.5 天的 GPT-2 训练 Benchmark，以及 A100 的 SRAM 约 19 TB/s／20 MB、HBM 约 1.5 TB/s／40 GB、CPU DRAM 12.8 GB/s／超过 1 TB 的教学配置。资料把“35 GB 降到 4.4 GB”称为“显存读写”，却未定义该指标，正式文章不擅自改写为峰值占用或累计 I/O。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、复习提示、画面操作和无意义转场；完整保留 $S=QK^T$、$P=\operatorname{softmax}(S)$、$O=PV$ 三步，指数溢出原因，最大值、分母与输出递推，单行到分块实现的递进关系，以及“没有减少 $n\times n$ 分数计算，只减少访存等待”的结论。
+- 新建资料摘要，将 FlashAttention 与 GQA、PagedAttention、Sparse Attention 的优化对象边界整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]，更新 KV Cache 与 PagedAttention 摘要和内容索引。用户字幕、原始音视频、辅助转写、关键帧、论文临时下载和接口响应均未进入知识库；写入后共有 79 篇原始资料、79 篇资料摘要和 11 篇跨资料综合，当前系列无期数冲突。
+
+## [2026-09-14] ingest | Claude Code ToolSearch 延迟加载与缓存保持
+
+- 完整读取用户重新提供的 `a.srt`，SHA-256 为 `ffab9ba8ee38f2f8d778460ce0e55cbba4e589fb5b27ebfce063e4e28e9e4130`。文件不是上一个任务的同名内容，也不是标准 SRT 字幕块，而是 111 行“秒级时间戳＋文本”，覆盖 00:00:00—00:06:35；按实际格式逐行解析。
+- 官方接口确认标题为《Claude Code如何利用ToolSearch调用任意多个工具》，作者为“张司机在路上”，发布于 2026-06-03，单 P，官方时长 399 秒；官方字幕轨和官方章节均为空。
+- 对照 398.083 秒原始音轨、全片辅助转写、抓包画面、Claude Code 配置文档画面和 Anthropic 工程文章画面完成核验，核验级别为原始音轨。字幕从音轨开头连续覆盖，00:06:35 的最后一句延续到片尾；未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 15 条；开头明确回链此前的 Claude Code 请求抓包，正文完整讲解 Deferred Tools、ToolSearch 两轮调用、缓存保持和量化结果，因此定位为合集第 15 条／通信抓包专题的后续篇。视频没有给当前技术专题标注独立期数，不另行编造。
+- 依据原始音轨和关键画面校正 Claude Code、Anthropic、`claude-tap`、Deferred Tools、`AskUserQuestion`、`WebSearch`、`tools`、Description、JSON Schema、`ToolSearch`、`tool_use`、`query`、`select:AskUserQuestion`、`max_results`、`tool_result`、`tool_reference`、`tool_name`、`defer_loading`、`ANTHROPIC_BASE_URL`、`ENABLE_TOOL_SEARCH=true`、Prompt Caching、Cache Prefix Hash、MCP、GitHub、Slack、Sentry、Grafana、Splunk、Opus 4 与 Opus 4.5 等转写错误或格式。
+- 抓包确认初始请求含 10 个完整工具定义和 23 个 Deferred Tool 名称，加载 `AskUserQuestion` 后 `tools` 从 10 增至 11。完整保留“ToolSearch 先取说明书，下一次请求再正式调用工具”的四步链路，以及 `defer_loading: true` 跳过原 Cache 前缀、`tool_reference` 在历史末尾展开的缓存保持机制；同时注明强制开启只适用于支持相关协议的代理。
+- 依据视频展示的 Anthropic 原文校正字幕末段：五个 MCP Server 是 GitHub、Slack、Sentry、Grafana、Splunk，共 58 个工具、约 55K Token；传统方式约 72K 工具定义、工作前总上下文约 77K，Tool Search 约 500 Token 加按需工具约 3K、总计约 8.7K，Token 用量下降 85%。工具选择准确率为 Opus 4 的 49%→74% 和 Opus 4.5 的 79.5%→88.1%，不是字幕所写的 Jira、GitLab、8K、Opus 3 或 Sonnet 3.5。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、抓包页面操作和无意义转场；完整保留代理关闭条件、环境变量、工具清单与 Schema 的区别、两次模型往返、缓存前缀因果链、Token 与准确率数据及版本边界。
+- 新建资料摘要，将 ToolSearch 的“名称目录—按需 Schema—正式调用”链路与缓存保持整合进[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，更新前一篇 Claude Code 请求摘要和内容索引。用户字幕、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 80 篇原始资料、80 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code 多轮对话的前缀缓存与 Token 成本
+
+- 完整读取用户提供的 221 条 SRT 字幕，覆盖 00:00:00.040—00:08:00.500，SHA-256 为 `ae6739943f42bcba0c894e8c1bc94bf23f2e59f528ffcca588d1e4e6b6bf6586`。字幕主题、顺序和时间轴与 `BV1KGoyBGEjN` 原始音轨对应，但存在自动转写错误和数字识别不完整。
+- 官方接口确认标题为《解密多轮对话Claude Code如何计算token消耗》，作者为“张司机在路上”，发布于 2026-04-27，单 P，官方时长 481 秒；官方字幕轨和官方章节均为空。
+- 对照 480.514 秒原始音轨、全片辅助转写和关键抓包画面完成核验，核验级别为原始音轨。字幕从 00:00:00.040 连续覆盖到距音轨结尾 0.014 秒处；00:02:00.860—00:02:02.980、00:02:04.220—00:02:07.020 等间隔对应交互等待，未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 6 条；开头明确承接第 5 条的单轮请求分析，正文完整讲解三轮请求的 Prompt Caching 与 Token 计量，因此定位为该合集第 6 篇正片，没有期数冲突。
+- 依据原始音轨和关键画面校正 Claude Code、Anthropic、Prompt Cache、Prompt Caching、Prefix Caching、`claude-trace`、`claude-tap`、`claude-tap --tap-live`、NPM、HTML、JSON、`tools`、`system`、`messages`、Hook、MCP、Skill、`CLAUDE.md`、`usage`、`input_tokens`、`cache_creation_input_tokens` 与 `cache_read_input_tokens` 等转写错误或格式。
+- 从抓包画面确认三轮输入计量依次为 `6／48654／0`、`6／24／48654`、`6／29／48678`；修正字幕把精确数字简写为“4万8”以及把 $48{,}654+24$ 口误成“4万6678”的问题。保留普通输入 `1×`、5 分钟写入 `1.25×`、1 小时写入 `2×`、读取 `0.1×` 的视频发布时价格口径，并明确这些数字只属于作者当次配置。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、浏览器操作提示、复习提示和无意义转场；完整保留抓包工具迁移、前缀结构、三轮消息与计量、递推关系、53 Token 增量、价格倍率、成本示例和“完整请求仍然发送”的边界。
+- 新建资料摘要，将多轮历史增长与稳定前缀复用整合进[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]与[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，为上一期摘要补充后续链接并更新内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 81 篇原始资料、81 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code 模型、工具、注入与 TTL 的缓存命中边界
+
+- 完整读取用户提供的 133 条 SRT 字幕，覆盖 00:00:00.040—00:04:16.839，SHA-256 为 `d204ef014d5c1fa782e05f57b7d7ccf21aa135a127ceef89046cf43d5f83635f`。字幕主题、顺序和时间轴与 `BV1ZQ5u6bEJ7` 原始音轨对应，但存在大量英文术语与命令转写错误。
+- 官方接口确认标题为《教你最大化Claude Code缓存命中来节省token》，作者为“张司机在路上”，发布于 2026-05-12，单 P，官方时长 257 秒；官方字幕轨和官方章节均为空。
+- 对照 256.859 秒原始音轨、全片辅助转写和关键说明画面完成核验，核验级别为原始音轨。字幕连续覆盖旁白，到音轨结尾仅相差 0.020 秒；未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 11 条；开头明确承接此前两篇 Prompt Cache 内容，正文完整讲解四类缓存失效因素及配置建议，因此定位为该合集第 11 篇正片，没有期数冲突。
+- 依据原始音轨和关键画面校正 Claude Code、Anthropic、Prompt Cache、KV Cache、Transformer、Attention、Key、Value、Tensor、Opus、Sonnet、Haiku、`/model`、Subagent、Explore Tool、WebSearch Tool、MCP、`tools`、`system`、`messages`、`CLAUDE.md`、Skill、Session、`/resume`、`/reload-plugins`、Hash、TTL 与 `export ENABLE_PROMPT_CACHING_1H=1` 等转写错误或格式。
+- 保留资料按请求位置给出的四类“缓存杀手”排序：中途切换模型、中途安装 MCP 后恢复或重载、修改 `CLAUDE.md` 或安装 Skill 后恢复 Session，以及中断超过默认五分钟 TTL。把十万 Token、读取 `0.1×`、五分钟写入 `1.25×`、一小时写入 `2×` 限定为资料示例与视频发布时口径，不外推为其他版本的固定配置。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、画面指示和无意义转场；完整保留请求前缀顺序、变化位置与影响范围、模型隔离、Subagent 交接、启动时配置读取、两个重载命令、TTL 过期语义、环境变量和作者建议强度。
+- 新建资料摘要，将模型边界、请求组装与缓存生命周期整合进[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]；同时区分中途修改 MCP 配置与后续 ToolSearch 从既有 Deferred Tool 目录按需加载定义，更新相关摘要和内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 82 篇原始资料、82 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code WebSearch 子 Agent 与攻击面隔离
+
+- 完整读取用户提供的 188 条标准 SRT 字幕，覆盖 00:00:00.040—00:07:00.800，SHA-256 为 `b282b9b1e21c615526a4d3dff893b2b18fd0a5b1a85f65f0088b76efebfeaf79`。字幕主题、顺序和时间轴与 `BV1CgRzBnEvM` 原始音轨对应，但存在大量模型名、工具名和字段名转写错误。
+- 官方接口确认标题为《揭秘在Claude Code里WebSearch是如何搜索网页的》，作者为“张司机在路上”，发布于 2026-05-05，单 P，官方时长 422 秒；官方字幕轨和官方章节均为空。
+- 对照 421.047 秒原始音轨、全片辅助转写、关键抓包画面和官方简介完成核验，核验级别为原始音轨。字幕从 00:00:00.040 连续覆盖到距音轨结尾 0.247 秒处；唯一超过 0.5 秒的 00:05:06.760—00:05:08.770 空档为章节转场停顿，未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何事实时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 8 条；开头承接客户端／服务器端工具，正文完整拆解 WebSearch 的三次请求、子 Agent 隔离与计费，因此定位为合集第 8 条／通信抓包专题的后续篇。知识库已收录合集第 5、6、8、11、15 条，第 7 条尚未导入，没有期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 Claude Code、Anthropic、`claude-tap`、HTML、API、Opus 4.7、Haiku 4.5、`tools`、`tool_use`、`stop_reason`、`web_search`、`web_search_20250305`、`server_tool_use`、`srvtoolu_`、`web_search_tool_result`、`encrypted_content`、`usage`、`server_tool_use.web_search_requests`、Brave、Subagent、Prompt Injection、`Bash`、`Edit`、`Write`、OpenClaw 与 API Key 等转写错误或格式。
+- 抓包确认第一次 Opus 请求含 28 个工具并决定搜索，第二次 Haiku 请求只含 `web_search`，取得 10 条结果、约 30 KB 加密内容和摘要，第三次 Opus 请求只接收 URL、标题与摘要。完整保留上下文隔离、攻击面隔离和“每 1,000 次搜索 10 美元、与 Token 分开计费”的视频发布时口径，并把加密目的明确限定为作者解释。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、抓包页面操作、重复转场和无意义填充；完整保留客户端／服务器端工具区分、三次 API 请求顺序、两种模型分工、字段结构、加密内容、两层隔离、OpenClaw 对照和计费边界。
+- 新建资料摘要，将 WebSearch 的模型路由、上下文压缩与最小工具权限整合进[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，更新相关 Claude Code 摘要与内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 83 篇原始资料、83 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code tool_use、tool_result 与客户端工具闭环
+
+- 完整读取用户提供的 121 条 SRT 字幕，覆盖 00:00:00.000—00:05:01.860，SHA-256 为 `ea9fdd322b3152dad0bb04ce4d4b631fdc49312a926eac5840625ee660cab423`。字幕主题、顺序和时间轴与 `BV1sJ9tBQEmr` 原始音轨对应，但存在大量模型名、工具名、SSE 字段和参数转写错误。
+- 官方接口确认标题为《揭秘Opus模型如何指挥Claude Code调用工具》，作者为“张司机在路上”，发布于 2026-04-30，单 P，官方时长 302 秒；官方字幕轨和官方章节均为空。
+- 对照 301.883 秒原始音轨、全片辅助转写和关键抓包画面完成核验，核验级别为原始音轨。00:00:51.500—00:00:55.380 与 00:01:00.900—00:01:04.240 的空档对应命令等待和界面切换；字幕末尾距音轨结尾 0.023 秒，未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 7 条；开头完整提出 Tool Use 问题，结尾明确预告下一篇服务器端工具，且知识库已收录第 6、8 条，因此定位为合集第 7 篇正片，导入后第 5—8 篇连续，没有期数冲突。
+- 依据原始音轨和关键画面校正 Anthropic、Opus、Sonnet、Opus 4.7、Claude Code、Tool Use、`claude-tap`、API、Bash、SSE、Content Block、`tool_use`、`toolu_01`、`input_json_delta`、`command`、`description`、`stop_reason`、`tool_result`、`tool_use_id`、`content`、`text`、`end_turn`、Client-executed Tool、Server-executed Tool、WebSearch 与 WebFetch 等转写错误或格式。
+- 抓包确认 Bash 参数为 `git status && echo "\\n---DIFF---" && git diff` 与 `Show git status and diff`；第一轮以 `stop_reason: tool_use` 等待客户端，第二轮 `user` 消息中的 `tool_result.tool_use_id` 与原调用 ID 完全一致，最终文本响应以 `end_turn` 结束。保留 `main` 分支、`README.md`／`hello.py` 修改、`.traces/`／`notes.md` 未跟踪等案例结果。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、抓包页面操作和无意义转场；完整保留模型与客户端职责、两次 API 请求、SSE 参数拼装、ID 配对、本地执行不可见性、最终总结、客户端／服务器端工具边界及下一篇预告。
+- 新建资料摘要，将 `tool_use → tool_result → end_turn` 执行闭环整合进[[wiki/syntheses/AI Agent：从工具调用到可信行动]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，补齐第 6、7、8 篇前后链接并更新内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 84 篇原始资料、84 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | KV Cache 与 Prompt Cache 的复用层级
+
+- 完整读取用户提供的 259 条 SRT 字幕，覆盖 00:00:00.000—00:09:23.740，SHA-256 为 `9d7d035b2f7dbc6a490653b781567d0f220d666c2699df6b36b4feb55bc0c58d`。字幕主题、顺序和时间轴与 `BV1DsG76AEEc` 原始音轨对应，但存在大量 Prefill、Attention、矩阵维度、复杂度和缓存术语转写错误。
+- 官方接口确认标题为《提示词缓存里到底存了什么？和KV Cache有什么区别？》，作者为“张司机在路上”，发布于 2026-05-24，单 P，官方时长 564 秒；官方字幕轨和官方章节均为空。
+- 对照 563.757 秒原始音轨、全片辅助转写和关键公式与对照表画面完成核验，核验级别为原始音轨。字幕从音轨开头连续覆盖到距结尾 0.017 秒处；两次“每生成一个新的 Token”分别用于 KV Cache 引入和复杂度对比，不是重复播放。未发现旁白缺失或越过视频结尾，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 14 条；正文完整回答 Prompt Cache 存储内容，并系统比较 Prefill、Decode 与 KV Cache，因此定位为合集第 14 篇正片。知识库已收录第 15 条 ToolSearch，本次没有期数冲突。
+- 依据原始音轨和关键画面校正 Prompt Cache、KV Cache、Transformer、Prefill、Decode、Autoregressive、Attention、Query、Key、Value、Softmax、$d_k$、$n\times d$、$d\times n$、$n\times n$、$O(n^2)$、$O(n)$、$O(1)$、GPU、LRU 与 Andrej Karpathy 等转写错误或格式。
+- 完整保留“喜欢／唱／跳／Rap／还有→篮球”示例、缩放点积注意力公式、Q／K／V 定义、Prefill 矩阵形状、Decode 逐行追加、只缓存 K／V 的原因，以及跨请求复用前缀 K／V 的链路。明确 Prompt Cache 保存模型中间状态而非历史答案。
+- 将“几千 Token 快几千倍、上万 Token 快上万倍”限定为来源的复杂度类比，把 Decode $O(n^2)\rightarrow O(n)$ 与命中 Prefill $O(n^2)\rightarrow O(1)$ 限定为跳过对应重复计算的教学口径，不外推为端到端实测延迟。保留 KV Cache 动态请求内状态、Prompt Cache 半持久跨请求状态与 LRU 过期的来源描述。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、复习提示、画面指示和无意义转场；完整保留误解澄清、两阶段推理、Attention 计算、矩阵维度、两类缓存的目的、复杂度、生命周期与最终结论。
+- 新建资料摘要，将 Prefill／Decode 复用层级整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]和[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]，更新 Claude Code、Codex 与通用缓存摘要和内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 85 篇原始资料、85 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code 第三方 API 的 cch 缓存失效
+
+- 完整读取用户提供的 207 条标准 SRT 字幕，覆盖 00:00:00.000—00:07:22.060，SHA-256 为 `9c10b1e5af1b517dbcdb4087d50830cc34977e184544849d9fa0dd0ebcc13886`。字幕主题、顺序和时间轴与 `BV1m2LG6WEdH` 原始音轨对应，但存在大量产品名、字段名、源码标识和环境变量转写错误。
+- 官方接口确认标题为《如何修复Claude Code给第三方大模型用户挖的坑》，作者为“张司机在路上”，发布于 2026-05-16，单 P，官方时长 443 秒；官方字幕轨和官方章节均为空。
+- 对照 442.085 秒原始音轨、全片辅助转写、关键抓包与源码画面及官方简介完成核验，核验级别为原始音轨。字幕从音轨开头连续覆盖到距结尾 0.025 秒处；00:00:57.950—00:01:00.700 的 2.75 秒空档对应请求对比界面切换，未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何事实时间段。结尾三句复述开场问题，承担总结作用，不是重复播放。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 13 条；正文完整讲解 Attribution Header、Prompt Cache 失效、Bun／Zig 生成链路与第三方接入修复，因此定位为合集第 13 篇正片。知识库已收录第 5—8、11、13—15 条，第 9、10、12 条尚未导入，没有期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 Claude Code、Anthropic、`claude-tap`、`x-anthropic-billing-header`、`cc_version`、`cc_entrypoint`、`cch`、`97bd6`、`24c2d`、`ead88`、Prompt Cache、`cache_control`、Breakpoint、Cache Miss、`src/constants/system.ts`、`getAttributionHeader`、`isAttributionHeaderEnabled`、`NATIVE_CLIENT_ATTESTATION`、Bun、Zig、`bun-anthropic/src/http/Attestation.zig`、OAuth、Pro、Max、`sub2api`、`CLAUDE_CODE_ATTRIBUTION_HEADER` 与 `~/.claude/settings.json` 等转写错误或格式。
+- 抓包确认 `cch` 位于三个缓存断点之前，源码画面确认 JavaScript 层先写 `cch=00000`，Bun Native HTTP Stack 再原位覆盖五位实际值。保留“Anthropic 服务端会跳过或特殊处理这段文本”为作者推测，未将抓包现象改写成已知服务端算法；关闭设置只限定于实际抓包确认受影响的第三方 API。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、源码页面操作、开头与结尾的同义重复和无意义转场；完整保留三轮 `cch`、三个断点、缓存失效因果、TypeScript／Bun／Zig 两层实现、占位符等长替换、Attestation 用途、`sub2api` 边界、配置方法和重启复测步骤。
+- 新建资料摘要，将客户端证明与第三方缓存的协议错位整合进[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，更新多轮缓存、缓存命中边界与内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 86 篇原始资料、86 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code Thinking 模式、Adaptive 与 Effort
+
+- 完整读取用户提供的 211 条标准 SRT 字幕，覆盖 00:00:00.180—00:06:58.280。字幕主题、顺序和时间轴与 `BV1fc5j62E1Q` 原始音轨对应，但存在大量产品名、字段名、代码标识和训练术语转写错误。
+- 官方接口确认标题为《Thinking模式是如何让Claude Code变聪明的》，作者为“张司机在路上”，发布于 2026-05-10，单 P，官方时长 419 秒；官方字幕轨和官方章节均为空。
+- 对照 418.307 秒原始音轨、覆盖 00:00:00.000—00:06:57.980 的全片辅助转写及官方简介完成核验，核验级别为原始音轨。字幕覆盖至距音轨结尾 0.027 秒处；辅助转写中的 15 个超过 0.5 秒间隔均不超过 0.9 秒，属于自然停顿。未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 10 条；正文完整讲解 Thinking 模式、TTL 缓存案例、请求与响应字段及训练解释，因此定位为合集第 10 篇正片。知识库已收录第 11 条缓存命中专题，本次没有期数冲突。
+- 依据原始音轨和官方简介校正 Claude Code、Claude 桌面应用、`/config`、`CLAUDE.md`、Thinking Mode、Thinking Token、`cache.js`、`app.js`、TTL、`set`、`get`、`user-1`、`null`、`Map`、`claude-tap`、`thinking`、`adaptive`、`effort`、`high`、`low`、`medium`、`xhigh`、`max`、`content`、Thinking Block、Text Block、`Date.now()`、`entry.expiry`、Lazy Eviction、Transformer、RLHF、Reasoning Tuning、Reasoning 标签与 Answer 标签等转写错误或格式。
+- 将字幕中的方程从与结论不一致的“$2x-3=14$”校正为官方简介给出的 $2(x-3)=14$，保留展开括号、两边加 6、得到 $2x=20$、两边除以 2 和 $x=10$ 的完整步骤。把“Thinking 提升质量”限定为资料机制说明和一次 TTL 缓存案例，没有补写同题关闭对照、准确率或 Token 数值。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、界面操作提示和无意义转场；完整保留普通模式与 Thinking 模式的流程差异、缓存根因与修复、两个请求字段、两个响应 Block、训练解释、延迟与 Token 代价及证据边界。
+- 新建资料摘要，将可见中间推理、自回归上下文承接和运行时预算整合进[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]、[[wiki/syntheses/大模型后训练：从模仿到行为选择]]与[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，并更新内容索引。用户 SRT、原始音视频、辅助转写和接口响应均未进入知识库；写入后共有 88 篇原始资料、88 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code Skill 渐进式披露与第三方执行边界
+
+- 完整读取用户提供的 280 条 SRT 字幕，覆盖 00:00:00.040—00:08:41.320，SHA-256 为 `cefb7059c102716f83ea8378804c4e81eee3ca35f88a8830689f9b79c24883f7`。字幕实际讲解 Claude Code 权限系统，主题和时长均与文件名及目标视频 `BV19bjN61EaK` 不符，因此未将其作为目标视频的正文来源，也未删除或修改附件。
+- 官方接口确认标题为《你装的skill都是如何被Claude Code识别和加载的》，作者为“张司机在路上”，发布于 2026-06-15，单 P，官方时长 333 秒；官方字幕轨和官方章节均为空。
+- 对照 332.579 秒原始音轨、150 条全片辅助转写、关键抓包画面和官方简介完成核验，核验级别为原始音轨。辅助转写连续覆盖 00:00:00.000—00:05:32.440，距音轨结尾 0.139 秒；未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 18 条；正文完整讲解 Skill 的三层渐进式披露，并承接第 15 条 ToolSearch 的按需加载主题，因此定位为合集第 18 篇正片，没有同一 BV 号、同名文章或期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 Claude Code、Skill、渐进式披露、`document-skills:pdf`、*Attention Is All You Need*、`The following skills are available for use with the Skill tool`、frontmatter、`tools`、`tool_use`、`tool_result`、`Launching skill: document-skills:pdf`、Text Block、`Base directory for this skill:`、`ARGUMENTS:`、`REFERENCE.md`、`FORMS.md`、`pdftotext`、ToolSearch、Description、JSON Schema、`messages`、`defer_loading`、`tool_reference` 与 Prompt Cache 等转写错误或格式。
+- 将原始音轨重写为正式博客文章，删除口播自指、听众互动、抓包页面操作和无意义转场；完整保留 Skill 清单、说明书加载与资源按需读取三层结构，PDF 案例、三处注入改写、四步调用链、与 ToolSearch 的缓存位置差异，以及第三方提示词和脚本的信任边界。
+- 新建资料摘要，将 Skill 的“名称与描述—主说明—附属资源”分层整合进[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，为 ToolSearch 摘要补充对照链接并更新内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 87 篇原始资料、87 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code /compact 上下文压缩与工作现场恢复
+
+- 完整读取用户提供的 189 条标准 SRT 字幕，覆盖 00:00:00.040—00:07:44.840，SHA-256 为 `2ba49de9f3974c12a5f3056fefafa3b00e84812fef5d69405160f8c93144f6d5`。字幕主题、顺序和时间轴与 `BV1JWEg6GEuv` 原始音轨对应，但存在大量产品名、字段名、标签、文件名和代码概念转写错误。
+- 官方接口确认标题为《/compact之后Claude Code的上下文发生了什么变化？》，作者为“张司机在路上”，发布于 2026-06-08，单 P，官方时长 465 秒；官方字幕轨和官方章节均为空。
+- 对照 464.864 秒原始音轨、覆盖 00:00:00.000—00:07:44.840 的 251 条全片辅助转写、关键抓包与源码画面及官方简介完成核验，核验级别为原始音轨。字幕末尾距音轨结尾 0.024 秒；00:00:46.189—00:00:47.500 与 00:01:46.069—00:01:46.860 的空档均为自然停顿。未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 16 条；正文完整讲解 `/compact` 的总结请求与上下文重建，并承接第 15 条 ToolSearch 抓包专题，因此定位为合集第 16 篇正片。知识库已收录第 15、18 条，第 17 条尚未导入，没有同一 BV 号、同名文章或期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 Claude Code、`/compact`、`whateat`、`claude-tap`、API、`CRITICAL`、Read、Bash、Grep、Glob、Edit、Write、`<analysis>`、`<summary>`、Thinking Mode、`verbatim`、`direct quote`、Primary Request and Intent、Key Technical Concepts、Files and Code Sections、Errors and Fixes、Problem Solving、All user messages、Pending Tasks、Current Work、Optional Next Step、`max_tokens`、`messages`、`CLAUDE.md`、MessagesToKeep、Attachments、`tool_use`、`tool_result`、MCP Server Instructions、SessionStart Hook、Local Command Caveat、Compacted Message、`fileAttachments`、`planAttachment` 与 `skillAttachment` 等转写错误或格式。
+- 保留作者当次案例的数量与边界：压缩前 87 条消息、接近十万 Token；总结上限从 64,000 调整为 20,000 Token，实际 Summary 不到一万 Token；压缩后消息数组缩减为 4 条；Attachments 恢复 5 个近期文件，单文件最多 5,000 Token。所有数字均限定于作者当次抓包与源码画面。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、抓包页面操作、重复转场和无意义填充；完整保留 `whateat` 案例、三道总结约束、九节模板、`<analysis>` 丢弃与 `<summary>` 保留、System Prompt 不变、三类恢复组件、工具消息配对、文件恢复数量、重复内容及作者“多层补丁”的评价边界。
+- 新建资料摘要，将 Summary、MessagesToKeep 与 Attachments 的分工整合进[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，为第 15 条 ToolSearch 摘要补充下一篇链接并更新内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 89 篇原始资料、89 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code 权限规则、Permission Mode 与本地放行
+
+- 完整读取用户提供的 280 条标准 SRT 字幕，覆盖 00:00:00.040—00:08:41.320，SHA-256 为 `cefb7059c102716f83ea8378804c4e81eee3ca35f88a8830689f9b79c24883f7`。该文件曾在合集第 18 条 Skill 资料任务中被识别为错配字幕；本次目标为 `BV19AEq66Epq`，主题、顺序和时间轴均与原始音轨对应，但存在大量产品名、工具名、规则、字段和模式名称转写错误。
+- 官方接口确认标题为《Claude Code权限系统Permission是如何工作的》，作者为“张司机在路上”，发布于 2026-06-11，单 P，官方时长 522 秒；官方字幕轨和官方章节均为空。
+- 对照 521.334 秒原始音轨、覆盖全片的 342 段辅助转写、关键权限与配置画面及官方简介完成核验，核验级别为原始音轨。字幕从 00:00:00.040 覆盖到距音轨结尾 0.014 秒处；辅助转写中 13 个超过 0.5 秒的间隔最长 2.44 秒，对应模式切换与自然停顿。未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 17 条；正文完整讲解本地门禁、工具类型、权限规则、六种 Permission Mode、`auto` Classifier 与 `bypassPermissions` 隔离边界，因此定位为合集第 17 篇正片。知识库已收录第 16、18 条，导入后第 15—18 条连续，没有期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 Claude Code、Permission、Read、Grep、Glob、Bash、Edit、Write、MultiEdit、`.claude/settings.json`、`/permissions`、`permissions`、`allow`、`ask`、`deny`、`Bash(npm run test)`、`Bash(git status)`、`Read(src/**)`、`WebFetch(domain:example.com)`、`Bash(git commit *)`、`Bash(git push *)`、`Read(./.env)` 与 `deny > ask > allow` 等转写错误或格式。
+- 校正六种模式与配置：`default`、`acceptEdits`、`plan`、`auto`、`dontAsk`、`bypassPermissions`、`claude --permission-mode acceptEdits`、`permissions.defaultMode` 和 `claude --dangerously-skip-permissions`。保留旁白称 `Shift+Tab` 可在前四种模式间切换、同一表格却只为前三种标注该方式并在 `auto` 行显示横线的冲突，不静默选择其一。
+- 依据画面精确保留 `acceptEdits` 的工作目录边界及 `mkdir`、`touch`、`rm`、`rmdir`、`mv`、`cp`、`sed`，`dontAsk` 的 CI 规则与未命中规则时直接拒绝，`auto` 的规则—自动批准—Classifier—安全替代流程，以及容器、Dev Container、VM 与可重置沙盒中的 `bypassPermissions` 适用条件。资料没有提供 Claude Code 版本、权限源码或 Classifier 评测，所有实现结论均限制在作者当次讲解与画面。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、界面操作和无意义转场；完整保留三类检查信息、三类工具、规则语义与优先级、六种模式、审批疲劳、聊天约束的易失性、Prompt Injection 风险、隔离要求与后续源码分析预告。
+- 新建资料摘要，将模型提议、本地确定性放行、上下文分类与沙箱隔离的分层关系整合进[[wiki/syntheses/AI Agent：从工具调用到可信行动]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，补齐合集第 16—18 条前后链接并更新内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 90 篇原始资料、90 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+## [2026-09-14] ingest | Claude Code cache_control 断点与 20 Block 前缀回溯
+
+- 完整读取用户提供的 181 条标准 SRT 字幕，覆盖 00:00:00.000—00:06:45.980，SHA-256 为 `ff7d4abcf1a340046789621c72a7e8cb65f6f01d99e419e4720b46b85b832b25`。字幕主题、顺序和时间轴与 `BV1FjRtBmEaH` 原始音轨对应，但存在大量产品名、字段名、缓存术语和英文专名转写错误。
+- 官方接口确认标题为《Claude Code提示词缓存 Prompt Caching算法详解》，作者为“张司机在路上”，发布于 2026-05-07，单 P，官方时长 406 秒；官方字幕轨和官方章节均为空。
+- 对照 406.001 秒原始音轨、覆盖 00:00:00.000—00:06:45.840 的 204 条全片辅助转写、关键抓包画面和官方简介完成核验，核验级别为原始音轨。用户字幕末尾距音轨结尾 0.021 秒，时间轴没有超过 0.5 秒的空档；未发现旁白缺失、重复播放或越过视频结尾的内容，没有删除任何时间段。
+- 官方“Claude Code大赏”合集将本视频列为“正片”第 9 条；开头承接此前多轮 Prompt Caching 计量，正文完整讲解 `cache_control` 的写入、查找与回溯，因此定位为合集第 9 篇正片。知识库已收录第 8、10 条，导入后第 5—11 条连续，没有同一 BV 号、同名文章或期数冲突。
+- 依据原始音轨、关键画面和官方简介校正 Claude Code、Anthropic、Prompt Caching、Prefix Caching、`cache_control`、Breakpoint、Automatic、Explicit、Block、Content Block、`system[0]`、`system[1]`、`system[2]`、`messages`、`type: ephemeral`、`ttl: 1h`、Cache Miss、Hash、lookback、`tool_use`、`tool_result`、Tool Search、`defer_loading`、Plan Mode、Compact、MCP、Hook、Thariq 与 *Lessons from building Claude Code: Prompt caching is everything* 等转写错误或格式。
+- 完整保留三个断点的位置与作用、Automatic／Explicit 区分、最多 4 个 Explicit Breakpoint、29 个工具随第一个断点进入缓存、三条累积前缀 Hash、`hello → fine → thank you` 三轮回溯过程，以及最多向前查找 20 个 Block 的上限。明确工具密集轮次影响移动断点查找，不表示已有缓存被删除或固定 System 断点必然失效。
+- 将本次画面的 29 个工具与较早多轮资料的 31 个工具并列保留，不合并为固定数量；将“同版本用户共享首段缓存”的来源说法与后续第三方 API 中动态 `cch` 的失效案例按接入路径区分，未静默覆盖冲突。
+- 将字幕重写为正式博客文章，删除口播自指、听众互动、抓包页面操作、复习提示和无意义转场；完整保留三层断点、缓存读写、三轮案例、20 Block 失败场景、官方博客名称及简介补充的工程建议，同时将 Hash 和共享范围限定为资料对当次协议的说明。
+- 新建资料摘要，将 Breakpoint、累积前缀和 lookback 查找整合进[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]和[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]，补齐合集第 8—10 条前后链接并更新内容索引。用户 SRT、原始音视频、辅助转写、关键帧和接口响应均未进入知识库；写入后共有 91 篇原始资料、91 篇资料摘要和 11 篇跨资料综合，当前合集定位没有期数冲突。
+
+
+## [2026-09-14] query | 判断当前知识库是否需要 ingest
+
+- 核对 `raw/sources/`、`wiki/sources/`、[[wiki/index|内容索引]]及双向链接：共有 91 篇原始资料和 91 篇资料摘要，每篇原始资料恰好对应一篇摘要，每篇摘要也恰好链接一篇原始资料；`raw/inbox/` 为空。当前没有待 ingest 的已确认资料。
+
+## [2026-09-14] query | 判断知识库是否需要重新整理
+
+- 检查未解析链接、孤立页面、无出链页面、索引覆盖及资料摘要 Frontmatter：未解析链接为 0；`wiki/` 没有孤立页或无出链页；除索引和日志自身外，其余 103 篇知识页面均由 [[wiki/index|内容索引]] 收录；91 篇资料摘要的字段名称与顺序全部符合规范。当前不需要整体重整，仅适合在发现具体内容矛盾或知识缺口时执行局部 lint。

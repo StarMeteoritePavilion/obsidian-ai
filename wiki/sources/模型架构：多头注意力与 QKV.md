@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1of6cBAEuJ
 author: 隔壁的程序员老王
 published: 2026-02-05
 ingested: 2026-09-04
-updated: 2026-09-07
+updated: 2026-09-14
 tags:
   - AI
   - 模型架构
@@ -39,6 +39,8 @@ $$
 
 ## 关联
 
+- Attention 的顺序缺口与正弦位置编码：[[wiki/sources/模型架构：正弦位置编码与注意力的顺序缺口]]
+- Query／Key 的相对位置旋转：[[wiki/sources/模型架构：RoPE 相对位置与旋转点积]]
 - 长上下文中的 GQA、DSA 与 MSA：[[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]]
 - 稀疏块注意力：[[wiki/sources/模型架构：MoBA 混合块注意力]]
 - Attention 之后的稀疏 FFN：[[wiki/sources/模型架构：MoE 稀疏专家路由]]

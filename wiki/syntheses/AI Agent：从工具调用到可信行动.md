@@ -1,7 +1,7 @@
 ---
 title: AI Agent：从工具调用到可信行动
 created: 2026-09-04
-updated: 2026-09-07
+updated: 2026-09-14
 tags:
   - AI
   - AI Agent
@@ -16,6 +16,8 @@ AI Agent 不是“能调用工具的模型”这么简单。模型负责提出�
 ## 最小执行链
 
 Function Calling 连接模型与 Agent：模型返回结构化调用请求，Agent 执行本地函数并把结果送回模型。MCP 连接 Agent 与外部服务，可以暴露 Tool、Resource 与 Prompt。两者只解决接口问题，不自动提供权限控制、持久状态、独立验证或停止条件。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|AI Agent 基础]]）
+
+Claude Code 的 Bash 抓包把这条抽象链路展开为两个模型请求：Opus 先用 `tool_use` 给出工具名、唯一 ID 和参数，客户端执行 `git status` 与 `git diff`，再以相同 `tool_use_id` 把文本输出包装成 `tool_result`；模型读取结果后返回 `text` 并以 `end_turn` 结束。ID 只负责调用与结果配对，不能代替对命令退出状态和文件结果的验证。（[[wiki/sources/Claude Code：tool_use、tool_result 与客户端工具闭环|Claude Code 客户端工具闭环]]）
 
 Pydantic AI 示例进一步表明，工具注册与消息历史也是两件事。`tools` 决定模型能够调用哪些本地函数，`all_messages()` 和 `message_history` 负责跨调用恢复对话；该示例没有实现持久记忆、权限隔离、验证或恢复。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|Pydantic AI 实践]]）
 
@@ -54,6 +56,8 @@ LLM Wiki 的 Supersession 与 Retention／Forgetting 提供文档层治理：新
 
 这套分工同样适用于安全。服务层分类器、拒绝与模型回退只能控制请求入口；Agent 获得文件、命令和生产数据权限后，还需要工具权限、沙箱、审计、人工审批、回滚和 Prompt Injection 防护。（[[wiki/sources/Agent 安全治理：Claude Fable 5 与 Mythos 5 的分层开放|Claude 分层开放]]、[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness|Agent Harness]]）
 
+Claude Code 的本地权限案例给出了一条具体放行链：模型返回工具调用后，客户端依据工具类型、确定性规则和 Permission Mode 决定是否执行。`auto` Classifier 可以参考对话减少机械审批，但对话约束可能随上下文压缩而丢失；长期硬边界需要 `deny`，跳过大多数提示的 `bypassPermissions` 需要可重置沙盒。由此可见，模型行为指导、客户端权限与执行环境隔离是三层不同控制，不能互相替代。（[[wiki/sources/Claude Code：权限规则、Permission Mode 与本地放行|Claude Code 权限系统]]）
+
 ## 采用顺序
 
 1. 先用单次模型调用建立任务基线。
@@ -70,6 +74,8 @@ LLM Wiki 的 Supersession 与 Retention／Forgetting 提供文档层治理：新
 - [[wiki/sources/AI Agent：工具调用、MCP 与最小实现]]
 - [[wiki/sources/AI Agent：工具调用、MCP 与最小实现]]
 - [[wiki/sources/AI Agent 框架选型：十大框架与五大范式]]
+- [[wiki/sources/Claude Code：tool_use、tool_result 与客户端工具闭环]]
+- [[wiki/sources/Claude Code：权限规则、Permission Mode 与本地放行]]
 - [[wiki/sources/Agent 记忆：MemRL 运行时强化学习]]
 - [[wiki/sources/Agent 世界模型：服务于行动的选择性压缩]]
 - [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]]

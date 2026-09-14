@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1e17y6wEy5
 author: 唐国梁Tommy
 published: 2026-06-05
 ingested: 2026-09-03
-updated: 2026-09-07
+updated: 2026-09-14
 tags:
   - AI
   - 模型工程
@@ -26,3 +26,10 @@ tags:
 ## 限制
 
 低单价不等于任务总成本低，高单价也不保证一次成功。应以完成同一任务的成功成本、延迟和可靠性共同决策。
+
+## 关联
+
+- [[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级]]
+- [[wiki/sources/模型推理优化：Codex 自动前缀缓存]]
+- [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
+- [[wiki/syntheses/上下文工程：有限窗口中的信息治理]]

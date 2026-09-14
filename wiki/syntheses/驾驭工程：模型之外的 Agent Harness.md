@@ -1,6 +1,6 @@
 ---
 title: 驾驭工程：模型之外的 Agent Harness
-updated: 2026-09-13
+updated: 2026-09-14
 tags:
   - AI
   - Agent
@@ -55,6 +55,30 @@ Function Calling 解决模型与 Agent 之间的结构化调用，MCP 解决 Age
 传输能力同样属于 Harness 的运行配置。Codex 重连资料展示了一项局部调整：`wire_api` 仍为 `responses`，OpenAI 身份验证也保持启用，只把模型提供方的 `supports_websockets` 设为 `false`，便可让请求绕过 WebSocket 并直接进入 HTTPS Streaming。它说明 API 语义、身份验证和传输协议是不同配置维度，故障定位时不能把三者混成“接口不可用”。这项处理仅适用于 HTTPS 可用而 WebSocket 链路不稳定的情况，并受视频所示 Codex 版本约束。（[[wiki/sources/Codex：禁用 WebSocket 解决重复重连|Codex 重连处理]]）
 
 同系列的下一个抓包案例继续展示请求边界：`instructions` 承载基础规则，`developer` 消息注入权限、协作模式、Skill 和插件清单，`user` 消息承载项目规范、环境、历史和当前问题，`tools` 定义行动能力。这些内容分别属于信息治理、安全边界和行动接口，却在一次模型请求中共同消耗上下文。资料对工具数量的 16 与 14 两种标注彼此冲突，因此只支持“工具 schema 是可观测成本”，不支持将某个数量当作 Codex 的固定能力。（[[wiki/sources/Codex：请求结构、服务端通信与 Token 计量|Codex 请求解剖]]）
+
+Claude Code 的抓包呈现出相同职责、不同协议结构：`messages` 的首条用户消息同时携带 Hook、延迟工具名、MCP 指南、Skill 与 `CLAUDE.md`，`system` 保存身份、行为、记忆和环境规则，`tools` 提供已加载能力的完整 Schema。响应则通过 `message_start`、`content_block_delta`、`message_delta` 等 SSE 事件增量返回。本次 `hello` 调用的三个输入计量项合计 30,986 Token，其中 14,145 个为缓存写入、16,835 个为缓存读取；这些数字属于作者个人配置与 `claude-opus-4-7` 单次抓包，不是 Claude Code 的固定上下文成本。（[[wiki/sources/Claude Code：请求结构、SSE 与缓存 Token 计量|Claude Code 请求解剖]]）
+
+Thinking 抓包进一步区分模型能力与 Harness 的运行时控制：训练使模型能够生成中间推理，Claude Code 请求中的 `thinking: adaptive` 与 `effort: high` 决定当次调用是否使用该输出通道及大致预算，响应协议再把 Thinking Block 放在 Text Block 前。字段存在不等于任务必然正确；该资料只有一次 TTL 缓存案例，没有 Thinking 开关的同题对照，因此 Harness 仍需用任务结果验证额外推理是否产生实际收益。（[[wiki/sources/Claude Code：Thinking 模式、Adaptive 与 Effort|Claude Code Thinking 模式]]）
+
+客户端工具抓包继续拆开模型与 Harness 的行动边界：Opus 返回 `tool_use` 后以 `stop_reason: tool_use` 等待，Claude Code 才在本地执行 Bash，把输出连同相同 `tool_use_id` 包装为 `tool_result`；模型收到第二次请求后生成 `text` 并以 `end_turn` 结束。模型负责选择动作和解释结果，客户端负责真实执行，但这条协议本身不验证命令是否成功或环境是否达到目标状态。（[[wiki/sources/Claude Code：tool_use、tool_result 与客户端工具闭环|Claude Code 客户端工具闭环]]）
+
+Claude Code 权限资料把“模型提出、客户端执行”的中间门禁进一步展开：本地程序先看工具类型、`allow`／`ask`／`deny` 规则和 Permission Mode，再决定允许、询问、拒绝或交给 `auto` Classifier。确定性规则的优先级为 `deny > ask > allow`；聊天中的约束可能随对话变长或压缩而丢失，不能替代硬规则。`dontAsk` 通过拒绝未预先允许的待询问动作支持无人值守，`bypassPermissions` 则必须放进可重置的隔离环境。这些行为来自作者讲解和画面，没有源码与版本号，只能作为当次资料的实现口径。（[[wiki/sources/Claude Code：权限规则、Permission Mode 与本地放行|Claude Code 权限系统]]）
+
+下一次三轮抓包把 Harness 的稳定结构与多轮成本联系起来：首轮把 48,654 Token 写入缓存，第二轮读取这段前缀并新增写入 24 Token，第三轮读取量随之增长到 48,678 Token。工具定义、System Prompt、Hook、MCP、Skill、`CLAUDE.md` 和历史仍随每轮请求发送，但稳定顺序允许服务端复用前缀计算。该现象只说明当次 Claude Code 请求与 Anthropic 计量字段的关系，不代表其他配置具有相同基数。（[[wiki/sources/Claude Code：多轮对话的前缀缓存与 Token 成本|Claude Code 多轮缓存]]）
+
+`cache_control` 抓包把缓存友好的 Harness 结构具体化为三个 Explicit Breakpoint：前两个固定在身份提示和行为准则后，第三个随最新用户消息移动。每个位置都保存累积前缀；新位置 Miss 时最多向前查找 20 个 Block。将稳定内容前置、避免切换模型或中途改变 MCP／Hook，以及用 `defer_loading` 和保持原 Session 前缀的 Compact，都是为了让可复用条目留在回溯范围和相同模型边界内。（[[wiki/sources/Claude Code：cache_control 断点与 20 Block 前缀回溯|Claude Code cache_control]]）
+
+缓存命中不仅由对话内容决定，Harness 的配置生命周期也会改变前缀。资料所示 Claude Code 在启动时读取 MCP、Skill 与 `CLAUDE.md`，通过 `/resume` 或 `/reload-plugins` 重建相应数组后，新配置才进入请求并影响缓存；切换主模型则跨越模型隔离的 KV 缓存。资料建议把其他模型的工作放入独立 Subagent，再把结果交回主对话，这是以额外上下文隔离换取主 Session 前缀稳定的具体策略。（[[wiki/sources/Claude Code：模型、工具、注入与 TTL 的缓存命中边界|Claude Code 缓存命中边界]]）
+
+Attribution Header 案例进一步说明，Harness 的客户端证明与第三方缓存可能发生协议错位。Claude Code 的 JavaScript 层先写入 `cch=00000`，Bun 的 Zig 原生层在发送前原位替换真实 `cch`；它可用于证明请求来自真实客户端，却也让第三方代理看到每轮不同的首个 System Block。`CLAUDE_CODE_ATTRIBUTION_HEADER=0` 只适用于已经确认无需官方订阅 Attestation、且确因该字段失去缓存的第三方接入，不能作为所有 Claude Code 环境的默认配置。（[[wiki/sources/Claude Code：第三方 API 的 cch 缓存失效与 Attribution Header|第三方 API 的 cch 缓存失效]]）
+
+ToolSearch 把 Harness 的“能力目录”与“可调用 Schema”进一步分层。客户端先暴露 Deferred Tool 名称，模型选中后，客户端才把完整定义带入下一轮；`defer_loading` 与 `tool_reference` 同时维持工具可见性和缓存前缀。它以一次额外模型往返换取更小初始上下文和更窄选择空间。该链路依赖代理支持 `tool_reference`，因此强制开启 `ENABLE_TOOL_SEARCH=true` 不能自动使任意第三方接口兼容。（[[wiki/sources/Claude Code：ToolSearch 延迟加载与缓存保持|ToolSearch 延迟加载]]）
+
+`/compact` 进一步说明 Harness 的恢复状态不能压成单一摘要。客户端先用禁止工具、固定标签、逐字用户约束和直接引用控制总结，再丢弃 `<analysis>`、保留九节 Summary；下一轮还通过 MessagesToKeep 维护工具消息配对，通过 Attachments 恢复近期文件、Plan 与 Skill。摘要负责远端历史，原始近期消息和材料负责工作现场；二者出现内容重复，是以额外 Token 换取连续性的结果，而非纯文本摘要能够独立完成恢复。（[[wiki/sources/Claude Code：compact 上下文压缩与工作现场恢复|Claude Code /compact]]）
+
+Skill 采用相似的能力目录，却把另一类 Harness 边界暴露得更清楚：客户端只在模型点名后读取 `SKILL.md`，再用 Base directory 让说明书继续定位参考文件和脚本。按需加载控制了上下文成本，却没有把第三方内容变成可信代码；Skill 可以使用同一运行环境中的 Shell、项目文件和凭据，因此来源审计、最小权限和隔离仍必须由 Harness 与用户承担。（[[wiki/sources/Claude Code：Skill 渐进式披露与第三方执行边界|Claude Code Skill 加载]]）
+
+WebSearch 抓包把模型路由、上下文隔离和最小工具权限连成一条实际链路：Opus 4.7 在含 28 个工具的主上下文中决定搜索，Haiku 4.5 在只有 `web_search` 的子上下文中接收 10 条结果和约 30 KB 加密内容，主 Agent 最后只获得 URL、标题与摘要。这样既不让搜索中间材料占据主上下文，也不让不可信网页直接接触 `Bash`、`Edit` 和 `Write`。隔离只能缩小直接攻击面；子 Agent 仍可能返回误导文字，不能代替证据验证。（[[wiki/sources/Claude Code：WebSearch 子 Agent、服务端搜索与攻击面隔离|Claude Code WebSearch]]）
 
 Pydantic AI 的最小文件管理示例展示了静态 Harness 的最小闭环：`tools` 暴露 `read_file`、`list_files` 与 `rename_file`，`run_sync()` 组织模型和工具调用，应用再保存 `resp.all_messages()` 并通过 `message_history` 重建后续上下文。工具注册没有自动产生跨调用记忆；消息历史也没有提供持久化、权限、验证或恢复。这两部分分别属于行动接口与信息治理，不能合并为一个模糊的“Agent 会记住并执行”。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|Pydantic AI 实践]]）
 
@@ -133,6 +157,18 @@ Harness Engineering 全景资料中的组织案例主要由 OpenAI、Anthropic�
 - [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解]]
 - [[wiki/sources/Codex：禁用 WebSocket 解决重复重连]]
 - [[wiki/sources/Codex：请求结构、服务端通信与 Token 计量]]
+- [[wiki/sources/Claude Code：请求结构、SSE 与缓存 Token 计量]]
+- [[wiki/sources/Claude Code：cache_control 断点与 20 Block 前缀回溯]]
+- [[wiki/sources/Claude Code：Thinking 模式、Adaptive 与 Effort]]
+- [[wiki/sources/Claude Code：多轮对话的前缀缓存与 Token 成本]]
+- [[wiki/sources/Claude Code：tool_use、tool_result 与客户端工具闭环]]
+- [[wiki/sources/Claude Code：模型、工具、注入与 TTL 的缓存命中边界]]
+- [[wiki/sources/Claude Code：第三方 API 的 cch 缓存失效与 Attribution Header]]
+- [[wiki/sources/Claude Code：ToolSearch 延迟加载与缓存保持]]
+- [[wiki/sources/Claude Code：compact 上下文压缩与工作现场恢复|Claude Code：/compact 上下文压缩与工作现场恢复]]
+- [[wiki/sources/Claude Code：权限规则、Permission Mode 与本地放行]]
+- [[wiki/sources/Claude Code：Skill 渐进式披露与第三方执行边界]]
+- [[wiki/sources/Claude Code：WebSearch 子 Agent、服务端搜索与攻击面隔离]]
 - [[wiki/sources/大模型后训练：RLM Harness 组合泛化]]
 - [[wiki/sources/大模型后训练：SKILLRL 技能增强强化学习]]
 - [[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV]]

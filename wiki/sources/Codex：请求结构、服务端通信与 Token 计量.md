@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1VJ7j6jE4L
 author: 张司机在路上
 published: 2026-06-26
 ingested: 2026-09-13
-updated: 2026-09-13
+updated: 2026-09-14
 tags:
   - AI
   - Codex
@@ -40,7 +40,9 @@ tags:
 
 ## 关联
 
+- [[wiki/sources/Claude Code：请求结构、SSE 与缓存 Token 计量]]
 - [[wiki/sources/Codex：禁用 WebSocket 解决重复重连]]
 - [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE]]
+- [[wiki/sources/模型推理优化：Codex 自动前缀缓存]]
 - [[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
 - [[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]

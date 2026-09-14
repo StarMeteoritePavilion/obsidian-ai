@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV153oRBXEsG
 author: 唐国梁Tommy
 published: 2026-04-25
 ingested: 2026-09-04
-updated: 2026-09-07
+updated: 2026-09-14
 tags:
   - 模型专题
   - AI
@@ -51,6 +51,7 @@ OPD 先独立训练数学、代码、Agent 和指令遵循等专家，再让 Stu
 - 稀疏注意力与 KV Cache：[[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]]
 - 残差连接的另一条改造路线：[[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]
 - MoE 与专家路由基础：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
+- Top-K 路由与负载均衡：[[wiki/sources/模型架构：MoE 路由、Top-K 与负载均衡]]
 - 另一种 Muon 稳定化实例：[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
 - 视觉专家的 OPD 实例：[[wiki/sources/多模态推理：DeepSeek 视觉原语]]
 - 后训练机制对照：[[wiki/syntheses/大模型后训练：从模仿到行为选择#专家分训与统一模型：SFT、RL 和 OPD|SFT、RL 与专家统一蒸馏]]

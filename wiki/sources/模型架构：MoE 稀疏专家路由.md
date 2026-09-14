@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1CgZABxEcy
 author: 隔壁的程序员老王
 published: 2026-02-19
 ingested: 2026-09-04
-updated: 2026-09-07
+updated: 2026-09-14
 tags:
   - AI
   - 模型架构
@@ -38,6 +38,7 @@ DeepSeek V4 进一步处理 MoE 的训练稳定性：Anticipatory Routing 使用
 
 ## 关联
 
+- 路由、Top-K 与 Auxiliary Loss：[[wiki/sources/模型架构：MoE 路由、Top-K 与负载均衡]]
 - Linear、Activation 与 MLP：[[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - 上下文形成机制：[[wiki/sources/模型架构：多头注意力与 QKV]]
 - 块级稀疏注意力：[[wiki/sources/模型架构：MoBA 混合块注意力]]
