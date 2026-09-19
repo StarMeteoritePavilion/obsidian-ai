@@ -1,6 +1,6 @@
 ---
 title: AI 知识索引
-updated: 2026-09-14
+updated: 2026-09-19
 tags:
   - AI
   - 索引
@@ -8,7 +8,7 @@ tags:
 
 # AI 知识索引
 
-本知识库以 `raw/sources/` 中的 **91 篇原始资料**为事实来源，维护 **91 篇一一对应的资料摘要**与 **11 篇跨资料综合**。原始资料保持不变；摘要负责提炼证据与限制，综合页负责跨来源比较、冲突和长期结论。
+本知识库以 `raw/sources/` 中的 **92 篇原始资料**为事实来源，维护 **92 篇一一对应的资料摘要**与 **11 篇跨资料综合**。原始资料保持不变；摘要负责提炼证据与限制，综合页负责跨来源比较、冲突和长期结论。
 
 维护历史见 [[wiki/log|维护日志]]。
 
@@ -123,6 +123,7 @@ tags:
 | 页面 | 内容 |
 | --- | --- |
 | [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE]] | Tokenizer 把文字切成 Token 并映射为数字 ID；Token ID 再经 Embedding 进入 Transformer。Word-based、Character-based 与 Subword 分别在词表规模、序列长度、语义完整性和未知文本覆盖之间取舍，BPE 通过反复合并高频相邻单元形成固定词表与规则。 |
+| [[wiki/sources/大语言模型：思维链如何用 Token 换取推理计算]] | 普通 Transformer 每生成一个 Token 的层数固定，但可以生成更多相关解题 Token 来增加测试时计算，从而在不扩大参数的情况下提高正确率。后续的自洽性、Verifier、STaR、PRM 和 GRPO 分别处理选答与训练主模型，最终答案正确仍不等于中间步骤正确。 |
 | [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]] | 资料解读的论文提出一种数据分布视角：可见思维链可能是模型从分布内数据中学到的结构化归纳偏置所生成的推理轨迹，其有效性受到训练数据与测试问题之间分布差异的约束。DataAlchemy 的可控实验为这一解释提供了任务、长度和格式三个维度的证据。 |
 | [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]] | 大语言模型以离散Token作为输入和输出接口，主要计算发生在连续表示中：Tokenizer把文本变为Token ID，Token Embedding提供初始向量，Transformer形成上下文化Hidden State。 |
 | [[wiki/sources/模型架构：Linear、Activation 与 MLP]] | Linear 用可训练的权重和偏置完成向量间的线性映射；多个 Linear 直接串联后仍然只能表示线性关系。在线性层之间加入 ReLU、Sigmoid、tanh 或 GELU 等非线性激活函数。 |

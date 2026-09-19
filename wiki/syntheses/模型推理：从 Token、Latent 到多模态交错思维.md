@@ -1,7 +1,7 @@
 ---
 title: 模型推理：从 Token、Latent 到多模态交错思维
 created: 2026-09-03
-updated: 2026-09-14
+updated: 2026-09-19
 tags:
   - AI
   - 模型原理
@@ -105,6 +105,12 @@ MCoT 的能力还取决于训练路线和数据质量。资料将其分为 Promp
 
 因此，表示方式应由信息需求决定：语言和已有视觉编码足以解决问题时，纯文本路径更短；必须产生新的视觉证据时，加入图像操作；需要压缩或并行保留多个内部方向时，才考虑更多 Latent 计算。ThinkMorph 的自主模式切换与 Token-Latent Hybrid 的设想都指向同一原则：保留可读接口，把额外计算放在确实能增加信息的表示空间中。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与 Latent]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
 
+## 可见思维链首先增加的是 Token 计算次数
+
+普通 Transformer 每生成一个 Token 都经过固定层数，不会因为题目更难就自动多走几层。可见思维链把解题过程写成更多 Token，使总前向次数随输出长度增加，并让中间结果进入后续上下文。这是一种不扩大参数、只增加测试时计算的路线；代价是输出更长、Token 花费更高。资料还指出，极小模型上额外格式可能成为负担，而参数足够大时，提示词里的步骤模板就能调动预训练中已见过的推理文本。（[[wiki/sources/大语言模型：思维链如何用 Token 换取推理计算|思维链的 Token 计算]]）
+
+这条解释与 DRAG／IterDRAG 分配检索预算、Claude Code Thinking 用 `thinking` 与 `effort` 控制中间推理预算属于同一层问题的不同实现：都是在推理时决定花多少额外计算，而不是把模型改成可变深度网络。
+
 ## 可见思维链与内部计算不是同一对象
 
 可见 CoT 是模型在 Token Space 中生成的文本，内部计算则发生在不可直接读取的 Latent State 中。前者可以帮助人检查步骤，却不能自动成为后者的忠实记录。1776 年案例中，模型正确叙述闰年规则后给出相反结论；DataAlchemy 的任务泛化实验还出现了错误推理过程与正确答案并存的情况，后者可由两种变换在实验设置中的可交换性解释。（[[wiki/sources/大语言模型：思维链的模式匹配与泛化边界|思维链泛化边界]]）
@@ -170,6 +176,7 @@ Codex 抓包进一步展示了跨请求前缀复用：短对话第二轮的 22,8
 - [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE]]
 - [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]]
+- [[wiki/sources/大语言模型：思维链如何用 Token 换取推理计算]]
 - [[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - [[wiki/sources/模型训练：梯度下降与均方误差]]
 - [[wiki/sources/模型训练：PyTorch 手写数字识别实战]]
