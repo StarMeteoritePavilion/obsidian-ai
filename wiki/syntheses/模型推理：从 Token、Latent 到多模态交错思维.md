@@ -1,7 +1,7 @@
 ---
 title: 模型推理：从 Token、Latent 到多模态交错思维
 created: 2026-09-03
-updated: 2026-09-19
+updated: 2026-09-22
 tags:
   - AI
   - 模型原理
@@ -11,198 +11,114 @@ tags:
 
 # 模型推理：从 Token、Latent 到多模态交错思维
 
-模型推理不能只用“生成下一个 Token”或“在隐藏空间思考”概括。现有资料呈现出三种相互衔接、但不能混为一谈的表示层：离散 Token 是输入输出接口，Latent State 承担模型内部连续计算，ThinkMorph 的 Interleaved CoT 则把部分中间处理显式展开为交替的文本片段和图像片段。模型容量也不只有 Dense 与 MoE 两种组织方式：Engram 增加按输入地址选择参数化记忆表项的稀疏轴。表示机制之外还存在独立的测试时计算、执行与服务层：DRAG 和 IterDRAG 分配检索文档、演示与迭代步骤，DSpark 调整草稿怎样生成、验证多少位置以及算力怎样随负载分配，计算硬件资料区分参数搬运、并行计算与卡间通信，API 成本资料则把 Prefill、Decode、KV Cache、Prompt Caching 和 Batch 映射为计费与架构选择。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与两类 Embedding]]、[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token Space 与 Latent Space]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/模型架构：Engram 参数化记忆查找|Engram]]、[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]、[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|AI 计算硬件]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本]]）
+理解模型推理，先沿着一次输入看它怎样变成表示、经过计算、再生成输出，然后区分三件事：信息怎样表示、一次任务投入多少计算、这些计算怎样高效执行。增加参数、增加思考步骤和提高生成速度作用于不同环节，不能互相代替。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|表示与生成]]、[[wiki/sources/大语言模型：思维链如何用 Token 换取推理计算|测试时计算]]、[[wiki/sources/模型推理优化：DSpark 投机解码|执行优化]]）
 
-## 三层表示的职责
+## 一次文本生成的数据流
 
-| 表示层 | 主要职责 | 可见性 | 主要限制 |
-| --- | --- | --- | --- |
-| Token Space | 文本输入、输出、训练标签、工具调用和审计 | 人可读 | 离散化边界影响模型收到的信息结构 |
-| Latent Space | 语义表示、上下文关联和内部连续计算 | 通常不可直接读 | 难解释、难审计，解码工具也可能失真 |
-| 多模态交错思维链 | 文本规划与视觉操作交替推进 | 文本和生成图像可检查 | 图像 Token 成本高，并非每个任务都需要 |
+```mermaid
+flowchart LR
+    A["输入文本"] --> B["Tokenizer：Token ID"]
+    B --> C["Token Embedding：初始向量"]
+    C --> D["Transformer：上下文化表示"]
+    D --> E["输出投影：词表分数"]
+    E --> F["解码策略：选择下一个 Token"]
+    F --> G["新增 Token 参与后续生成"]
+    G --> D
+```
 
-三层不是互斥架构。文本和图像输入仍会被编码为离散或连续表示，模型内部仍需 Latent 计算；ThinkMorph 的不同之处，是把部分推理过程外化为文本思考、图像操作和后续文本验证，而不是把全部中间过程隐藏在 Latent State 中。
+图示概括自回归文本生成的依赖关系，不代表每步都重新计算全部历史。Tokenizer 决定离散切分，Embedding 提供初始向量，Transformer 形成上下文化 Hidden State，输出投影得到词表 logits，再由解码策略选择下一项。KV Cache 可以复用已处理历史的中间状态。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|表示链路]]、[[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支|生成与采样]]、[[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级|历史状态复用]]）
+
+原始 Encoder—Decoder 先编码输入，再逐步生成目标序列；Decoder-only 根据已有 Token 继续生成；Encoder-only 的注意力范围与训练目标不同，不应把这条自回归输出链原样套到所有 Transformer。架构区别见 [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支#三种架构路线|三种基础路线]]。
 
 ## Token ID、Token Embedding 与 RAG Embedding
 
-Tokenizer 把文字切分并映射为固定词表中的 Token ID；Token Embedding 再把离散编号映射为连续向量，并随大语言模型共同训练。前者是训练期间固定的预处理，后者是模型参数。One-Hot 乘以线性映射与直接查 Embedding 表在数学关系上相通，但工程实现不必显式构造完整 One-Hot 向量。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与两类 Embedding]]）
+Token ID 是词表编号；Token Embedding 是模型参数中的初始表示；Hidden State 是经过当前上下文计算后的状态。Residual Stream、层内 Activation、KV Cache 与 logits 又处在不同计算位置，把它们统称为“隐藏空间”会失去具体含义。RAG Embedding 则服务于检索，其训练目标与聚合方式不同，不能把任意生成模型的 Hidden State 直接当成合格的检索向量。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|表示位置与用途]]）
 
-Tokenizer 的切分粒度需要在词表规模、序列长度、语义完整性和未知文本覆盖之间取舍。Word-based 切分保留完整词义和短序列，却会产生 OOV／`[UNK]` 并扩大词表；Character-based 使用小词表组合新词，却拉长序列并把词义拆散；Subword 则保留高频大单元、把罕见词拆成小片。BPE 通过反复合并高频相邻单元建立词表，并在推理时按固定规则顺序重放合并，是这类折中的一种实现。（[[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE|Tokenizer 与 BPE]]）
-
-可见文本重新分词也不等于 API 的输出计量。Codex 抓包中的三个 GPT-5.5 响应分别出现 `15→19`、`11→15` 和 `4→8`，作者将差值解释为系统开销；这三个样本来自同一次对话，只能证明该次响应的 `usage.output_tokens` 比可见文本重新分词多 4，不能推出跨模型、跨版本的固定差值。（[[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE|Codex Tokenizer 案例]]）
-
-RAG Embedding 面向整段文本，训练目标是让相关文本靠近、无关文本远离，通常还需要 Pooling 汇总多个位置。它与大语言模型内部表示都属于连续向量，却不能因此直接等同：Token Embedding 服务于模型输入，下一个 Token 预测塑造生成模型；RAG Embedding 服务于语义检索，对比学习塑造文本距离。任意 LLM Hidden State 也不能未经单独训练和处理就视为可用的检索向量。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与两类 Embedding]]、[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索|RAG 个人知识库]]）
-
-## Transformer 的三种基础路线
-
-原始 Transformer 用 Encoder—Decoder 结构完成序列到序列转换：Encoder 处理完整输入并形成内部表示，Decoder 结合该表示和已经生成的目标 Token 继续自回归输出。GPT 路线保留适合下一个 Token 预测的 Decoder 主体，形成 Decoder-only 架构；BERT 路线使用 Encoder-only 架构，通过恢复 `[MASK]` 等目标学习双向文本表示。（[[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支|Transformer 架构导论]]）
-
-三种路线共享 Transformer 的分层参数计算，却不能只用“理解”与“生成”两个拟人化标签区分。实际差异还包括注意力可见范围、是否接收独立 Encoder 输出、训练目标和解码方式。资料中的“含义矩阵”适合作为内部表示的教学类比，不代表模型形成了可直接读取、与人类概念一一对应的语义表。
-
-## 位置编码怎样进入注意力点积
-
-最朴素的 Attention 没有单独读取 Token 位置。前序 Token 换序时，Key 的分数项与对应 Value 一起换序，加权求和仍然不变；位置编码由此负责把顺序注入输入表示。原始 Transformer 使用成对的正弦与余弦，角频率为 $\omega_i=1/10000^{2i/d}$：低维组转得快，高维组转得慢，编码只依赖绝对位置而不依赖序列总长。（[[wiki/sources/模型架构：正弦位置编码与注意力的顺序缺口|正弦位置编码]]）
-
-正弦位置编码自身可以通过旋转矩阵从 $PE(pos)$ 得到 $PE(pos+k)$，两个位置编码的点积也只保留位置差；但把它与 Embedding 相加后再投影，Query／Key 点积会产生语义与单个位置的交叉项，投影矩阵也会作用于位置编码。RoPE 改在投影后对 Query、Key 的二维分量组执行旋转，利用 $RoPE(m)^TRoPE(n)=RoPE(n-m)$，让点积直接表示为未旋转 Query、Key 与相对位置 $n-m$ 的函数。（[[wiki/sources/模型架构：RoPE 相对位置与旋转点积|RoPE 相对位置]]）
-
-这一结论比较的是资料所写两种注入方式的代数结构，不是跨模型性能排名。资料只列举 DeepSeek V3、GLM-4.5 与 Qwen3 作为发布时实例，没有提供准确率、上下文外推或运行效率实验，因此不能从公式直接推出统一收益。
-
-## Linear、Activation 与 MLP 提供基础变换
-
-Linear 通过 $y=Wx+b$ 把一个向量映射为另一个向量，Weight 与 Bias 由训练数据确定。多个 Linear 直接复合仍然是线性函数；ReLU、Sigmoid、tanh 和 GELU 等 Activation 在层间引入非线性，使 FFN／MLP 能够拟合更复杂的关系。Transformer 的 Feed Forward 模块建立在这类结构上。（[[wiki/sources/模型架构：Linear、Activation 与 MLP|Linear、Activation 与 MLP]]）
-
-参数并不是从目标公式中直接读取。线性回归教学示例先用平方误差衡量预测与训练目标的差距，再根据损失对 $w$、$b$ 的梯度确定更新方向，由 Learning Rate 控制步长；多个样本的平方误差取平均后形成 MSE，Batch Size 决定一轮使用的样本数。该示例说明参数怎样更新，不表示所有模型都使用同一损失函数、批量或学习率。（[[wiki/sources/模型训练：梯度下降与均方误差|梯度下降与均方误差]]）
-
-PyTorch 手写数字训练实例把抽象更新过程映射为工程链路：Dataset 在返回单个样本时执行 `transform`，DataLoader 组成批次，模型产生 Logits，CrossEntropyLoss 计算分类损失，`backward()` 求梯度，Optimizer 清空梯度并更新参数，`state_dict()` 则负责保存和恢复权重。示例使用训练集样本展示预测，只能证明对应样本的结果；模型泛化仍需测试集验证。（[[wiki/sources/模型训练：PyTorch 手写数字识别实战|PyTorch 训练实战]]）
-
-GPT-2 XL 的输出 Linear 将 1600 维内部表示映射为 50257 个 Token 的匹配分数。视频演示的三层 MLP 则采用 `1→128→256→1`，包含 33537 个可训练参数，以 2000 条数据拟合非线性曲线。这些实例说明同一基础模块可以承担不同映射职责，不表示模型参数能够逐项翻译为人类概念。
+分词在词表大小、序列长度和未知文本覆盖间取舍。BPE 等方法改变模型首先接收到的信息单元；可见文本重新分词的数量也不必等于 API 的全部输出计量。算法与抓包计数留在 [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE|Tokenizer 专题]]，不能由一次计量差值推出跨版本固定开销。
 
 ## 注意力怎样形成上下文表示
 
-Token 进入 Transformer 后先映射为 Embedding，再分别投影为 Query、Key 和 Value。$QK^T$ 计算当前位置与其他位置的匹配分数，按 $\sqrt{d_k}$ 缩放并经过 Softmax 后形成注意力权重，最后对 Value 加权求和。自回归模型还用因果 Mask 把未来位置的权重压到 0，保证当前位置只读取已经出现的 Token。（[[wiki/sources/模型架构：多头注意力与 QKV|多头注意力]]）
+Query 与 Key 的匹配经缩放和 Softmax 形成权重，再对 Value 加权汇总；多头使用不同投影学习关系，自回归模型用因果 Mask 限制未来信息。这解释了上下文怎样影响当前位置，却不意味着每个头都对应人可命名的“语法”或“语义”。（[[wiki/sources/模型架构：多头注意力与 QKV|注意力与 QKV]]）
 
-多头结构让多组独立投影并行学习不同关系，再拼接各头结果。资料用“语法表”“需求表”和“内容矩阵”解释 Key、Query 与 Value，但明确这些只是教学类比；真实隐向量维度与 Attention Head 通常不能直接命名为可读概念。这条链路解释 Latent State 怎样吸收上下文，不意味着人类能够逐维读出模型内部含义。
+顺序信息还需要位置机制。正弦位置编码在输入表示中加入位置，RoPE 在投影后旋转 Query／Key，使点积中的位置关系由相对位移表达。代数结构不同不直接证明跨任务性能优劣；推导分别见 [[wiki/sources/模型架构：正弦位置编码与注意力的顺序缺口|正弦位置编码]] 与 [[wiki/sources/模型架构：RoPE 相对位置与旋转点积|RoPE]]。
 
-多头计算也会直接变成 Decode 阶段的存储成本。MHA 为每个 Query Head 保存独立 Key 和 Value；MQA 让所有 Query Head 共享一套 KV；GQA 则在组内共享。因此 KV Cache 公式中决定 Head 方向存储量的是 KV Head 数 $h_{kv}$，而不是 Query Head 数本身。资料对 MHA、MQA 与 GQA 表达能力的排序没有提供评测数字，只能作为教学性取舍描述。（[[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA|KV Cache 显存公式]]）
+### Linear、Activation 与 MLP 提供基础变换
 
-## Attention Residuals 沿深度选择表示
+Linear 执行向量映射，Activation 引入非线性，FFN／MLP 继续变换每个位置的表示。参数来自训练；推理使用这些参数处理当前输入。梯度下降、训练循环与保存加载属于参数怎样获得和验证的问题，详见 [[wiki/sources/模型架构：Linear、Activation 与 MLP|基础变换]]、[[wiki/sources/模型训练：梯度下降与均方误差|梯度下降]] 与 [[wiki/sources/模型训练：PyTorch 手写数字识别实战|MNIST 完整实践]]。
 
-标准残差连接让原始输入与各模块输出沿深度连续相加，为训练信号提供直通路径；固定单位权重也会使深层隐藏表示的数值持续累积，并稀释单层贡献。Attention Residuals（AttnRes）把 Attention 的动态聚合从 Token 维度移到层深度：当前层使用可训练 pseudo-query 生成 Softmax 权重，再选择性汇总此前表示。（[[wiki/sources/模型架构：Attention Residuals 层间选择性聚合|Attention Residuals]]）
+MNIST 的现存原文已包含独立测试和保存加载验证，不能再描述为只有训练集单例；具体结果绑定所列运行环境。本页保留训练与推理的分工，训练顺序及结果见 [[raw/sources/模型工程/训练与后训练/用 PyTorch 搭建并训练 MNIST 手写数字识别模型#独立测试与保存加载结果|独立测试记录]]。
 
-Full AttnRes 访问所有此前层输出，提供细粒度选择，但需要保存和读取完整层历史；Block AttnRes 在块内保留标准残差，只在块间执行注意力聚合，以较粗粒度降低开销。它与 Token 间 Attention 共享“根据相关性加权”的思想，但处理对象分别是序列位置与网络深度，不能把两者视为同一个注意力轴。
+## 容量、序列与深度是不同的改动位置
 
-## MoE 把容量与活跃计算分开
+| 改动位置 | 机制与作用 | 必须保留的区别 | 展开位置 |
+| --- | --- | --- | --- |
+| FFN 容量 | MoE 为每个 Token 路由少量专家 | 总参数不等于激活参数；路由、分发与负载均衡仍有成本，FLOPs 不等于端到端延迟 | [[wiki/sources/模型架构：MoE 稀疏专家路由|MoE 容量]]、[[wiki/sources/模型架构：MoE 路由、Top-K 与负载均衡|路由与训练]] |
+| 参数化记忆 | Engram 按输入 N-gram 查表，门控后注入主干 | 查找训练所得参数表不同于 RAG 检索外部文档；CPU 预取也有搬运成本 | [[wiki/sources/模型架构：Engram 参数化记忆查找|Engram]] |
+| 历史序列 | KV 共享、稀疏筛选、压缩、混合注意力与分段记忆 | 减少 KV Head、筛选位置和压缩序列是不同操作，不能把节省比例直接当作速度提升 | [[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆|长上下文机制对照]] |
+| 网络深度 | Attention Residuals 选择此前层表示；mHC 约束多通道混合 | 层间选择不同于 Token 间注意力，也不同于优化器更新或专家负载控制 | [[wiki/syntheses/深层模型训练稳定性：残差、更新与路由|训练稳定性]]、[[wiki/sources/模型架构：Attention Residuals 层间选择性聚合|AttnRes]] |
 
-Attention 形成上下文表示后，FFN 负责继续变换每个位置。Dense 模型让所有 FFN 参数处理每个 Token；MoE 把大型 FFN 拆为多个专家，由 Router 为当前 Token 选择少量路由专家，再与共享专家的结果加权组合。总参数因而表示模型容纳的专家容量，激活参数则更接近单次 Token 实际使用的计算规模。（[[wiki/sources/模型架构：MoE 稀疏专家路由|MoE 稀疏专家路由]]）
-
-路由的完整数据流还包含打分、Dispatch、Expert 计算与加权、Combine。Top-K 选出多个 Expert 后，需要归一化选中分数再混合输出；增加 Expert 总数不要求同步提高每个 Token 的 Top-K。资料所示 Auxiliary Loss 用 Router 平均概率 $P_i$ 与实际选择频率 $f_i$ 的乘积约束负载，但没有给出真实模型的训练消融，不能由教学示例推出统一系数或收益。（[[wiki/sources/模型架构：MoE 路由、Top-K 与负载均衡|MoE 路由与负载均衡]]）
-
-DeepSeekMoE 对比中，145B MoE 有 144.6B 总参数、22.2B 激活参数，每 4K Token FLOPs 为 585.6T；67B Dense 的总参数和激活参数均为 67.4B，对应 2057.5T FLOPs。资料据此概括 MoE 的计算优势，但该表没有直接测量端到端延迟或 API Token 价格，不能用 FLOPs 代替这两项指标。
-
-## Engram 把参数化记忆与动态计算分开
-
-Engram 在 MoE 之外增加 N-gram 查找通道。词表投影先统一大小写与前导空格等表面形式，多尺度 N-gram 再通过多头哈希定位少量 Embedding 表项；上下文门控过滤多义和哈希碰撞噪声，Depthwise Convolution 连接相邻位置，最后通过残差注入主干。它检索的是随模型端到端训练的参数表，不等于 RAG 从外部知识库召回资料。（[[wiki/sources/模型架构：Engram 参数化记忆查找|Engram]]）
-
-MoE 与 Engram 分别提供计算稀疏性和记忆稀疏性。资料中的等预算实验保持 26.7B 总参数与 3.8B 激活参数，把部分路由专家容量换成 5.7B 查表参数；固定预算下的较优区域约为 75%～80% 给 MoE、20%～25% 给 Engram。该比例来自对应模型与任务，不能作为其他领域的固定分配。
-
-Engram 查找地址只依赖输入 Token，使 CPU 能够在 GPU 计算浅层时预取表项。资料所述 100B 参数表放在 CPU 内存、H800 推理 8B 模型的实验中，吞吐下降 2.8%。这说明模型架构可以与内存层级共同设计，但总参数不参与密集计算不代表参数搬运、CPU 内存和 PCIe 成本消失。
-
-## 交错推理之前的多模态架构
-
-ViT 提供了从像素到视觉特征的基础入口。资料中的 $224\times224$ 彩色图片先被切成 196 个 $16\times16$ 图块，每块展开为 768 个 RGB 数字；局部模型提取图块特征后，Transformer 编码器通过无因果限制的注意力关联全图，输出融合上下文的图块表示。这里的“狗眼睛”“狗尾巴”等名称只是对数字特征的教学类比，不能视为模型内部存在可直接读取的自然语言标签。（[[wiki/sources/多模态模型：ViT 图像分块与编码|ViT 图像分块与编码]]）
-
-多模态推理首先受输入表示约束。典型系统由视觉编码器、模态接口和预训练语言模型组成；MLP Projection、Q-Former 与 Cross-Attention 分别以直接投影、固定 Query 压缩和按需跨模态注意力连接视觉与语言。资料对超过 120 个模型的汇总中，输入分辨率从 224 提高到 336 的画面结果为提升 11.5%，接口从 MLP 换为 Q-Former 为提升 1.2%。这组特定比较说明视觉细节是否进入模型可能比接口形式更先构成瓶颈，但不能外推为所有任务的架构排名。（[[wiki/sources/多模态模型：架构、数据、推理与检索|多模态技术地图]]）
-
-MCoT 的能力还取决于训练路线和数据质量。资料将其分为 Prompt 提示、SFT 长链训练和 RL 三阶段；最后一阶段只有在结果可以可靠验证时才容易形成有效奖励。数学、科学和代码可借助答案或执行结果验证，情感、创意和社会常识则缺少稳定的单一评分标准。ThinkMorph 展示的是统一模型怎样显式交替生成文本和图像，二者共同说明“推理表示”与“训练反馈”是两项相互作用但不可混同的设计选择。（[[wiki/sources/多模态模型：架构、数据、推理与检索|多模态技术地图]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
-
-《Thinking with Visual Primitives》进一步指出，视觉信息已经进入模型也不等于推理能够稳定引用它。自然语言中的“左边那个”或“他旁边的”在复杂场景中可能发生指代漂移；点和边界框可以作为中间推理变量，把语言概念绑定到可重复引用的图像坐标。它解决的是 Reference Gap，而非单纯增加感知分辨率。（[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语专题]]）
-
-视觉原语要成为可靠推理变量，还需要数据、训练与验证共同约束。报告把 97,984 个原始数据源经过语义和视觉几何过滤缩减为 31,701 个，再采样、去重形成超过 4,000 万个样本；框与点分别训练专家后，通过 Unified RFT 和 OPD 合并。格式、质量和任务准确性三层奖励进一步检查坐标语法、原语—答案一致性、迷宫合法探索与双向路径匹配。表示形式因此只提供“可以怎样思考”的接口，训练信号才决定模型是否会稳定使用该接口。（[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语训练专题]]）
+这些改动可以组合，效果必须落回完整模型。DeepSeek V4 的压缩与稀疏、Qwen 3.5 的混合注意力、Kimi K2 Thinking 的 MoE／MLA 与量化，分别改变不同数据流。具体配置与证据见 [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性|DeepSeek V4]]、[[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示|Qwen 3.5]]、[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练|Kimi K2 Thinking]]；不能把三篇不同设置的数字拼成统一排名。
 
 ## 推理表示应跟随任务需要
 
-纯文本 CoT 适合抽象规划、逻辑计算和可审计表达，但难以直接验证局部视觉细节。Latent Reasoning 可以减少必须写成自然语言的中间步骤，却把解释和追责压力转移到 Decoder、Probe、SAE 或因果干预工具。Interleaved CoT 在文本与视觉空间同时搜索，适合需要裁剪、放大、定位或视觉重构的任务，但生成图像的成本明显更高。
+| 路线 | 中间信息怎样存在 | 能检查什么 | 主要边界 |
+| --- | --- | --- | --- |
+| 文本 CoT | 将解题步骤生成成后续可读取的 Token | 可见步骤、答案及其一致性 | 增加生成与上下文成本，不保证忠实反映内部计算 |
+| Latent Reasoning | Coconut、Soft Thinking 等将部分步骤保留在连续状态 | 需额外解释或干预工具分析 | 隐藏步骤仍需前向计算，可见 Token 少不等于总计算少 |
+| 多模态交错推理 | ThinkMorph 交替生成文本与视觉中间状态 | 文本规划、图像操作和结果 | 依赖视觉信息与任务，额外图像步骤有成本 |
 
-因此，表示方式应由信息需求决定：语言和已有视觉编码足以解决问题时，纯文本路径更短；必须产生新的视觉证据时，加入图像操作；需要压缩或并行保留多个内部方向时，才考虑更多 Latent 计算。ThinkMorph 的自主模式切换与 Token-Latent Hybrid 的设想都指向同一原则：保留可读接口，把额外计算放在确实能增加信息的表示空间中。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与 Latent]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
+上述区别来自 [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|连续表示与隐藏计算]]、[[wiki/sources/大语言模型：思维链如何用 Token 换取推理计算|思维链计算]] 与 [[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]。它们可以共存：可见中间步骤仍经模型内部连续计算，不能当作互斥架构。
+
+视觉输入还要区分“看见、指代、操作、验证”。ViT 编码已有图片，点和框减少指代漂移，ThinkMorph 生成可见中间图像；增加分辨率无法代替稳定指代和动作验证。完整衔接见 [[wiki/syntheses/多模态推理闭环：感知、指代、操作与验证|多模态闭环]]，原始机制见 [[wiki/sources/多模态模型：ViT 图像分块与编码|ViT]]、[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语]] 与 [[wiki/sources/多模态模型：架构、数据、推理与检索|多模态技术地图]]。
 
 ## 可见思维链首先增加的是 Token 计算次数
 
-普通 Transformer 每生成一个 Token 都经过固定层数，不会因为题目更难就自动多走几层。可见思维链把解题过程写成更多 Token，使总前向次数随输出长度增加，并让中间结果进入后续上下文。这是一种不扩大参数、只增加测试时计算的路线；代价是输出更长、Token 花费更高。资料还指出，极小模型上额外格式可能成为负担，而参数足够大时，提示词里的步骤模板就能调动预训练中已见过的推理文本。（[[wiki/sources/大语言模型：思维链如何用 Token 换取推理计算|思维链的 Token 计算]]）
+普通 Transformer 生成每个 Token 时经过固定层数。把相关解题步骤写成更多 Token，会增加前向次数，并把中间结果交给后续生成；这增加测试时计算，不增加参数，也不自动保证结果正确。资料还保留极小模型上额外格式可能成为负担的例外。（[[wiki/sources/大语言模型：思维链如何用 Token 换取推理计算|计算预算与模型边界]]）
 
-这条解释与 DRAG／IterDRAG 分配检索预算、Claude Code Thinking 用 `thinking` 与 `effort` 控制中间推理预算属于同一层问题的不同实现：都是在推理时决定花多少额外计算，而不是把模型改成可变深度网络。
+自我一致性和 Verifier 在多次生成后选择答案，主模型参数不因选答更新；STaR、奖励驱动训练与蒸馏才涉及新的学习过程。提示和采样的选择见 [[wiki/syntheses/提示词工程：从单轮指令到生产规范|提示词工程]]，反馈如何用于参数更新见 [[wiki/syntheses/大模型后训练：从模仿到行为选择|后训练]]。Claude Code 的 Thinking 抓包展示预算控制与响应通道，但没有同题开关对照，不能单凭它证明准确率收益。（[[wiki/sources/Claude Code：Thinking 模式、Adaptive 与 Effort|Thinking 案例边界]]）
 
 ## 可见思维链与内部计算不是同一对象
 
-可见 CoT 是模型在 Token Space 中生成的文本，内部计算则发生在不可直接读取的 Latent State 中。前者可以帮助人检查步骤，却不能自动成为后者的忠实记录。1776 年案例中，模型正确叙述闰年规则后给出相反结论；DataAlchemy 的任务泛化实验还出现了错误推理过程与正确答案并存的情况，后者可由两种变换在实验设置中的可交换性解释。（[[wiki/sources/大语言模型：思维链的模式匹配与泛化边界|思维链泛化边界]]）
+DataAlchemy 从任务、长度和格式三个维度展示了分布变化时的退化，还出现可见步骤与答案不一致。它支持可见推理受到训练分布约束的解释，不证明所有模型都缺少抽象推理。流畅步骤既不是内部计算的完整记录，也不是最终答案正确的保证。（[[wiki/sources/大语言模型：思维链的模式匹配与泛化边界|思维链泛化边界]]）
 
-Claude Code 的 Thinking 抓包补充了运行时链路：请求使用 `thinking: adaptive` 与 `effort: high`，响应先生成 Thinking Block，再生成 Text Block；按自回归机制，前一段 Token 会成为后一段的上下文。TTL 缓存案例中，两块内容分别承担根因定位与修复说明。这证明当次可见中间文本参与了后续生成，但单个案例没有关闭 Thinking 的同题对照，也不能证明可见文本完整反映模型内部计算。（[[wiki/sources/Claude Code：Thinking 模式、Adaptive 与 Effort|Claude Code Thinking 模式]]）
-
-DataAlchemy 进一步从任务、长度和格式三个维度观察到：测试分布偏离训练分布时，可见推理链会变得脆弱。该结果支持思维链受到训练数据分布约束的解释，但不能据此断言全部大模型内部都不存在抽象推理。评估时应同时检查最终答案、可见步骤、二者的一致性以及任务所处的分布范围。
-
-## 评估不能只看最终准确率
-
-不同表示方式消耗的资源不同。比较文本 CoT、Latent Reasoning 和 Interleaved CoT 时，至少需要同时记录可见 Token、图像 Token、隐藏步骤、FLOPs、实际延迟、准确率和审计能力。Best-of-N 的收益还必须结合采样数和选择器成本；少生成文本不代表总计算更少，多生成视觉步骤也不必然带来更高准确率。
-
-现有资料的实验数字分别来自不同模型、任务和论文设置，不能横向拼成统一排名。ThinkMorph 模式切换数据还存在讲解文字与论文图注的基准归属冲突，说明评估结论必须保留原始表格、评判器和适用条件，而不能只摘取提升比例。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|Token 与 Latent]]、[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]）
-
-视觉原语实验也说明最终答案准确率不足以评价中间推理。DS_Maze_Navigation 和 DS_Path_Tracing 分别比所列 GPT-5.4 结果高 16.3 与 10.2 个百分点，但本文模型在 CountQA、CV-Bench 和 OmniSpatial 上仍略低于 Gemini 3 Flash；而且比较统一使用低推理预算。点和框的收益集中在需要精确引用与连续轨迹的任务，不构成模型整体能力排名。报告也没有提供标准消融表，无法把收益分别归因于视觉原语、框点分训、OPD 或 CSA。（[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语上集]]、[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语下集]]）
+因此需要分开检查答案、步骤、二者一致性和外部证据。SAE、Probe 或 Circuit Tracing 提供观察途径，因果解释还需要干预验证；内部激活不能直接解释为人类概念或心理状态。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|解释边界]]）
 
 ## 表示机制、RAG 推理扩展与执行优化是三条轴
 
-Token、Latent State 和 Interleaved CoT 回答的是中间信息以什么形式存在、哪些步骤对人可见；DRAG 与 IterDRAG 回答的是在有效上下文预算内，怎样把测试时计算分配给外部文档、示例和迭代检索；DSpark 回答的是自回归输出已经确定以后，怎样减少生成这些 Token 的等待时间和无效计算。投机解码仍以 Token 为输入输出接口，目标模型内部仍执行 Latent 计算，但草稿模型先预测一段 Token，目标模型再并行验证，从而在保持目标输出分布的条件下提高生成速度。（[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]）
+表示机制决定中间信息的形式；DRAG／IterDRAG 决定检索文档、演示和迭代预算；投机解码优化生成执行。前者可能改变模型怎样使用信息，第二类增加可见证据和调用，第三类在满足无损条件时保持目标输出分布。它们应分别报告质量、资源投入与服务性能。（[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|检索预算]]、[[wiki/sources/模型推理优化：DSpark 投机解码|投机解码]]）
 
-三条轴不能用同一组指标替代。表示路线需要比较准确率、可见 Token、隐藏步骤、图像 Token 和可审计性；RAG 推理扩展还要记录检索文档数、示例数、迭代次数、有效上下文长度以及 EM、F1、准确率；执行优化则要记录接受长度、有效吞吐、每秒轮数、端到端延迟和并发负载。增加 RAG 的测试时计算可能提高答案质量，却不等于提高服务吞吐；增加单轮验证长度也不必然降低延迟。（[[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展|DRAG 与 IterDRAG]]、[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]）
-
-DSpark 的半自回归和置信度调度说明，模型质量与系统效率也不能分开优化。第一个草稿 Token 更依赖模型容量，后续位置更依赖连贯性；验证范围则取决于草稿通过概率和当前硬件批量。其 60%～85% 单用户生成速度提升来自 DeepSeek-V4 的特定线上条件，不构成其他模型或部署环境的通用收益保证。（[[wiki/sources/模型推理优化：DSpark 投机解码|DSpark]]）
-
-DeepSeek V4 又把模型内部的长上下文效率拆成压缩与稀疏两条轴。CSA 先压缩 KV 再执行 Top-k 稀疏选择，HCA 则以更高压缩率保留 Dense Attention；两者交错，使精细选择与全局覆盖不必由同一机制承担。mHC、Muon 和 Anticipatory Routing 分别限制残差信号、权重更新和 MoE 路由的异常放大，说明百万上下文可用性同时取决于推理数据流与预训练稳定性。（[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性|DeepSeek V4]]）
-
-Qwen 3.5 采用另一条长上下文成本路线：资料以 15 个周期说明，线性注意力占 75%，全注意力占 25%，两类机制交替堆叠。线性注意力处理大量普通上下文，全注意力保留关键长程依赖；它降低的是注意力计算随序列长度平方增长的压力，不等于先压缩序列再稀疏选择。该资料没有展开线性注意力的精确实现、周期内部结构或消融实验，因此只能支持设计意图，不能据此判断各任务收益，也不能把成本降低 60%、吞吐提高 8 倍或长上下文最高提高 19 倍写成通用效果。（[[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示|Qwen 3.5]]）
-
-## 从稀疏容量到长程工具调用
-
-Kimi K2 Thinking 把模型容量、每 Token 计算量和部署精度作为三项不同变量。资料所述架构有 1.04T 总参数、32B 激活参数、384 个专家，每个 Token 使用 8 个路由专家与 1 个共享专家；MLA 压缩 Key-Value 状态，MoE 组件再通过 QAT 获得原生 Weight-only INT4。总参数增加不等于每次推理同比增加计算，量化也不等于减少逻辑步骤。（[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练|Kimi K2 Thinking]]）
-
-资料称原生 INT4 使生成速度提高约 2 倍，并支持 200～300 次连续工具调用。前者属于模型、硬件和推理实现共同决定的执行效率，后者属于 Agent 在长程轨迹中维持目标和上下文的行为能力。二者不能用同一指标替代：更快生成不会自动减少工具错误，长调用链也不证明端到端延迟或任务成功成本更低。
-
-Kimi K2 Thinking 的 Test-Time Scaling 又增加了第四项变量：推理时允许模型使用多少思考时间和工具调用预算。它与 DRAG/IterDRAG 分配检索和演示预算、DSpark 优化 Token 验证执行属于不同实现，但都说明模型评估必须同时报告计算预算、工具环境和停止条件，不能只比较最终分数。
+同样，Qwen 3.5 交替使用线性与全注意力，不等于 V4 的先压缩再筛选，也不等于应用层删减文档。两者配置与召回代价的比较由 [[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆#先压缩再筛选|长上下文专题]]承担；应用如何选择材料由 [[wiki/syntheses/上下文工程：有限窗口中的信息治理|上下文工程]]承担。
 
 ## 从推理阶段到 API 成本
 
-模型的计算量只有映射到实际硬件数据流后，才会变成吞吐与延迟。CPU 可以执行模型所需运算，但单请求自回归生成可能先受参数读取带宽限制；HBM 提高带宽，批量请求复用参数后，瓶颈又会移向并行计算核心。模型超过单卡显存时，推理主要沿模型分片传递中间激活；大规模训练还需跨并行组同步与参数同量级的梯度，因此需要 NVLink、Infinity Fabric 等高速互联。峰值 FLOPs、显存容量、内存带宽和互联带宽回答的是不同问题，不能互相替代。（[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|AI 计算硬件]]）
+Prefill 较为并行地处理输入，Decode 逐 Token 生成并读取历史状态。服务优化要先区分计算、存储、访存、调度和计费，避免把所有节省都叫作“减少 Token”。（[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|推理阶段与计费]]）
 
-FlashAttention 把“计算量”和“执行数据流”进一步分开：它仍计算标准 Attention 的全部 $n\times n$ 分数，却通过 Kernel Fusion 避免在阶段间把完整中间矩阵写回 HBM；Online Softmax 用修正因子递推最大值、分母和输出，使稳定 Softmax 可以边扫描边计算；Tiling 再把单行递推扩展为多行小块，利用 SRAM 与 Tensor Core。它优化的是精确 Attention 的 HBM I/O，不等于 GQA 的 KV 共享、PagedAttention 的物理分页或 Sparse Attention 的分数筛选。（[[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling|FlashAttention]]）
+| 机制 | 实际改变什么 | 不能据此认定什么 |
+| --- | --- | --- |
+| KV Cache／Prompt Cache | 请求内复用历史 K／V，或跨请求复用稳定前缀的 Prefill 状态 | 命中不返回历史答案，也不消除新增后缀、解码和读取成本；[[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级|复用层级]] |
+| GQA | 减少每个位置保存的 KV Head | 不减少序列位置；[[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA|显存公式]] |
+| FlashAttention | 通过融合、在线 Softmax 与分块减少中间矩阵写入和访存 | 不减少标准注意力的全部分数计算；[[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling|算子数据流]] |
+| PagedAttention | 分页管理 KV 物理存储，支持前缀共享与块复用 | 不能由某平台计量跳变推出其物理块大小；[[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐|分页与共享]]、[[wiki/sources/模型推理优化：Codex 自动前缀缓存|Codex 观察边界]] |
+| DSpark | 草稿生成、验证长度与负载调度协同 | 特定线上速度提升不是跨模型保证；[[wiki/sources/模型推理优化：DSpark 投机解码|模型、基线与负载条件]] |
+| Batch 与硬件调度 | 合并调度以提高利用率，按带宽、计算和互联瓶颈分配资源 | 吞吐提高不等于单请求等待更短，峰值 FLOPs 不代表实际速度；[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|硬件约束]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Batch 与成本]] |
 
-硬件执行还受到软件栈约束。PyTorch 经 cuBLAS、cuDNN 等中间层调用 CUDA 内核，长期算法适配把硬件优势放大为生态优势；ROCm 尝试兼容既有路径，TPU／OpenXLA 则另建计算、互联和软件体系。这些路线说明，推理优化不仅是模型算法问题，也受算子覆盖、框架集成、部署工具和迁移成本影响。
+模型生成工具调用后，外部系统还必须执行、授权、检查结果并处理失败。更快生成不自动带来更少工具错误；运行责任见 [[wiki/syntheses/驾驭工程：模型之外的 Agent Harness|Agent Harness]]。任务经济性应计入重试、失败、人工稽核与运维，不能仅比较每百万 Token 单价。（[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|任务总成本]]）
 
-Prefill 与 Decode 的计算形态解释了输入和输出 Token 为什么常被区别定价。Prefill 面对完整输入，可以较为并行地建立中间状态；Decode 按自回归顺序逐 Token 生成，每一步都需要新的计算和调度。Reasoning Token、图像 Token 和音频 Token 则把用户不可见的内部生成或非文本输入继续折算为计量单位。（[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Token 成本专题]]）
+### 推理慢、显存高、费用高时先查什么
 
-KV Cache、Prompt Caching 和 Batch 分别作用于不同环节。KV Cache 保存当前请求已经计算的 Key 与 Value，用显存换取历史状态复用；Prompt Caching 识别跨请求重复的稳定前缀，把重复上下文变成低成本输入；Batch 允许延后请求并合并调度，用等待时间换取 GPU 利用率。三者不能互相替代，也不能只用“减少 Token 数”概括。
+先固定模型、输入输出长度、精度、硬件或服务平台及并发条件，再分开记录各阶段耗时、显存占用、实际计量和任务成功率。下表是依据上述机制整理的排查顺序；看到一种症状并不能直接确定根因。（[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|硬件条件]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|成本条件]]）
 
-KV Cache 与 Prompt Cache 的教学资料进一步说明，两者复用的都不是历史答案。Prefill 为输入前缀批量建立 K／V，Decode 让新 Query 读取历史 K／V 并追加新状态；KV Cache 保留当前请求已经处理的 Token，Prompt Cache 则把完全相同前缀的 Prefill K／V 延伸到后续请求。资料所写 $O(n^2)\rightarrow O(n)$ 与命中 Prefill $O(n^2)\rightarrow O(1)$ 只表示对应重复计算被跳过，不等于端到端延迟按相同比例下降。（[[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级|KV Cache 与 Prompt Cache]]）
+| 观察到的问题 | 先检查的证据 | 根据证据选择下一步 |
+| --- | --- | --- |
+| 长输入后等待明显增加 | 输入长度、Prefill 耗时与前缀命中；区分模型计算和请求排队 | 检查无关输入与稳定前缀复用；自管推理服务再检查算子访存。见 [[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级|缓存复用]]、[[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling|FlashAttention]] |
+| 开始输出后仍生成缓慢 | 输出与思考长度、Decode 速度、批量和内存带宽 | 比较必要推理预算与实际质量；具备部署控制时再评估量化或投机解码，不能由减少可见文字推断总计算减少。见 [[wiki/sources/模型推理优化：DSpark 投机解码|DSpark 的负载条件]]、[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|隐藏计算]] |
+| 上下文或并发一增，显存就紧张 | 分开核算模型权重与 KV；检查序列长度、KV Head、层数、精度和分配碎片 | 先确定占用对象；分页改善分配，KV 共享属于模型结构，二者不能互换。见 [[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA|KV 公式]]、[[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐|分页管理]] |
+| 单次 Token 单价低，任务账单仍高 | 输入／输出、缓存写入／读取、重试与成功任务数量 | 按完成同一任务的总成本比较模型和工作流；允许延后交付时再考虑 Batch。见 [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|任务成本]] |
 
-PagedAttention 继续处理 KV Cache 在 GPU 中怎样分配和共享：固定大小的物理 Block 减少连续预留造成的内部碎片和动态空洞造成的外部碎片；Block Table 把逻辑顺序映射到分散物理块；链式 Block Hash 与全局映射按完整前缀寻找已有 KV；`ref_cnt` 保护仍在共享的块。当引用计数归零时，块返回空闲队列，但数据在被重新分配和覆盖前仍可命中。这是 vLLM 资料中的执行层实现，不能由 Codex 抓包的 512 Token 递增直接推断 OpenAI 使用相同 Block 大小或后端。（[[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐|PagedAttention]]）
+验证改动时同时观察任务质量、单请求延迟、吞吐和费用。托管 API 用户能调整输入、预算与调用组织；分页、算子和草稿模型等服务内部机制是否可控，须以实际部署能力为准，不把机制名称直接当成可用配置。
 
-Codex 抓包进一步展示了跨请求前缀复用：短对话第二轮的 22,878 个输入 Token 中，22,400 个被报告为缓存命中；长文本实验的命中数按 `22400 → 22912 → 23424 → 23936` 增长。资料用 vLLM Automatic Prefix Caching 的 Block、链式哈希和 KV Cache 哈希表解释 512 Token 的跳变，但这是机制类比，不是 OpenAI 内部实现证明。截至 2026-09-14，OpenAI 官方文档称 GPT-5.5 及更早模型的 `cached_tokens` 按 128 的倍数向下取整，因此 512 只能视为该次实验观察到的递增间隔，不能直接等同于物理 Block 大小。（[[wiki/sources/模型推理优化：Codex 自动前缀缓存|Codex 自动前缀缓存]]）
+## 评估不能只看最终准确率
 
-推理性能最终还要落到任务经济性。每百万 Token 单价忽略了重试、延迟、错误、人工稽核、运维和成功率；便宜模型若反复失败，完成任务的总成本可能更高。模型路由、缓存友好的 Prompt 结构和 Token FinOps 因此属于推理服务架构，而不只是采购或提示词技巧。
+比较前先固定模型版本、任务、提示与采样条件，再同时记录答案质量、可见与隐藏计算、图像 Token、实际延迟、吞吐和审计能力。涉及工具时还要记录环境、预算与最终状态；数据集、模型或负载不同的提升比例不能直接相加。（[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space|评测边界]]、[[wiki/syntheses/评估工程：从通用基准到业务质量门|系统评估]]）
 
-## 资料链
-
-- [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
-- [[wiki/sources/模型架构：正弦位置编码与注意力的顺序缺口]]
-- [[wiki/sources/模型架构：RoPE 相对位置与旋转点积]]
-- [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
-- [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE]]
-- [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
-- [[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]]
-- [[wiki/sources/大语言模型：思维链如何用 Token 换取推理计算]]
-- [[wiki/sources/模型架构：Linear、Activation 与 MLP]]
-- [[wiki/sources/模型训练：梯度下降与均方误差]]
-- [[wiki/sources/模型训练：PyTorch 手写数字识别实战]]
-- [[wiki/sources/模型架构：多头注意力与 QKV]]
-- [[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA]]
-- [[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]
-- [[wiki/sources/模型架构：MoE 稀疏专家路由]]
-- [[wiki/sources/模型架构：MoE 路由、Top-K 与负载均衡]]
-- [[wiki/sources/模型架构：Engram 参数化记忆查找]]
-- [[wiki/sources/多模态推理：ThinkMorph 交错思维链]]
-- [[wiki/sources/多模态模型：ViT 图像分块与编码]]
-- [[wiki/sources/多模态模型：架构、数据、推理与检索]]
-- [[wiki/sources/多模态推理：DeepSeek 视觉原语]]
-- [[wiki/sources/多模态推理：DeepSeek 视觉原语]]
-- [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
-- [[wiki/sources/Claude Code：Thinking 模式、Adaptive 与 Effort]]
-- [[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]]
-- [[wiki/sources/上下文工程：DRAG 与 IterDRAG 推理扩展]]
-- [[wiki/sources/模型推理优化：DSpark 投机解码]]
-- [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
-- [[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态]]
-- [[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling]]
-- [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
-- [[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级]]
-- [[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐]]
-- [[wiki/sources/模型推理优化：Codex 自动前缀缓存]]
-- [[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆]]
-- [[wiki/syntheses/深层模型训练稳定性：残差、更新与路由]]
-- [[wiki/syntheses/多模态推理闭环：感知、指代、操作与验证]]
+本库保留各研究的限制：ThinkMorph 的部分模式切换数字有基准归属冲突；视觉原语缺少标准消融，不能独立归因各组件收益；Qwen 3.5 资料没有展开混合注意力精确实现与消融。具体数字和争议应读取对应摘要，不把机制图或教学公式当成统一性能证明。（[[wiki/sources/多模态推理：ThinkMorph 交错思维链|ThinkMorph]]、[[wiki/sources/多模态推理：DeepSeek 视觉原语|视觉原语]]、[[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示|Qwen 3.5]]）
