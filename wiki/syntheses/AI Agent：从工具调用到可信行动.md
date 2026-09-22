@@ -21,6 +21,12 @@ Claude Code 的 Bash 抓包把这条抽象链路展开为两个模型请求：Op
 
 Pydantic AI 示例进一步表明，工具注册与消息历史也是两件事。`tools` 决定模型能够调用哪些本地函数，`all_messages()` 和 `message_history` 负责跨调用恢复对话；该示例没有实现持久记忆、权限隔离、验证或恢复。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|Pydantic AI 实践]]）
 
+## ReAct 与 Plan-And-Execute 组织不同层级的循环
+
+ReAct 把一次循环组织为 Thought、Action、Observation，直到模型返回 Final Answer。模型只提出工具请求，Agent 主程序解析请求、执行函数并把结果加入消息历史。系统提示词可以约定这套输出协议，却不能代替执行权限和结果验证。（[[wiki/sources/AI Agent：ReAct 与 Plan-And-Execute 构建模式|ReAct 最小实现]]）
+
+Plan-And-Execute 在执行循环外增加显式计划：Plan 模型产生初始步骤，执行 Agent 完成当前步骤，Re-Plan 模型依据执行记录返回新计划或最终答案。执行 Agent 内部仍可使用 ReAct，因此两者不是必须二选一的同层方案。显式规划增加了可见状态，也同时增加了计划、执行记录和终止判断需要保持一致的责任。（[[wiki/sources/AI Agent：ReAct 与 Plan-And-Execute 构建模式|Plan-And-Execute]]、[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程]]）
+
 ## 四类状态不能统称为记忆
 
 | 状态 | 保存内容 | 主要风险 | 资料入口 |
@@ -87,7 +93,7 @@ Claude Code 的本地权限案例给出了一条具体放行链：模型返回�
 ## 资料链
 
 - [[wiki/sources/AI Agent：工具调用、MCP 与最小实现]]
-- [[wiki/sources/AI Agent：工具调用、MCP 与最小实现]]
+- [[wiki/sources/AI Agent：ReAct 与 Plan-And-Execute 构建模式]]
 - [[wiki/sources/AI Agent 框架选型：十大框架与五大范式]]
 - [[wiki/sources/Claude Code：tool_use、tool_result 与客户端工具闭环]]
 - [[wiki/sources/Claude Code：权限规则、Permission Mode 与本地放行]]
