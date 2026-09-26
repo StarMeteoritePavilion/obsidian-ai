@@ -1,7 +1,7 @@
 ---
 title: 模型推理：从 Token、Latent 到多模态交错思维
 created: 2026-09-03
-updated: 2026-09-22
+updated: 2026-09-26
 tags:
   - AI
   - 模型原理
@@ -99,6 +99,7 @@ Prefill 较为并行地处理输入，Decode 逐 Token 生成并读取历史状�
 | GQA | 减少每个位置保存的 KV Head | 不减少序列位置；[[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA|显存公式]] |
 | FlashAttention | 通过融合、在线 Softmax 与分块减少中间矩阵写入和访存 | 不减少标准注意力的全部分数计算；[[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling|算子数据流]] |
 | PagedAttention | 分页管理 KV 物理存储，支持前缀共享与块复用 | 不能由某平台计量跳变推出其物理块大小；[[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐|分页与共享]]、[[wiki/sources/模型推理优化：Codex 自动前缀缓存|Codex 观察边界]] |
+| RadixAttention | 用 Radix Tree 匹配公共前缀，以槽位下标复用已有 KV，减少重复 Prefill | 节点分割不搬移已有 KV；教学案例未证明所有后端布局或端到端性能。见 [[wiki/sources/模型推理优化：SGLang RadixAttention|前缀树、分割与叶子淘汰]] |
 | DSpark | 草稿生成、验证长度与负载调度协同 | 特定线上速度提升不是跨模型保证；[[wiki/sources/模型推理优化：DSpark 投机解码|模型、基线与负载条件]] |
 | Batch 与硬件调度 | 合并调度以提高利用率，按带宽、计算和互联瓶颈分配资源 | 吞吐提高不等于单请求等待更短，峰值 FLOPs 不代表实际速度；[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态|硬件约束]]、[[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制|Batch 与成本]] |
 

@@ -1,6 +1,6 @@
 ---
 title: AI 知识索引
-updated: 2026-09-24
+updated: 2026-09-26
 tags:
   - AI
   - 索引
@@ -8,7 +8,7 @@ tags:
 
 # AI 知识索引
 
-本知识库以 `raw/sources/` 中的 **95 个当前资料单元**（98 个原始资料文件，含 3 个保留的历史版本）为事实来源，维护 **95 篇一一对应的资料摘要**与 **11 篇跨资料综合**。已归档原始文件保持不变，修订以新增版本保留历史；摘要负责提炼证据与限制，综合页负责跨来源比较、冲突和长期结论。
+本知识库以 `raw/sources/` 中的 **96 个当前资料单元**（99 个原始资料文件，含 3 个保留的历史版本）为事实来源，维护 **96 篇一一对应的资料摘要**与 **11 篇跨资料综合**。除用户明确要求替换或清理外，已归档原始文件保持不变，修订以新增版本保留历史；摘要负责提炼证据与限制，综合页负责跨来源比较、冲突和长期结论。
 
 维护历史见 [[wiki/log|维护日志]]。
 
@@ -189,6 +189,7 @@ tags:
 | [[wiki/sources/模型推理优化：Codex 自动前缀缓存]] | Codex 会复用请求开头保持不变的渲染前缀。资料所测短对话第二轮有 22,400／22,878 个输入 Token 命中缓存；长文本实验呈现 512 Token 的递增间隔，但该现象不能证明 OpenAI 的物理缓存 Block 固定为 512。 |
 | [[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级]] | KV Cache 在单次请求内复用已经处理 Token 的 K／V，Prompt Cache 则跨请求复用完全相同前缀的 Prefill K／V；命中缓存不会直接返回历史答案。 |
 | [[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐]] | PagedAttention 用固定大小的物理 Block 和请求级 Block Table 管理 KV Cache；完整前缀可以共享同一物理块，引用归零后的内容在被重新分配前仍可命中。 |
+| [[wiki/sources/模型推理优化：SGLang RadixAttention]] | Radix Tree 用槽位索引复用前缀 KV，四时刻案例串联前缀匹配、节点分割与叶子淘汰；核验限于结构及官方简介。 |
 | [[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling]] | FlashAttention 不减少标准 Attention 的分数计算，而是用算子融合、在线 Softmax 和 Tiling 避免在 HBM 中保存完整中间矩阵，并减少 HBM 与 SRAM 之间的数据搬运。 |
 | [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]] | API成本应分别计算输入、输出、缓存写入、缓存读取、批处理与重试，比较时固定平台、模型、日期和调用条件。 |
 | [[wiki/sources/模型推理优化：DSpark 投机解码]] | DSpark用深层并行草稿模型提高首Token质量，再以轻量串行模块恢复后续位置连贯性。 |

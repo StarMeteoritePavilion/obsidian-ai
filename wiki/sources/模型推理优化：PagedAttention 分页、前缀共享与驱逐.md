@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1go836fECf
 author: 张司机在路上
 published: 2026-08-18
 ingested: 2026-09-14
-updated: 2026-09-14
+updated: 2026-09-26
 tags:
   - AI
   - PagedAttention
@@ -50,6 +50,7 @@ Block Hash 链接前一块哈希和当前块 Token，因此命中表示从开头
 
 ## 关联
 
+- [[wiki/sources/模型推理优化：SGLang RadixAttention]]：对照连续 Token 段的树上匹配、节点分割与叶子淘汰；两篇资料不是同条件性能基准。
 - [[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling]]
 - [[wiki/sources/模型推理优化：Codex 自动前缀缓存]]
 - [[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA]]
