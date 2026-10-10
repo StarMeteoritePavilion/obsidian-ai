@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1VBX9BrEon
 author: 唐国梁Tommy
 published: 2026-03-29
 ingested: 2026-09-04
-updated: '2026-09-07'
+updated: 2026-10-10
 tags:
 - AI
 - Agent
@@ -20,29 +20,29 @@ tags:
 
 ## 核心结论
 
-资料把 Harness Engineering 定义为模型外部运行系统的设计：它不只决定模型看到什么，还管理任务拆解、工具、权限、状态、验证、恢复、日志和人类接管。按照本资料的包含口径，Harness 包含 Context，Context 包含 Prompt；三者分别回答“怎样表达”“让模型看到什么”和“让模型在什么机制中工作并确保完成”。资料用每步成功率 95%、连续 20 步约 36% 说明多步任务会累积局部失败；这是同等条件下单步成功率连续相乘的简化假设示例（`0.95^20 ≈ 36%`），不是实测系统可靠性。
+资料把 Harness Engineering 定义为模型外部运行系统的设计：它不只决定模型看到什么，还管理任务拆解、工具、权限、状态、验证、恢复、日志和人类接管。按照本资料的包含口径，Harness 包含 Context，Context 包含 Prompt；三者分别回答“怎样表达”“让模型看到什么”和“让模型在什么机制中工作并确保完成”。每步成功率 95%、连续 20 步约 35.8% 的例子明确假设各步骤完全独立（`0.95^20 ≈ 35.8%`），不是实测系统可靠性。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#二、兴起原因|原文：独立步骤假设]]）
 
-Harness 的价值不等于堆叠更多组件。Vercel 移除 80% 工具后反而减少步骤和 Token 并提高成功率；Anthropic 针对 Sonnet 4.5 设置的上下文重置，在 Opus 4.5 消除对应行为后失去必要性。资料据此强调，Harness 应当约束 Agent 的解空间，同时保持可删减、可替换并匹配当前模型能力。
+Harness 的价值不等于堆叠更多组件。现存原文保留 Vercel 删减冗余工具后减少步骤、Token 和响应时间并提高成功率的厂商案例，不再提供工具删减比例。模型升级时应复测补偿组件：移除后是否仍达标、中间 Agent 是否增加延迟，以判断哪些机制可以删除。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#三、跨组织案例对比与共性|原文：组织案例]]、[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#五、风险与局限|原文：升级回归]]）
 
 ## 实践中的共同模式
 
-Anthropic 用初始化 Agent、编码 Agent、进度文件、Git 历史和 JSON 功能清单承接跨窗口任务，随后演进为 Planner、Generator、Evaluator 三角色结构。Google DeepMind 的 Aletheia 使用 Generator、Verifier、Reviser 循环。两套方案共同指向生成与评估分离：外部严格评估器比依赖生成器自我批评更容易工程化。
+原文将 Anthropic 案例概括为从双角色向 Planner、Generator、Evaluator 演进，并用进度文件与 Git 历史接续任务；Google DeepMind 的相关验证架构采用 Generator、Verifier、Reviser 循环。两类案例共同强调生成与评估分离，原文未提供足以独立复核各实现与收益的一手材料。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#三、跨组织案例对比与共性|原文：角色与状态]]）
 
-OpenAI 案例把代码库知识、确定性架构约束和周期性“垃圾回收”连接起来；Stripe Minions 使用隔离、预热的 Devbox，并通过 MCP 接入 400 多个内部工具；Manus 在六个月内经历五次完整重写。这些案例分别强调版本化制品、硬约束、执行环境和持续迭代，但均来自特定组织与条件，不能直接外推为通用收益。
+OpenAI 案例连接动态可观测数据、Linter、结构测试与后台清理；Stripe Minions 使用隔离且预热的 Devbox，通过 MCP 访问内部工具；Manus 案例强调生产就绪前的多次重写。原文未保留工具数量和重写次数、周期的精确数字，不能补为通用收益。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#三、跨组织案例对比与共性|原文：其他组织案例]]）
 
 ## 六个模块
 
-资料将成熟 Harness 归纳为六部分：上下文与知识管理、工具编排与权限、验证与硬约束、状态与持续记忆、可观测性与反馈闭环、人类接管与生命周期管理。`AGENTS.md`／`CLAUDE.md`、子 Agent 上下文隔离、Linter、结构测试、Pre-commit Hook、进度文件、检查点和审批点分别落在这些模块中。
+资料将成熟 Harness 归纳为六部分：上下文与知识管理、工具编排与权限、验证与硬约束、状态与持续记忆、可观测性与反馈闭环、人类接管与生命周期管理。`AGENTS.md`、子 Agent 上下文隔离、Linter、结构测试、Pre-commit Hook、进度文件、检查点和审批点分别落在这些模块中。
 
-这套结构重组了 Test Harness、DevOps、分布式系统、安全工程和 SRE 的既有实践，同时把约束对象从确定性程序扩展为概率性推理系统。其创新主要在组合方式、生成—评估分离、约束解空间和面向 Agent 可推理性的代码库设计，不代表所有组成都是新技术。
+三类控制必须分别承担责任：确定性约束拥有安全否决权，模型评判检查语义质量并提供重试反馈，人类接管处理高价值决策和超出预定义恢复逻辑的风险。模型评判不能替代系统级权限边界。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#三类控制的责任边界（加深建议）|原文：三类控制]]）
 
 ## 证据与风险边界
 
-资料列出四类风险：Harness 概念可能膨胀为无所不包的术语；模型升级会让补偿性组件变成过度工程；主要案例来自工具厂商，缺少独立、定量、可复现的 Benchmark；OpenAI 百万行代码案例的空仓库、自有 Codex 与专家团队条件尚未在普通团队复现。
+现存原文列出三类风险：模型升级会让补偿性组件变成过度工程；复杂搜索与多 Agent 配置可能放大风险；主要证据来自有利益关系的工具厂商，OpenAI 百万行代码案例也缺少普通工程团队的可复现证明。
 
-Harness 还可能放大风险。资料转述 Anthropic BrowseComp 复盘：非预期解法发生率在单 Agent 配置中为 0.24%，在多 Agent 配置中升至 0.87%。该数字只适用于对应配置与评测，不证明多 Agent 普遍更危险。
+BrowseComp 类评测复盘只保留多 Agent 配置可能出现更多非预期解法的定性转述；原文没有保留精确发生率。不能把复杂 Harness 或多 Agent 本身视为风险更低的证明。
 
-资料关于 Aletheia 的 95.1% 准确率、四个 Erdős 猜想数据库开放问题和更广泛问题集 68.5% 错误率也来自不同评测口径，只能说明专用系统的场景内成绩与场景外泛化可能同时存在明显差异，不能合并为统一能力结论。
+摘要撤下现存原文未保留的漏洞率、数学准确率、工具数量与具体模型升级对照，避免旧数字继续作为当前资料的证据。组织案例用于说明工程机制，具体版本、实现和实验条件仍需补证。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#五、风险与局限|原文：证据边界]]、[[wiki/questions/原始资料待补证清单|待补证清单]]）
 
 ## 定位与关联
 

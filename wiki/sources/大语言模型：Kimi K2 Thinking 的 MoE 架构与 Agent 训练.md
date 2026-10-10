@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1sJCnBGESj
 author: 唐国梁Tommy
 published: 2025-11-12
 ingested: 2026-09-03
-updated: 2026-09-07
+updated: 2026-10-10
 tags:
   - 模型专题
   - AI
@@ -22,29 +22,29 @@ tags:
 
 ## 核心结论
 
-Kimi K2 Thinking 把 1.04T 总参数、32B 激活参数的 MoE 基础模型，与 Agent SFT、强化学习、原生 INT4 和 Test-Time Scaling 组合为一条完整技术链。模型共有 384 个专家，每个 Token 路由至 8 个专家和 1 个共享专家；第 1 个 Transformer Block 使用 Dense FFN，从第 2 个 Block 开始使用 MoE。模型采用 160K 词表、MLA 与资料所述 256K 上下文。
+Kimi K2 Thinking 的官方模型卡列出 1T 总参数、32B 激活参数、61 层且包含 1 个 Dense 层、384 个专家、每 Token 选择 8 个专家及 1 个共享专家，并采用 160K 词表、MLA 与 256K 上下文。基础模型 Kimi K2 技术报告中的 1.04T 与模型卡的 1T 属于精确值和取整值的区别。（[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent#架构摘要|原文：官方架构摘要]]）
 
-资料还将其与 DeepSeek R1 作结构对照：Kimi K2 Thinking 与 DeepSeek R1 的注意力头数分别为 64 与 128，MoE 专家数分别为 384 与 256，激活参数分别为 32B 与 37B；非 MoE 层分别为第 1 个 Block 与前 3 个 Block。这些数字对应资料采用的具体模型版本，不构成所有版本的固定差异。
+证据分为两组：Kimi K2 技术报告说明基础模型的预训练、数据合成和 Agent 后训练；Thinking 模型卡与发布页说明 Thinking 的配置、INT4、长程工具调用与评测。不能把基础报告中的方法自动写成 Thinking 版本新增或完整的训练配方。（[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent#强化学习机制的证据边界|原文：版本归属]]）
 
 ## 预训练与数据效率
 
-Muon 在大规模训练中可能引发 Attention Logit 爆炸。MuonClip 将 Muon、Weight Decay、Consistent RMS Matching 与 QK-Clip 结合；QK-Clip 在权重更新后按注意力头监控最大 Logit，并以 $\tau=100$ 为阈值缩放相关 Query/Key 投影权重。资料称 Kimi K2 据此完成 15.5T Token 预训练且没有 Loss Spike。
+基础模型 Kimi K2 技术报告第 2.1 节介绍 MuonClip：组合 Muon、权重衰减、更新量 RMS 匹配与 QK-Clip；QK-Clip 读取前向计算已得到的各头最大 Logit，超过 $\tau=100$ 时缩放相关 Query／Key 权重。报告称基础模型在 15.5T Token 预训练中没有 Loss Spike；这不是任意模型采用该方法后的稳定性保证。（[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent#基础模型如何稳定完成预训练|原文：MuonClip]]）
 
-Data Rephrasing 通过多样化 Prompt、分块自回归改写和 Fidelity Verification 提高 Token 效率。资料引用的早期 K2 Checkpoint 在 SimpleQA 上，原文训练 10 个 Epoch 为 23.76，改写 1 次并训练 10 个 Epoch 为 27.39，改写 10 次且各训练 1 个 Epoch 为 28.94；结果只适用于对应实验。
+Data Rephrasing 通过多样化 Prompt、分块自回归改写和一致性检查提高 Token 效率。基础报告 Table 1 的早期 K2 检查点在 SimpleQA 上：原文训练 10 个 Epoch 为 23.76，改写 1 次训练 10 个 Epoch 为 27.39，改写 10 次训练 1 个 Epoch 为 28.94。报告称大规模知识语料实际最多改写两次，不能把 10 次改写当作生产配方。（[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent#Data Rephrasing提高高质量数据利用率|原文：数据改写实验]]）
 
 ## Agent 后训练与部署
 
-SFT 数据合成依次生成 Tool Spec、Agent 与任务、交互轨迹。工具库包括 3,000 多个真实工具和 20,000 多个合成工具，User Agent、Tool Simulator 与 Judge Agent 共同生成并筛选成功轨迹，编码和软件工程任务还结合真实执行沙箱。
+基础报告第 3.1.1 节依次建立工具规范、生成 Agent 与任务、生成并筛选轨迹。真实库来自 GitHub 上 3,000 多个 MCP 工具，另有 20,000 多个合成工具；任务带 Rubric，用户模拟与工具执行环境维护交互，Judge Agent 判断成功，编码任务结合真实沙箱。MCP 只是工具规范来源之一。（[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent#Agent数据合成|原文：基础模型的 Agent 数据]]）
 
-强化学习结合 Verifiable Rewards“Gym”（RLVR）与 Self-Critique Rubric Reward，并使用 Budget Control、PTX Loss 和 Temperature Decay。前者覆盖数学、代码、软件工程与忠实性，后者由 Actor 生成回答、Critic 按 Rubric 排序，再用可验证反馈持续校准。
+基础报告第 3.2 节的联合强化学习对可验证任务使用结果检查器，对开放任务使用 Self-Critique Rubric Reward，并用任务 Token 预算、PTX Loss 与温度衰减控制成本、遗忘和随机性。Thinking 发布页没有逐项披露这些方法在其后训练中的配置。（[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent#强化学习机制的证据边界|原文：强化学习范围]]）
 
-MoE 组件通过 QAT 获得原生 Weight-only INT4。资料称生成速度提高约 2 倍、显存下降且性能接近无损。Kimi K2 Thinking 还通过 Test-Time Scaling 增加推理预算，并在对应设置中支持 200～300 次连续工具调用；这些收益不构成其他硬件、环境和任务的保证。
+Thinking 发布页说明后训练对 MoE 组件应用 INT4 Weight-only 量化感知训练，低延迟模式下生成速度约提高 2 倍，并将发布页基准标为 INT4 精度。这是依赖官方服务、硬件与基线的厂商口径。（[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent#原生INT4部署|原文：INT4]]）
 
 ## 评测边界
 
-Kimi K2 Thinking 在 HLE 工具设置、BrowseComp、Seal-0 和 SciCode 等项目表现较强，但并非全面领先：BrowseComp-ZH 的 62.3 略低于 GPT-5 的 63.0，SWE-bench Verified 的 71.3 也低于资料所列 GPT-5 与 Claude Sonnet 4.5。数字来自相应工具、预算和评测协议，不能合并为模型整体能力排名。
+官方发布页报告 HLE 工具设置为 44.9、BrowseComp 为 60.2、SWE-bench Verified 为 71.3。Heavy Mode 并行生成 8 条轨迹再反思汇总，不能直接与单轨迹模式比较；编码任务采用内部 Harness 和 5 次独立运行平均，部分对照分数按相同条件重测。这些结果不构成模型整体能力排名。（[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent#评测应按设置阅读|原文：评测协议]]）
 
-作者的 API 演示还显示，已配置的 Kimi K2 Thinking 只自称属于 Kimi 系列，没有准确报告具体模型版本。模型自述因此不能替代调用端记录的模型标识。
+厂商称可连续完成 200～300 次工具调用，但这不是任意任务的可靠性保证。HLE 最多 120 步、每步 48K 推理 Token；Agent Search 最多 300 步、每步 24K。输入超过 256K 时隐藏此前工具输出，长程能力因此依赖工具、预算与上下文管理。（[[raw/sources/模型原理/模型专题/KIMI K2 Thinking 深度解析：从万亿MoE到智能体时代的架构革命｜超越DeepSeek的思考模型｜MoonshotAI｜AI Agent#长程工具调用与测试时扩展|原文：调用与预算]]）
 
 ## 关联
 

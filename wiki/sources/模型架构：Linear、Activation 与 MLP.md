@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1i5koBtEUU
 author: 隔壁的程序员老王
 published: 2025-11-13
 ingested: 2026-09-04
-updated: 2026-09-07
+updated: 2026-10-09
 tags:
   - 基础原理
   - 模型原理
@@ -48,3 +48,5 @@ Linear 用可训练的权重和偏置完成向量间的线性映射；多个 Lin
 - 残差通道与层间聚合：[[wiki/sources/模型架构：Attention Residuals 层间选择性聚合]]
 - 模型内部表示：[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
+- [[wiki/sources/模型原理：从函数到神经网络]]：另一来源用直线拟合引入联结主义，并把激活函数写成套在 $wx+b$ 之外的非线性运算；它称嵌套后理论上可逼近任意连续函数，但没有给出定理条件，且同一段又把嵌套结果说成“复杂的线性关系”。
+- [[wiki/sources/模型原理：定义问题，预测下一个词]]：另一讲的“不大的 GPT-2”把 FFN 画成 768、3072、768，线性层画成 768 到 50257。词表个数同为 50257，隐藏维度不是这里的 1600。

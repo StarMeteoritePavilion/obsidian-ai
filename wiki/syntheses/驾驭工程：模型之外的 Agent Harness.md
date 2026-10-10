@@ -1,6 +1,6 @@
 ---
 title: 驾驭工程：模型之外的 Agent Harness
-updated: 2026-09-22
+updated: 2026-10-10
 tags:
   - AI
   - Agent
@@ -17,11 +17,11 @@ Agent Harness 是模型输出与真实执行之间的工程外壳：它组装输
 
 | 来源 | Harness 的范围 | 这一定义回答什么 |
 | --- | --- | --- |
-| [[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界|Prompt／Context／Harness 对照]] | 以预设工作流、权限和检查约束执行 | 怎样区分任务表达、信息组织和执行治理 |
-| [[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程]] | 包住 Prompt、Context 与 Loop 的共同外壳 | 工具、安全、隔离和恢复位于架构何处 |
-| [[wiki/sources/驾驭工程：系列完结，下一步该往哪走？|系列收尾篇]] | 模型之外的治理、优化和编排 | 作者怎样总括工程领域；明确不是统一定义 |
-| [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness|HarnessX]] | 可序列化的配置、Processor 与生命周期挂载点 | 怎样把运行外壳变成可组合、可替换的优化对象 |
-| [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景|运行系统全景]] | 覆盖任务完整生命周期，Harness 包含 Context、Context 包含 Prompt | 怎样统一任务、工具、状态、验证、恢复和接管 |
+| [[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界\|Prompt／Context／Harness 对照]] | 以预设工作流、权限和检查约束执行 | 怎样区分任务表达、信息组织和执行治理 |
+| [[wiki/syntheses/循环工程：从逐轮操作到外部调度\|循环工程]] | 包住 Prompt、Context 与 Loop 的共同外壳 | 工具、安全、隔离和恢复位于架构何处 |
+| [[wiki/sources/驾驭工程：系列完结，下一步该往哪走？\|系列收尾篇]] | 模型之外的治理、优化和编排 | 作者怎样总括工程领域；明确不是统一定义 |
+| [[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness\|HarnessX]] | 可序列化的配置、Processor 与生命周期挂载点 | 怎样把运行外壳变成可组合、可替换的优化对象 |
+| [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景\|运行系统全景]] | 覆盖任务完整生命周期，Harness 包含 Context、Context 包含 Prompt | 怎样统一任务、工具、状态、验证、恢复和接管 |
 
 这五种口径分别用于职责划分、架构定位、领域总括、具体实现和生命周期管理。引用时保留来源口径，不能把 HarnessX 的实现维度或某位作者的宽泛定义当成所有系统必须采用的标准。
 
@@ -33,13 +33,13 @@ Agent Harness 是模型输出与真实执行之间的工程外壳：它组装输
 
 | 环节 | Harness 必须处理的问题 | 依据 |
 | --- | --- | --- |
-| 输入与能力准备 | 当前任务需要哪些规则、证据、工具及参数契约 | [[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界|职责边界]] |
-| 授权 | 动作是否符合路径、工具、模式与人工审批规则 | [[wiki/sources/Claude Code：权限规则、Permission Mode 与本地放行|权限系统]] |
-| 执行与观测 | 在受控环境运行，记录返回、文件变化、通知与轨迹 | [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解|Runtime 架构]] |
-| 独立验证 | 根据测试或环境状态判断结果，而非采用生成者的自我评价 | [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景|生成与验证分离]] |
-| 继续、恢复或停止 | 区分传输失败、上下文溢出、输出截断与任务失败，保存可继续的状态 | [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解|运行闭环与恢复]] |
+| 输入与能力准备 | 当前任务需要哪些规则、证据、工具及参数契约 | [[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界\|职责边界]] |
+| 授权 | 动作是否符合路径、工具、模式与人工审批规则 | [[wiki/sources/Claude Code：权限规则、Permission Mode 与本地放行\|权限系统]] |
+| 执行与观测 | 在受控环境运行，记录返回、文件变化、通知与轨迹 | [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解\|Runtime 架构]] |
+| 独立验证 | 根据测试或环境状态判断结果，而非采用生成者的自我评价 | [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景\|生成与验证分离]] |
+| 继续、恢复或停止 | 区分传输失败、上下文溢出、输出截断与任务失败，保存可继续的状态 | [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解\|运行闭环与恢复]] |
 
-Anthropic 的 Planner／Generator／Evaluator 与 Aletheia 的 Generator／Verifier／Reviser 支持同一判断：灵活生成与严格放行应由不同角色承担。Harness 执行质量门，[[wiki/syntheses/评估工程：从通用基准到业务质量门|评估工程]]定义合格证据；要跨轮自治，还须由[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程]]接上外部触发、持久状态、预算与停止条件。
+原文转述的 Anthropic Planner／Generator／Evaluator 与 Google DeepMind 相关验证架构的 Generator／Verifier／Reviser 支持同一判断：灵活生成与严格放行应由不同角色承担。现存原文未保留更具体的项目名称或可独立复核的实现材料。（[[wiki/sources/驾驭工程：Harness Engineering 运行系统全景#实践中的共同模式|组织案例与证据边界]]）Harness 执行质量门，[[wiki/syntheses/评估工程：从通用基准到业务质量门|评估工程]]定义合格证据；要跨轮自治，还须由[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程]]接上外部触发、持久状态、预算与停止条件。
 
 故障处理也必须按责任定位。Codex 重连案例只在 HTTPS 可用、WebSocket 链路不稳定时调整传输能力，保留 Responses API 与身份验证；它支持区分传输、API 语义与认证，不能作为所有重连故障的通用修复。（[[wiki/sources/Codex：禁用 WebSocket 解决重复重连|传输故障边界]]）
 
@@ -64,7 +64,7 @@ Claude Code 权限资料把模型提出动作与客户端放行分开：聊天�
 
 能力加载与信任判断同样不同。Skill 按需读取只降低初始上下文成本，第三方说明和脚本仍可能接触项目、Shell 与凭据。WebSearch 子 Agent 只拥有搜索工具，缩小了不可信网页直接调用高权限工具的机会，但它返回的误导文字仍可能影响主 Agent；隔离不能替代来源核验。（[[wiki/sources/Claude Code：Skill 渐进式披露与第三方执行边界|Skill 信任边界]]、[[wiki/sources/Claude Code：WebSearch 子 Agent、服务端搜索与攻击面隔离|搜索隔离]]）
 
-服务门控则控制另一层责任。Fable 5／Mythos 5 资料讨论身份、领域风险、分类器和回退策略；这些措施不能替代工具权限、生产访问控制、审计与回滚。资料中的保守分类器会误伤合法请求，因此门控是安全与可用性的取舍，不能从特定测试得分推出开放环境绝对安全。（[[wiki/sources/Agent 安全治理：Claude Fable 5 与 Mythos 5 的分层开放|服务层门控]]）
+服务门控则控制另一层责任。Fable 5／Mythos 5 资料讨论身份、领域风险、分类器和回退策略；这些措施不能替代工具权限、生产访问控制、审计与回滚。原文记录的超过 95% 不触发回退以会话为分母，不是一般请求；不能从这项早期数据推出开放环境绝对安全。（[[wiki/sources/Agent 安全治理：Claude Fable 5 与 Mythos 5 的分层开放#网络安全门控|服务层门控与会话分母]]）
 
 ## 检查器是最小的行动模型
 
@@ -84,7 +84,7 @@ HarnessX 用 Processor 与固定生命周期挂载点分离行为配置，再让
 
 ## 工程收益需要与模型升级比较
 
-运行责任需要保留，实现组件需要复测。Harness 全景资料中，Vercel 删减工具后减少了步骤与 Token，Anthropic 为 Sonnet 4.5 设置的上下文重置在 Opus 4.5 下失去必要性。这支持维护最小充分工具集、删除已失效补偿措施，不支持取消权限、验证或恢复。（[[wiki/sources/驾驭工程：Harness Engineering 运行系统全景|工程收益与模型升级]]）
+运行责任需要保留，实现组件需要复测。Harness 全景资料转述 Vercel 删减冗余工具后减少步骤、Token 与响应时间，并建议模型升级后通过移除组件复测其必要性。这支持维护最小充分工具集、删除已失效补偿措施，不支持取消权限、验证或恢复；现存原文未保留具体模型升级对照。（[[wiki/sources/驾驭工程：Harness Engineering 运行系统全景|工程收益与模型升级]]、[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#五、风险与局限|升级回归与证据边界]]）
 
 上述组织案例多来自厂商自述或行业归纳，不能拼接成统一效果证明；BrowseComp 的单／多 Agent 风险差异也只适用于对应配置。Claude Code Runtime 资料缺少源码仓库、Commit 和可复核快照，支持运行职责的结构性判断，不能保证其内部名称和数量适用于其他版本。
 

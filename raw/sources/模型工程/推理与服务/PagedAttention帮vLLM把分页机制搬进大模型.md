@@ -7,8 +7,6 @@ tags:
   - AI
   - PagedAttention
   - vLLM
-  - KV Cache
-  - Prompt Caching
   - 推理优化
   - 模型工程
 ---

@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1CrKA6YETu
 author: AI架构师Leo
 published: 2026-07-18
 ingested: 2026-09-23
-updated: 2026-09-23
+updated: 2026-10-10
 tags:
   - AI
   - AI Agent
@@ -26,14 +26,14 @@ tags:
 
 | 模式 | 主要职责与采用条件 | 需要保留的限制 | 原文定位 |
 | --- | --- | --- | --- |
-| ReAct | 判断、调用工具、观察结果；适合路线未定的开放任务 | 可能重复调用和持续循环；设置完成、预算与人工停止条件 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#一、ReAct：边做边判断|ReAct]] |
-| Plan-and-Execute | 规划器拆任务图，执行器按依赖逐项完成；适合长任务 | 遇到阻塞要重新规划，完成状态须回传 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#二、Plan-and-Execute：先规划，再执行|规划与执行]] |
-| Multi-Agent | 主管分工，专业角色共享任务状态、产物和证据 | 只在并行与专业视角有价值时采用；增加通信、冲突和重复劳动 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#三、Multi-Agent：通过角色分工协作|角色协作]] |
-| Reflection | 生成、按标准评价、反馈修改；适合有明确质量标准的交付 | 自我评价有共同盲区；建议外部测试、可靠数据与人工审核，并限制轮数 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#四、Reflection：通过反馈改进结果|反思与反馈]] |
-| Tools | 模型选工具和参数，网关校验与执行，结果标准化回传 | 发送、删除、付款等副作用需人工审批、幂等与审计 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#五、Tools：让模型具备受控的操作能力|受控操作]] |
-| Memory | 工作记忆保存当前状态，筛选后写入情景、语义、偏好与规则 | 处理去重、冲突、过期、错误、隐私和删除 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#六、Memory：让状态与经验跨轮延续|记忆治理]] |
-| RAG | 拆问题、改查询、选数据源、检查证据与继续搜索 | 来源冲突需查证；质量受检索、文档与引用可追溯性限制 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#七、RAG：主动寻找可验证的证据|证据检索]] |
-| Autonomous Loop | 保存目标状态，持续观察、决策、行动、评估 | 先具备权限、预算、轮数、检查点、日志、审批和停止机制；错误目标会被放大 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#八、Autonomous Loop：围绕目标持续推进|自主循环]] |
+| ReAct | 判断、调用工具、观察结果；适合路线未定的开放任务 | 可能重复调用和持续循环；设置完成、预算与人工停止条件 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#一、ReAct：边做边判断\|ReAct]] |
+| Plan-and-Execute | 规划器拆任务图，执行器按依赖逐项完成；适合长任务 | 遇到阻塞要重新规划，完成状态须回传 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#二、Plan-and-Execute：先规划，再执行\|规划与执行]] |
+| Multi-Agent | 主管分工，专业角色共享任务状态、产物和证据 | 只在并行与专业视角有价值时采用；增加通信、冲突和重复劳动 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#三、Multi-Agent：通过角色分工协作\|角色协作]] |
+| Reflection | 生成、按标准评价、反馈修改；适合有明确质量标准的交付 | 自我评价有共同盲区；建议外部测试、可靠数据与人工审核，并限制轮数 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#四、Reflection：通过反馈改进结果\|反思与反馈]] |
+| Tools | 模型选工具和参数，网关校验与执行，结果标准化回传 | 发送、删除、付款等副作用需人工审批、幂等与审计 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#五、Tools：让模型具备受控的操作能力\|受控操作]] |
+| Memory | 工作记忆保存当前状态，筛选后写入情景、语义、偏好与规则 | 处理去重、冲突、过期、错误、隐私和删除 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#六、Memory：让状态与经验跨轮延续\|记忆治理]] |
+| RAG | 拆问题、改查询、选数据源、检查证据与继续搜索 | 来源冲突需查证；质量受检索、文档与引用可追溯性限制 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#七、RAG：主动寻找可验证的证据\|证据检索]] |
+| Autonomous Loop | 保存目标状态，持续观察、决策、行动、评估 | 先具备权限、预算、轮数、检查点、日志、审批和停止机制；错误目标会被放大 | [[raw/sources/应用工程/AI Agent/10 分钟讲透 AI Agent 8 种主流架构#八、Autonomous Loop：围绕目标持续推进\|自主循环]] |
 
 ## 采用顺序与组合
 

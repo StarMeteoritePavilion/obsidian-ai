@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1TU8x6hEVb
 author: 张司机在路上
 published: 2026-08-23
 ingested: 2026-09-14
-updated: 2026-09-14
+updated: 2026-10-09
 tags:
   - AI
   - FlashAttention
@@ -65,3 +65,4 @@ $$
 - KV 物理分页：[[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐]]
 - GPU 带宽与计算：[[wiki/sources/AI 计算硬件：内存带宽、互联与软件生态]]
 - 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
+- [[wiki/sources/模型推理优化：Continuous Batching 与 Ragged Batching]]：Ragged Attention 的分块循环使用在线 Softmax，算法步骤仍以本资料为准。
