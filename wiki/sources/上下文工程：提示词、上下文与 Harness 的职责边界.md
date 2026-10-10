@@ -9,7 +9,7 @@ author:
   - 隔壁的程序员老王
 published: 2025-08-21
 ingested: 2026-07-15
-updated: 2026-09-07
+updated: 2026-10-10
 tags:
   - AI
   - 上下文工程
@@ -38,7 +38,7 @@ Prompt 主要表达任务，Context 管理当前调用可见的信息，Harness 
 
 ## 来源差异
 
-三份资料对 Prompt 与 Context 的职责大体一致，对 Harness 和 Memory 的范围采用不同口径。合并稿保留差异，并删除了缺少模型、任务和评测配置的“新模型击败工程系统”个案作为技术证据。
+三份资料对 Prompt 与 Context 的职责大体一致，对 Harness 和 Memory 的范围采用不同口径，应按具体职责比较。
 
 ## 关联
 

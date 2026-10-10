@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1BCZBBSEJj
 author: 唐国梁Tommy
 published: 2026-02-20
 ingested: 2026-09-04
-updated: 2026-09-07
+updated: 2026-10-10
 tags:
   - 模型专题
   - AI
@@ -41,11 +41,7 @@ Early Fusion 表示文本 Token 与视觉 Token 从预训练阶段共同处理�
 
 API 演示通过阿里云百炼创建密钥，在 VS Code 的 Cline 中选择 `OpenAI Compatible`，填写 DashScope Base URL、API Key 和 `qwen3.5-plus`，再用 Act 模式生成三维太阳系网页。该链路把模型能力与外部 Harness 清楚分开：Qwen 3.5 负责理解和生成，Cline 负责工具、文件和执行流程，运行环境与人工检查负责验证结果。
 
-资料记录的新账号 100 万 Token 免费额度、640GB 本地显卡需求和“小模型尚未开源”均对应 2026 年 2 月 20 日。产品选项、计费和部署条件变化较快，实际使用前需要重新核对官方信息。
-
 ## 定位与关联
-
-官方标题、开场和结尾均没有期数标识；视频为单 P，分 P 名称“1应用演示”只描述内容，不构成系列期数。本文横跨架构、训练与应用，因此归入模型原理／模型专题。
 
 - MoE 机制：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - 长上下文注意力：[[wiki/sources/模型架构：GQA、DSA 与 MSA 长上下文优化]]

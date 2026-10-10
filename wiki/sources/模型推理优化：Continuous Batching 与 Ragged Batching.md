@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1Nqp46GETj
 author: 张司机在路上
 published: 2026-10-09
 ingested: 2026-10-09
-updated: 2026-10-09
+updated: 2026-10-10
 tags:
   - AI
   - Continuous Batching
@@ -43,14 +43,6 @@ tags:
 - 吞吐提升是本资料对 batching 目的的说明，没有给出加速比，也不表示单个请求的等待一定变短。
 - $[4, d]$、$4\times4$ 下三角、$1\times5$ 和 `cu_seqlens` 都是作者示例。图中 FFN 激活函数标为 ReLU，旁白只说“激活函数”，不能据此认为所有模型的 FFN 都使用 ReLU。
 - 伪代码展示的是讲解用的 `ragged_batching` 流程，不是 vLLM 或 SGLang 某一版本的完整内核。
-
-## 核验与整理记录
-
-- 官方标题为《Continuous Batching如何实现高并发推理》，作者“张司机在路上”，发布于 2026-10-09，单 P，官方时长 603 秒。播放地址时长 602.766 秒。官方合集为“Codex工作原理”，当前列在正片最后一条；视频没有宣布期数，因此按无编号技术专题归档，不命名为第几期。
-- 官方播放器接口返回字幕轨与章节均为空。核验级别为原始音轨：602.767 秒音轨的辅助转写覆盖到 602.76 秒，主题顺序与本地字幕一致。辅助转写只用于发现缺口和同音字，不作为新事实来源。
-- 本地字幕 272 条，范围 00:00:00,040–00:10:02,740。结尾比音轨短 0.027 秒，没有越过视频结尾。字幕相邻间隔都不超过 0.8 秒，辅助转写也没有超过 1.2 秒的空档。未发现重复旁白，没有删除任何时间段。
-- 画面字幕和示意图确认 Tensor Core、vLLM、SGLang、Prefill、Decode、EOS、Naive Batching、Continuous Batching、Ragged Batching、KV Cache、`cu_seqlens = [0, 4, 5, 6]`、LayerNorm、QKV Linear、Attn Out Linear、ReLU 和形状 $[4, d]$、$[3, 4, d]$、$[6, d]$。据此校正字幕里的同音误写。开头画面出现一篇题为 Continuous batching 的 Hugging Face 文章，旁白没有引用其作者或论据，正文不引入该页内容。
-- 去掉口播自指、看图提示和互动语，保留早高峰类比、A/B/C/D 替换顺序、两种拼法、Token 独立计算与 Attention 例外、分数图的最后一行讲法，以及 Kernel 的六行输出。没有把教学形状写成框架的通用性能结论。
 
 ## 关联
 

@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1MjN16oE84
 author: 隔壁的程序员老王
 published: 2026-07-16
 ingested: 2026-09-04
-updated: 2026-09-07
+updated: 2026-10-10
 tags:
   - AI
   - 模型工程
@@ -26,3 +26,9 @@ tags:
 ## 限制
 
 文中硬件数字是指定模型、精度和设备下的教学估算。量化、批量、算子、框架和整机配置都会改变结果；没有厂商报价页支持的价格不作为结论。
+
+## 关联
+
+- [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
+- [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
+- [[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling]]

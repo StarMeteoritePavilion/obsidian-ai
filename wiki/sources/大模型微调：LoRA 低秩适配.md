@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1PvwYzxE9D
 author: 隔壁的程序员老王
 published: 2026-03-19
 ingested: 2026-09-04
-updated: 2026-09-07
+updated: 2026-10-10
 tags:
   - AI
   - 模型工程
@@ -31,3 +31,10 @@ tags:
 ## 限制
 
 低秩更新有效是实验观察与方法假设，不是所有任务都只需要极小秩的证明。秩、适配位置、精度、批量和序列长度共同决定效果与资源占用。
+
+## 关联
+
+- [[wiki/syntheses/大模型后训练：从模仿到行为选择]]
+- [[wiki/syntheses/深层模型训练稳定性：残差、更新与路由]]
+- [[wiki/sources/大模型后训练：强化学习如何选择反馈与算法]]
+- [[wiki/sources/模型训练：PyTorch 手写数字识别实战]]

@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1Bd7X64EeF
 author: 张司机在路上
 published: 2026-06-03
 ingested: 2026-09-14
-updated: 2026-09-14
+updated: 2026-10-10
 tags:
   - AI
   - Claude Code
@@ -51,8 +51,6 @@ ToolSearch 将工具发现与工具使用拆成两轮：System Prompt 先列出 
 Anthropic 的五服务器示例包含 GitHub、Slack、Sentry、Grafana 和 Splunk，共 58 个工具、约 55K Token。传统方式为 50 多个工具定义约 72K Token，工作开始前总上下文约 77K；Tool Search 自身约 500 Token，按需加载 3～5 个工具约 3K，总上下文约 8.7K，文章称 Token 用量降低 85%。
 
 同一 MCP 评估中，Opus 4 的工具选择准确率从 49% 提升到 74%，Opus 4.5 从 79.5% 提升到 88.1%。这些数字来自对应文章的配置，不能外推为其他模型和工具库的固定收益。
-
-本地字幕把五个服务写成含 Jira、GitLab 的组合，把 8.7K 写成 8K，并把 Opus 4／4.5 写成 Opus 3／Sonnet 3.5；正式资料依据视频展示的 Anthropic 原文画面校正。
 
 ## 关联
 

@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1vcPEzuERE
 author: 唐国梁Tommy
 published: 2026-03-02
 ingested: 2026-09-04
-updated: 2026-09-07
+updated: 2026-10-10
 tags:
   - AI
   - 模型工程
@@ -37,10 +37,6 @@ GiGPO 的步骤级优势在相同环境状态下比较不同轨迹的动作选�
 ARLArena 的对比表使用 Qwen3-4B 的 SFT 版本，覆盖 ALFWorld、WebShop、Sokoban 和 TIR Math。SAMPO 在 ALFWorld 上达到 92.72% 成功率，GRPO 为 62.36%；在 Sokoban 上，CISPO、SAPO、GRPO 和 SAMPO 分别为 26.02%、30.25%、83.90% 和 88.86%。论文汇总表把 SAMPO 平均结果记为 60.21，并标注平均提升 25.2%，但 SAMPO 行没有 TIR Math 结果；资料旁白所称“在四个任务上”全面超过对比方法与官方表格不一致，不能据此补全。
 
 资料另列出 ALFWorld 上 GPT-5.2 单 Agent 51.56%、o3 Multi-Agent 56.25% 和 Qwen3-4B SAMPO 92.72%。前两者没有接受相同的环境专项训练，不能据此形成通用模型能力排名，也不能把受控任务结果直接外推到真实开放式 Web Agent。
-
-## 与现有知识的整合
-
-该资料补充了 Agent RL 路线中的优化稳定性层：奖励来源和轨迹粒度确定之后，还需要控制旧策略数据与当前策略之间的偏差，并让裁剪、信用分配和采样过滤协同工作。它也进一步说明训练奖励与独立评测必须分工，受控环境上的专项成功率不等于开放环境中的通用可靠性。
 
 ## 关联
 

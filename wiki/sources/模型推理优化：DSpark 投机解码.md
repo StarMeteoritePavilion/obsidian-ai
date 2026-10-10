@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV14fTc6TEj7
 author: 唐国梁Tommy
 published: 2026-06-30
 ingested: 2026-09-03
-updated: 2026-09-07
+updated: 2026-10-10
 tags:
   - AI
   - 模型工程
@@ -26,3 +26,9 @@ tags:
 ## 时间冲突
 
 原视频属性日期为2026-06-30，论文v1提交于2026-07-06。现有材料未解释先后差异，两者分别保留，不把视频日期写成论文公开日期。
+
+## 关联
+
+- [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
+- [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
+- [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]

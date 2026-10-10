@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1i5koBtEUU
 author: 隔壁的程序员老王
 published: 2025-11-13
 ingested: 2026-09-04
-updated: 2026-10-09
+updated: 2026-10-10
 tags:
   - 基础原理
   - 模型原理
@@ -38,7 +38,7 @@ Linear 用可训练的权重和偏置完成向量间的线性映射；多个 Lin
 
 ## 系列定位与关联
 
-官方“从0开始一起学大模型”合集将本文列为第二条，上一条为《Transformer如何成为AI模型的地基》。视频明确承接其宏观架构介绍，但没有使用“第二期”标识，因此本库记录合集顺序，不另行命名期数。
+本文承接 [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支|Transformer 架构导论]]，解释前馈网络中的线性映射与激活。
 
 - 系列导论：[[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
 - PyTorch 实践续篇：[[wiki/sources/模型训练：PyTorch 手写数字识别实战]]

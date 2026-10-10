@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1TSg7zuEqR/
 author: 马克的技术工作坊
 published: 2025-07-22
 ingested: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-10
 tags:
   - AI
   - AI Agent
@@ -16,9 +16,7 @@ tags:
 
 # AI Agent：ReAct 与 Plan-And-Execute 构建模式
 
-当前原始资料：[[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code（2026-09-22 任务路径修订版）|Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code]]
-
-历史版本：[[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code|初版（保留）]]。另保留 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code（2026-09-22 实践补充版）|实践补充版]]。另保留 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code（2026-09-22 权限澄清版）|权限澄清版]]。当前版本补齐目标路径输入步骤，视频发布日期不变。
+原始资料：[[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code|Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code]]
 
 ## 核心结论
 
@@ -39,16 +37,16 @@ Plan-And-Execute 把规划与执行分开：Plan 模型生成初始计划，执�
 
 `snake` 是任务面向的项目目录。固定源码中，目录参数用于存在性检查和提示词文件列表；`read_file`、`write_to_file` 直接使用传入路径，没有项目目录范围校验。`run_terminal_command` 未设置 `cwd`，程序也未切换工作目录；它继承启动进程的工作目录。命令执行前的人工确认只覆盖终端工具，不覆盖文件读写，也不构成沙箱。
 
-因此，不能把“指定项目目录”写成“只允许在该目录操作”；实际访问仍受进程的操作系统权限等外部条件限制。依据与代码位置见 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code（2026-09-22 任务路径修订版）#目标项目目录不构成权限边界|源码边界核验]]，本结论来自静态核查，未执行越界读写实验。
+因此，不能把“指定项目目录”写成“只允许在该目录操作”；实际访问仍受进程的操作系统权限等外部条件限制。依据与代码位置见 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code#目标项目目录不构成权限边界|源码边界核验]]，本结论来自静态核查，未执行越界读写实验。
 
 ## 实践入口与复现状态
 
 - 作者源码为 [MarkTechStation/VideoCode](https://github.com/MarkTechStation/VideoCode)，固定提交 `27052e6db5b91d5f65e8de008f37a090471c77a1`；Python 3.12、uv、`OPENROUTER_API_KEY` 与已存在的 `snake` 目录是准备项。锁定的直接依赖为 Click 8.2.1、OpenAI SDK 1.91.0、python-dotenv 1.1.1。
-- 完整获取、配置和启动步骤见 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code（2026-09-22 任务路径修订版）#按该版本准备并启动|当前修订版启动步骤]]。本轮只读核对代码并执行离线锁文件检查，没有安装项目依赖、调用模型或验收游戏。
+- 完整获取、配置和启动步骤见 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code#按该版本准备并启动|启动步骤]]；验证范围为静态代码核查与离线锁文件检查，不包含依赖安装、在线模型调用或游戏验收。
 - 新建空 `snake` 时，源码传给模型的文件列表为空，且没有单独传入项目目录。启动前用 `(cd snake && pwd -P)` 取得绝对路径，在“请输入任务：”中明确粘贴该路径并要求使用它；这只补足任务上下文，不增加权限隔离。具体输入示例见上述启动步骤。
-- 作者所给 LangChain 原网址已跳转至 To-do list 中间件文档；原流程改用 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code（2026-09-22 任务路径修订版）#Plan-And-Execute 的官方实现与版本边界|固定提交的历史 Notebook]] 追溯。它使用 OpenAI 与 Tavily 两种凭据，依赖没有完整锁定，不能与作者的 ReAct 项目混用运行配置。
+- 作者所给 LangChain 原网址已跳转至 To-do list 中间件文档；原流程改用 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code#Plan-And-Execute 的官方实现与版本边界|固定提交的历史 Notebook]] 追溯。它使用 OpenAI 与 Tavily 两种凭据，依赖没有完整锁定，不能与作者的 ReAct 项目混用运行配置。
 
-以上补充均核验于 2026-09-22，证据和版本选择依据见当前原始资料的“实践入口与运行前提”章节。
+版本与检查记录截至 2026-09-22，见原始资料的“实践入口与运行前提”章节。
 
 ## 与长期 Loop 的衔接
 

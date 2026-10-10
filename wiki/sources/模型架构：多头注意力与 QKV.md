@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1of6cBAEuJ
 author: 隔壁的程序员老王
 published: 2026-02-05
 ingested: 2026-09-04
-updated: 2026-09-14
+updated: 2026-10-10
 tags:
   - AI
   - 模型架构
@@ -15,27 +15,29 @@ tags:
 
 # 模型架构：多头注意力与 QKV
 
-原始资料：[[raw/sources/模型原理/模型架构/多头注意力 MultiHeadAttention 是什么|多头注意力 MultiHeadAttention 是什么]]
+原始资料：[[raw/sources/模型原理/模型架构/多头注意力 MultiHeadAttention 是什么|多头注意力：从 Q、K、V 到上下文表示]]
 
 ## 核心结论
 
-多头注意力让同一组词元表示经过多组独立的 Query、Key 和 Value 投影，在不同 Attention Head 中计算上下文关系，再拼接各头结果。它不是为每个头预先指定“语法”或“语义”，而是通过训练形成不同投影；资料中的“语法表”“需求表”和“内容矩阵”只是解释计算目的的教学类比。
+多头注意力对当前子层表示执行多组独立 Q、K、V 投影，各头读取可见上下文，再拼接并经过输出投影 $W^O$。头的功能由训练形成；“语法表”“需求表”等名称是教学类比，不是预先分配的真实功能。
 
 ## 计算链路
 
-Embedding 为每个词元提供初始向量。Query 表示当前位置要寻找的特征，Key 表示各位置能够提供的特征，二者通过 $QK^T$ 形成关联分数。自回归模型再用因果 Mask 将未来位置设为负无穷，随后按 $\sqrt{d_k}$ 缩放并执行 Softmax，得到每行和为 1 的注意力权重。权重对 Value 加权求和，形成包含上下文关系的新表示：
+标准单头计算为：
 
 $$
-\operatorname{Attention}(Q,K,V)=\operatorname{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+H_i=\operatorname{softmax}_{\text{Key轴}}\left(\frac{Q_iK_i^T}{\sqrt{d_k}}+M\right)V_i.
 $$
 
-多头结构并行重复该过程，每个头使用不同投影矩阵，最后按词元拼接输出。Transformer 后续层继续接收这些混合表示。
+Softmax 对每个 Query、每个头沿 Key 轴归一化。因果 Mask 屏蔽未来，Padding Mask 屏蔽补齐；整行不能全部被屏蔽而造成无效归一化。$\sqrt{d_k}$ 缩放用于避免点积随维度增长而使 Softmax 过度饱和，其动机依赖论文给定的随机变量假设。（[[raw/sources/模型原理/模型架构/多头注意力 MultiHeadAttention 是什么#从分数到上下文|缩放与掩码]]）
+
+标准配置 $d_k=d_v=d/h$ 下，输入为 `[B,T,d]`，分头后为 `[B,h,T,d_k]`，分数为 `[B,h,T,T]`，聚合结果拼接回 `[B,T,h*d_v]`，再投影到 `[B,T,d]`。只有第一层入口直接接收词嵌入和位置信息，后续层使用前一层表示。（[[raw/sources/模型原理/模型架构/多头注意力 MultiHeadAttention 是什么#投影、分头与形状|形状]]、[[raw/sources/模型原理/模型架构/多头注意力 MultiHeadAttention 是什么#拼接之后还有输出投影|输出投影]]）
 
 ## 示例与边界
 
-资料以“我用毒毒毒蛇”说明相同字形会因上下文承担名词、动词和修饰作用，并用 $(20,5,100)$ 与 $(60,70,80)$ 的点积得到 9550，展示 Query 与 Key 怎样计算匹配分数。演示中的标签、整数和可读关注点并不是对真实模型隐向量的逐维解释。
+$(20,5,100)\cdot(60,70,80)=9550$ 是纯算术教学示例，不代表真实隐向量的逐维语义或数值范围。
 
-资料称早期 GPT-2 的表示可达 1600 维、DeepSeek 为 7168 维，并推测流行商业模型可能超过一万维；这些数字与推测只保留来源口径，不用于推断其他模型。对 BERT 式双向关联与 GPT、Gemini 式因果 Mask 的对比，也只说明两类注意力可见范围，不代表所有模型架构细节完全相同。
+Encoder 自注意力从同一编码层输入取得 Q/K/V，读取全部有效源位置；Decoder 因果自注意力读取当前及此前位置；交叉注意力的 Q 来自 Decoder，K/V 来自 Encoder，Query 与 Key 长度可以不同。（[[raw/sources/模型原理/模型架构/多头注意力 MultiHeadAttention 是什么#三种注意力的输入来源|输入与可见范围]]）
 
 ## 关联
 

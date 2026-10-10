@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV18twWzuELh
 author: 唐国梁Tommy
 published: 2026-03-14
 ingested: 2026-09-03
-updated: '2026-09-07'
+updated: 2026-10-10
 tags:
 - AI
 - 应用工程
@@ -30,7 +30,9 @@ MemRL 在冻结语言模型权重的情况下，把环境反馈写入情景记�
 
 ## 实验与限制
 
-资料展示的 WebArena、ALFWorld、SciWorld 和 InterCode 实验中，MemRL 的平均成功率相对最强基线提高 3.8 个百分点，探索密集型任务最高提高 6.2 个百分点，额外推理成本约为零。这些数字属于论文的特定实验设置。
+实验覆盖 HLE、BigCodeBench、ALFWorld 和 Lifelong Agent Bench；相对 MemP 基线的累计成功率提高 3.8 个百分点，在 ALFWorld 与 OS 任务等场景最高提高 6.2 个百分点。数字限于来源记载的实验设置，未独立复现。（[[raw/sources/应用工程/AI Agent/AI Agent终于能边用边学了？MemRL这篇论文太有工程价值了！MemRL给出新解法，提出无参数化Runtime Learning#实验结果与边界|实验与指标归属]]）
+
+冻结语言模型权重不等于零额外推理成本；现有资料没有成本对照表，不能量化检索、记忆更新与轨迹摘要的额外开销。
 
 系统仍依赖可靠奖励，记忆库持续增长还需要规模管理、淘汰和冲突治理。当前讲解面向单 Agent；多 Agent 共享记忆时，错误经验可能跨实例污染决策。
 

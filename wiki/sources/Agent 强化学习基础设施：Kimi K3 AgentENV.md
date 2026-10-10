@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1iXuH6UEd5
 author: 唐国梁Tommy
 published: 2026-08-06
 ingested: 2026-09-03
-updated: 2026-09-07
+updated: 2026-10-10
 tags:
   - AI
   - 模型工程
@@ -26,3 +26,10 @@ tags:
 ## 限制
 
 累计沙箱数、镜像数、最低快照／恢复延迟和内存超配比例属于Kimi K3报告中的特定基础设施，不是其他集群的性能保证。
+
+## 关联
+
+- [[wiki/syntheses/大模型后训练：从模仿到行为选择]]
+- [[wiki/syntheses/循环工程：从逐轮操作到外部调度]]
+- [[wiki/syntheses/AI Agent：从工具调用到可信行动]]
+- [[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]

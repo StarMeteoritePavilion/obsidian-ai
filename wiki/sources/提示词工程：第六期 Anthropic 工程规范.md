@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1ijTR6vENm
 author: 晴天AI实战
 published: 2026-07-06
 ingested: 2026-07-15
-updated: 2026-09-22
+updated: 2026-10-10
 tags:
 - AI
 - 提示词工程
@@ -35,7 +35,7 @@ tags:
 
 ## 系列归类
 
-现存原文的系列复盘已将 CoT、零样本 CoT、Auto-CoT 和 ToT 归入第三期，将投票纠错和链式拆解归入第四期，与对应两期内容一致。（[[raw/sources/应用工程/提示词工程/第六期：Anthropic 工程规范#六期全系列复盘|原文系列复盘]]）
+第三期介绍 CoT、零样本 CoT、Auto-CoT 和 ToT，第四期介绍投票纠错和链式拆解。（[[raw/sources/应用工程/提示词工程/第六期：Anthropic 工程规范#六期全系列复盘|原文系列复盘]]）
 
 ## 关联
 

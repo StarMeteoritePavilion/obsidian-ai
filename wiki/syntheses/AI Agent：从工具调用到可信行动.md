@@ -19,7 +19,7 @@ Function Calling 连接模型与 Agent：模型返回结构化调用请求，Age
 
 Claude Code 的 Bash 抓包把这条抽象链路展开为两个模型请求：Opus 先用 `tool_use` 给出工具名、唯一 ID 和参数，客户端执行 `git status` 与 `git diff`，再以相同 `tool_use_id` 把文本输出包装成 `tool_result`；模型读取结果后返回 `text` 并以 `end_turn` 结束。ID 只负责调用与结果配对，不能代替对命令退出状态和文件结果的验证。（[[wiki/sources/Claude Code：tool_use、tool_result 与客户端工具闭环|Claude Code 客户端工具闭环]]）
 
-Pydantic AI 示例进一步表明，工具注册与消息历史也是两件事。`tools` 决定模型能够调用哪些本地函数，`all_messages()` 和 `message_history` 负责跨调用恢复对话；该示例没有实现持久记忆、权限隔离、验证或恢复。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|Pydantic AI 实践]]）
+Pydantic AI 示例进一步表明，工具注册与消息历史也是两件事。`tools` 决定模型能够调用哪些本地函数，`all_messages()` 和 `message_history` 负责跨调用恢复对话；当前示例已实现临时目录范围、符号链接、覆盖目标及调用预算检查，并通过工具与调度的离线验收；这不等于在线模型效果已验证，也不等于具备多用户授权、容器隔离、持久记忆或崩溃恢复。（[[wiki/sources/AI Agent：工具调用、MCP 与最小实现|Pydantic AI 实践]]）
 
 ## ReAct 与 Plan-And-Execute 组织不同层级的循环
 
@@ -42,7 +42,7 @@ Plan-And-Execute 在执行循环外增加显式计划：Plan 模型产生初始�
 | 完成的依据 | 模型返回 Final Answer，或 Re-Plan 返回最终答案，结束当前流程 | 独立 Checker 根据实际结果与验收标准决定是否通过，再决定继续、返修或停止 |
 | 中断与资源边界 | 有内部循环不代表已有跨运行恢复、回退和整体预算治理 | 明确轮数、时间、Token 与重试预算，并验证停止、可信状态恢复和人工接管 |
 
-左列依据 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code（2026-09-22 任务路径修订版）#三个工具与一个主循环|ReAct 主循环]]及其 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code（2026-09-22 任务路径修订版）#Plan-And-Execute：先规划，再动态调整|Plan-And-Execute 流程]]；右列依据 [[raw/sources/应用工程/循环工程/Loop 的组件、搭建方法与上线检查#五步搭建一个有边界的循环|搭建方法]]、[[raw/sources/应用工程/循环工程/Loop 的组件、搭建方法与上线检查#Maker与Checker分离|独立验证]]及 [[raw/sources/应用工程/循环工程/Loop 的组件、搭建方法与上线检查#六项上线检查|上线检查]]。
+左列依据 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code#三个工具与一个主循环|ReAct 主循环]]及其 [[raw/sources/应用工程/AI Agent/Agent 的概念、原理与构建模式 —— 从零打造一个简化版的 Claude Code#Plan-And-Execute：先规划，再动态调整|Plan-And-Execute 流程]]；右列依据 [[raw/sources/应用工程/循环工程/Loop 的组件、搭建方法与上线检查#五步搭建一个有边界的循环|搭建方法]]、[[raw/sources/应用工程/循环工程/Loop 的组件、搭建方法与上线检查#Maker与Checker分离|独立验证]]及 [[raw/sources/应用工程/循环工程/Loop 的组件、搭建方法与上线检查#六项上线检查|上线检查]]。
 
 Re-Plan 的职责是利用执行记录更新计划或结束回答。即使单独调用另一个模型，也不能仅凭这个角色名称认定它已具备独立 Checker 的证据与职责隔离。同样，保存了计划或消息对象，只能说明当前执行有状态，不能据此推断进程重启后能够恢复；需要单独检查持久化与恢复实现。（[[wiki/sources/AI Agent：ReAct 与 Plan-And-Execute 构建模式|执行与重规划]]、[[wiki/sources/循环工程：组件、搭建与上线检查|验证与持久化]]）
 

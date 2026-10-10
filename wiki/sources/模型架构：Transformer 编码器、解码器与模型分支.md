@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1k6yWBEEmH
 author: 隔壁的程序员老王
 published: 2025-10-30
 ingested: 2026-09-04
-updated: 2026-09-14
+updated: 2026-10-10
 tags:
   - AI
   - 模型架构
@@ -16,37 +16,33 @@ tags:
 
 # 模型架构：Transformer 编码器、解码器与模型分支
 
-原始资料：[[raw/sources/模型原理/模型架构/Transformer如何成为AI模型的地基|Transformer如何成为AI模型的地基]]
+原始资料：[[raw/sources/模型原理/模型架构/Transformer如何成为AI模型的地基|Transformer 架构导论：Encoder、Decoder 与生成模型]]
 
 ## 核心结论
 
-原始 Transformer 以 Encoder—Decoder 结构处理翻译：Encoder 把完整输入转换为内部表示，Decoder 结合这组表示和已经生成的目标 Token，自回归地产生下一个 Token。后续模型根据任务分化为 Decoder-only 与 Encoder-only 等路线；它们共享 Transformer 基础模块，但训练目标、可见上下文和输出方式不同。
+原始 Transformer 用 Encoder 编码源序列，Decoder 结合源表示与已生成目标 Token 自回归预测下一项。原论文采用 Post-LN；后续 Pre-LN 等布局分别讨论。内部上下文化表示不是可逐维翻译为人类词义的“含义矩阵”。（[[raw/sources/模型原理/模型架构/Transformer如何成为AI模型的地基#原始Encoder：编码全部源文本|原始 Encoder]]）
 
 ## 三种架构路线
 
-| 架构 | 输入与输出方式 | 资料中的训练示例 | 典型定位 |
+| 架构 | 可见上下文 | 常用训练目标 | 输出与用途 |
 | --- | --- | --- | --- |
-| Encoder—Decoder | Encoder 处理完整原文，Decoder 逐 Token 生成译文 | 成对原文与译文的监督学习 | 翻译等序列到序列任务 |
-| Decoder-only | 根据已有 Token 持续预测下一个 Token | 从普通文本自动构造下一个 Token 目标 | GPT 式自回归生成 |
-| Encoder-only | 同时利用被遮挡位置两侧的上下文 | BERT 的 `[MASK]` 恢复 | 文本理解、实体提取和标注 |
+| Encoder—Decoder | Encoder 读取源序列；Decoder 读取源表示与已有目标 | 条件序列预测 | 翻译、摘要等输入到输出转换 |
+| Decoder-only | 当前及此前 Token | 下一个 Token 预测 | 自回归文本或结构化生成 |
+| Encoder-only | 全部有效输入，按任务屏蔽部分 Token | 如 BERT 的遮盖 Token 恢复 | 分类、实体提取等表示任务 |
+
+Decoder-only 通常没有原始 Decoder 的 Encoder 交叉注意力；Encoder-only 的常用任务定位也不等于绝对无法参与生成。未公开架构的商业模型不作确定归类。（[[raw/sources/模型原理/模型架构/Transformer如何成为AI模型的地基#三类Transformer的职责|模型分支]]）
+
+训练时将正确目标序列右移，因果 Mask 防止读取未来标签，各位置可并行计算损失；推理时则依赖刚生成的 Token 逐步推进。固定源输入的一次翻译中可复用 Encoder 输出，不表示跨请求自动共享。（[[raw/sources/模型原理/模型架构/Transformer如何成为AI模型的地基#训练不等于逐次运行完整生成|训练与推理]]）
 
 ## 生成与采样
 
-Decoder 每一步都为词表中的 Token 计算分数或概率，再通过解码策略选择下一项。Temperature 调整采样随机性；Top-K 只保留概率最高的固定数量 Token。原始资料已校正字幕中的 `top-p` 转写：`K=1`、`K=2` 描述的是按固定数量保留 Token 的 Top-K，Top-P 则按累计概率阈值确定保留集合。
-
-资料借 GPT-2 的 50257 个 Token 说明输出层规模，并用开始标记—逐 Token 生成—结束标记展示自回归过程。该示例用于解释流程，不代表原始 Transformer 翻译模型与 GPT-2 使用相同词表。
+对 $T>0$，常见温度采样为 $p_i\propto e^{z_i/T}$；$T=0$ 不能直接代入公式，接口对贪心选择的约定分别核对。Top-K 保留固定数量最高分 Token，Top-P 按累计概率阈值保留集合；两者均改变解码选择，不重新训练模型。（[[raw/sources/模型原理/模型架构/Transformer如何成为AI模型的地基#解码补充：Temperature、Top-K与Top-P|采样定义]]）
 
 ## 证据边界
 
-- “含义矩阵”是对 Encoder 内部表示的教学类比，不表示该矩阵能够被人直接翻译成稳定、唯一的语义。
-- GPT-4 的 1.8 万亿参数属于资料明确标注的外界传言，没有得到 OpenAI 正式确认，不能作为已公布规格。
-- Decoder 的逐 Token 特性可以解释输出阶段的串行计算压力，但 API 输入、输出价格还受到模型、硬件、缓存、并发和服务策略影响，不能只由本例推出固定价差。
-- 资料对 GPT、Claude、Gemini、DeepSeek 与 Kimi 的 Decoder-only 归类是宏观概括，不能代替各模型版本的官方架构说明。
-- 字幕中的“标注参考线”无法从官方字幕或章节精确恢复，正式文章只保留能够确认的“其他文本标注任务”，未补写具体任务名。
+输出越长通常带来更多串行生成步骤；API 价差还取决于平台、模型、硬件、缓存与并发，不能仅由架构推导报价。
 
 ## 系列定位与关联
-
-本资料是官方“从0开始一起学大模型”合集首条，内容建立 Transformer 宏观结构，并在结尾预告继续拆解内部组件；因此定位为系列导论，不另行添加期数。
 
 - 下一条：[[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - 注意力内部机制：[[wiki/sources/模型架构：多头注意力与 QKV]]

@@ -39,7 +39,7 @@ Agent Harness 是模型输出与真实执行之间的工程外壳：它组装输
 | 独立验证 | 根据测试或环境状态判断结果，而非采用生成者的自我评价 | [[wiki/sources/驾驭工程：Harness Engineering 运行系统全景\|生成与验证分离]] |
 | 继续、恢复或停止 | 区分传输失败、上下文溢出、输出截断与任务失败，保存可继续的状态 | [[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解\|运行闭环与恢复]] |
 
-原文转述的 Anthropic Planner／Generator／Evaluator 与 Google DeepMind 相关验证架构的 Generator／Verifier／Reviser 支持同一判断：灵活生成与严格放行应由不同角色承担。现存原文未保留更具体的项目名称或可独立复核的实现材料。（[[wiki/sources/驾驭工程：Harness Engineering 运行系统全景#实践中的共同模式|组织案例与证据边界]]）Harness 执行质量门，[[wiki/syntheses/评估工程：从通用基准到业务质量门|评估工程]]定义合格证据；要跨轮自治，还须由[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程]]接上外部触发、持久状态、预算与停止条件。
+原文转述的 Anthropic Planner／Generator／Evaluator 与 Google DeepMind 相关验证架构的 Generator／Verifier／Reviser 支持同一判断：灵活生成与严格放行应由不同角色承担。这些机构案例仅用于比较生成、验证与修订职责，具体实现须以对应项目的代码与版本为依据。（[[wiki/sources/驾驭工程：Harness Engineering 运行系统全景#实践中的共同模式|组织案例与证据边界]]）Harness 执行质量门，[[wiki/syntheses/评估工程：从通用基准到业务质量门|评估工程]]定义合格证据；要跨轮自治，还须由[[wiki/syntheses/循环工程：从逐轮操作到外部调度|循环工程]]接上外部触发、持久状态、预算与停止条件。
 
 故障处理也必须按责任定位。Codex 重连案例只在 HTTPS 可用、WebSocket 链路不稳定时调整传输能力，保留 Responses API 与身份验证；它支持区分传输、API 语义与认证，不能作为所有重连故障的通用修复。（[[wiki/sources/Codex：禁用 WebSocket 解决重复重连|传输故障边界]]）
 
@@ -84,7 +84,7 @@ HarnessX 用 Processor 与固定生命周期挂载点分离行为配置，再让
 
 ## 工程收益需要与模型升级比较
 
-运行责任需要保留，实现组件需要复测。Harness 全景资料转述 Vercel 删减冗余工具后减少步骤、Token 与响应时间，并建议模型升级后通过移除组件复测其必要性。这支持维护最小充分工具集、删除已失效补偿措施，不支持取消权限、验证或恢复；现存原文未保留具体模型升级对照。（[[wiki/sources/驾驭工程：Harness Engineering 运行系统全景|工程收益与模型升级]]、[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#五、风险与局限|升级回归与证据边界]]）
+运行责任需要保留，实现组件需要复测。Harness 全景资料转述 Vercel 删减冗余工具后减少步骤、Token 与响应时间，并建议模型升级后通过移除组件复测其必要性。这支持维护最小充分工具集、删除已失效补偿措施，权限、验证和恢复仍是运行责任；组件删减的收益必须在具体模型升级前后对照验证。（[[wiki/sources/驾驭工程：Harness Engineering 运行系统全景|工程收益与模型升级]]、[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#五、风险与局限|升级回归与证据边界]]）
 
 上述组织案例多来自厂商自述或行业归纳，不能拼接成统一效果证明；BrowseComp 的单／多 Agent 风险差异也只适用于对应配置。Claude Code Runtime 资料缺少源码仓库、Commit 和可复核快照，支持运行职责的结构性判断，不能保证其内部名称和数量适用于其他版本。
 

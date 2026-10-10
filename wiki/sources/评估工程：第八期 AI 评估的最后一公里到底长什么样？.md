@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV13a8d69EwB
 author: 晴天AI实战
 published: 2026-08-26
 ingested: 2026-08-28
-updated: 2026-09-22
+updated: 2026-10-10
 tags:
 - AI
 - 评估工程
@@ -18,7 +18,7 @@ tags:
 
 ## 核心结论
 
-合同驱动架构把来源资格、实体范围、声明准入和答案合同交给代码检查，模型负责有边界的语言组合，无效或不可用时由确定性模板回退。现存原文依据论文 *From Prompts to Contracts: Harness Engineering for Auditable Enterprise LLM Agents*（arXiv:2607.08028v1，2026-07-09）说明：该实现和测试集内，验证与回退比仅靠提示约束更可靠；这不证明上游声明全部正确或投资答案具有价值。
+合同驱动架构把来源资格、实体范围、声明准入和答案合同交给代码检查，模型负责有边界的语言组合，无效或不可用时由确定性模板回退。论文 *From Prompts to Contracts: Harness Engineering for Auditable Enterprise LLM Agents*（arXiv:2607.08028v1，2026-07-09）显示：该实现和测试集内，验证与回退比仅靠提示约束更可靠；这不证明上游声明全部正确或投资答案具有价值。
 
 ## 来源、声明与组合边界
 

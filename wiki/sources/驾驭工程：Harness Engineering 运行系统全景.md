@@ -22,13 +22,13 @@ tags:
 
 资料把 Harness Engineering 定义为模型外部运行系统的设计：它不只决定模型看到什么，还管理任务拆解、工具、权限、状态、验证、恢复、日志和人类接管。按照本资料的包含口径，Harness 包含 Context，Context 包含 Prompt；三者分别回答“怎样表达”“让模型看到什么”和“让模型在什么机制中工作并确保完成”。每步成功率 95%、连续 20 步约 35.8% 的例子明确假设各步骤完全独立（`0.95^20 ≈ 35.8%`），不是实测系统可靠性。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#二、兴起原因|原文：独立步骤假设]]）
 
-Harness 的价值不等于堆叠更多组件。现存原文保留 Vercel 删减冗余工具后减少步骤、Token 和响应时间并提高成功率的厂商案例，不再提供工具删减比例。模型升级时应复测补偿组件：移除后是否仍达标、中间 Agent 是否增加延迟，以判断哪些机制可以删除。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#三、跨组织案例对比与共性|原文：组织案例]]、[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#五、风险与局限|原文：升级回归]]）
+Harness 的价值不等于堆叠更多组件。Vercel 的厂商案例描述，删减冗余工具可减少步骤、Token 和响应时间并提高成功率。模型升级时应复测补偿组件：移除后是否仍达标、中间 Agent 是否增加延迟，以判断哪些机制可以删除。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#三、跨组织案例对比与共性|原文：组织案例]]、[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#五、风险与局限|原文：升级回归]]）
 
 ## 实践中的共同模式
 
 原文将 Anthropic 案例概括为从双角色向 Planner、Generator、Evaluator 演进，并用进度文件与 Git 历史接续任务；Google DeepMind 的相关验证架构采用 Generator、Verifier、Reviser 循环。两类案例共同强调生成与评估分离，原文未提供足以独立复核各实现与收益的一手材料。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#三、跨组织案例对比与共性|原文：角色与状态]]）
 
-OpenAI 案例连接动态可观测数据、Linter、结构测试与后台清理；Stripe Minions 使用隔离且预热的 Devbox，通过 MCP 访问内部工具；Manus 案例强调生产就绪前的多次重写。原文未保留工具数量和重写次数、周期的精确数字，不能补为通用收益。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#三、跨组织案例对比与共性|原文：其他组织案例]]）
+OpenAI 案例连接动态可观测数据、Linter、结构测试与后台清理；Stripe Minions 使用隔离且预热的 Devbox，通过 MCP 访问内部工具；Manus 案例强调生产就绪前的多次重写。这些案例用于说明机制，不证明通用收益。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#三、跨组织案例对比与共性|原文：其他组织案例]]）
 
 ## 六个模块
 
@@ -38,15 +38,15 @@ OpenAI 案例连接动态可观测数据、Linter、结构测试与后台清理�
 
 ## 证据与风险边界
 
-现存原文列出三类风险：模型升级会让补偿性组件变成过度工程；复杂搜索与多 Agent 配置可能放大风险；主要证据来自有利益关系的工具厂商，OpenAI 百万行代码案例也缺少普通工程团队的可复现证明。
+三类主要风险是：模型升级会让补偿性组件变成过度工程；复杂搜索与多 Agent 配置可能放大风险；主要证据来自有利益关系的工具厂商，OpenAI 百万行代码案例也缺少普通工程团队的可复现证明。
 
-BrowseComp 类评测复盘只保留多 Agent 配置可能出现更多非预期解法的定性转述；原文没有保留精确发生率。不能把复杂 Harness 或多 Agent 本身视为风险更低的证明。
+BrowseComp 类评测的定性转述表明，多 Agent 配置可能产生更多非预期解法；复杂 Harness 或多 Agent 本身不证明风险更低。
 
-摘要撤下现存原文未保留的漏洞率、数学准确率、工具数量与具体模型升级对照，避免旧数字继续作为当前资料的证据。组织案例用于说明工程机制，具体版本、实现和实验条件仍需补证。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#五、风险与局限|原文：证据边界]]、[[wiki/questions/原始资料待补证清单|待补证清单]]）
+组织案例的具体版本、实现和实验条件没有可独立定位的完整一手证据。（[[raw/sources/应用工程/驾驭工程/为什么你的Agent总翻车？Harness Engineering全拆解：Anthropic、OpenAI、DeepMind都在押注的Agent Runtime#五、风险与局限|原文：证据边界]]、[[wiki/questions/原始资料待补证清单|待补证清单]]）
 
 ## 定位与关联
 
-官方“前沿论文与最新技术趋势洞察”合集将本文列为第 16 条，但官方标题、开场和结尾均没有期数标识，官方章节为空；正文完整介绍 Harness 的定义、行业案例、模块、旧技术重组和风险，因此定位为应用工程／驾驭工程独立全景专题，不把合集位置当作文章期数。
+本文为应用工程／驾驭工程独立全景专题，没有期数标识。
 
 - Harness 综合：[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]
 - Prompt、Context 与 Harness 边界：[[wiki/sources/上下文工程：提示词、上下文与 Harness 的职责边界]]

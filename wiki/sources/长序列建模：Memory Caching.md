@@ -29,7 +29,7 @@ tags:
 
 资料介绍四种策略：Residual Memory 等权聚合所有段；GRM 根据当前 Token 与各段摘要的相关性动态分配权重；Memory Soup 先组合记忆参数再查询；Sparse Selective Caching（SSC）只加载和查询选中的 Top-k 状态，但对全部摘要评分与选段的成本仍随历史段数增长，不能把完整检索成本写成固定值。（[[raw/sources/模型原理/模型架构/RNN不再“金鱼记忆”！一篇论文讲透Memory Caching，Mamba长上下文终于能打了#四种聚合策略|原文：聚合策略]]）
 
-当前原文已按论文 v1 第 3.1 节将 GRM 明确为 Gated Residual Memory。GRM 与 Memory Soup 仅在查询算子对记忆参数线性且使用相同权重时等价；DLA、Titans 的深度或非线性记忆不能自动满足该条件。（[[raw/sources/模型原理/模型架构/RNN不再“金鱼记忆”！一篇论文讲透Memory Caching，Mamba长上下文终于能打了#GRM 与 Memory Soup 何时等价|原文：等价条件]]）
+论文 v1 第 3.1 节将 GRM 定义为 Gated Residual Memory。GRM 与 Memory Soup 仅在查询算子对记忆参数线性且使用相同权重时等价；DLA、Titans 的深度或非线性记忆不能自动满足该条件。（[[raw/sources/模型原理/模型架构/RNN不再“金鱼记忆”！一篇论文讲透Memory Caching，Mamba长上下文终于能打了#GRM 与 Memory Soup 何时等价|原文：等价条件]]）
 
 ## 设计取舍
 
@@ -41,7 +41,7 @@ Memory Caching 把分段器、段内 RNN 与跨段聚合器解耦，可以接入
 
 ## 实验边界
 
-原文核对论文 v1 Table 2 的 S-NIAH-3（UUID）16K 列：DLA 加 GRM 后从 4.0% 提高到 18.2%，Titans（LMM）从 21.2% 提高到 32.2%，均仍低于 Transformer 的 40.8%。另一套 Table 1 常识推理设置为 1.3B 参数、100B 训练 Token、4K 训练上下文和默认段长 256：Titans + GRM 为 58.33%，自身基线为 56.82%，Samba 为 54.46%，Transformer++ 为 53.19%。这些结果只属于对应模型与协议，不是其他系统的性能保证。（[[raw/sources/模型原理/模型架构/RNN不再“金鱼记忆”！一篇论文讲透Memory Caching，Mamba长上下文终于能打了#论文实验支持什么|原文：实验设置与纠正数字]]）
+论文 v1 Table 2 的 S-NIAH-3（UUID）16K 列显示：DLA 加 GRM 后从 4.0% 提高到 18.2%，Titans（LMM）从 21.2% 提高到 32.2%，均仍低于 Transformer 的 40.8%。另一套 Table 1 常识推理设置为 1.3B 参数、100B 训练 Token、4K 训练上下文和默认段长 256：Titans + GRM 为 58.33%，自身基线为 56.82%，Samba 为 54.46%，Transformer++ 为 53.19%。这些结果只属于对应模型与协议，不是其他系统的性能保证。（[[raw/sources/模型原理/模型架构/RNN不再“金鱼记忆”！一篇论文讲透Memory Caching，Mamba长上下文终于能打了#论文实验支持什么|原文：实验设置与结果]]）
 
 ## 关联
 
