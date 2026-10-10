@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1HW4X6QEuh
 author: 张司机在路上
 published: 2026-08-30
 ingested: 2026-09-14
-updated: 2026-09-14
+updated: 2026-10-10
 tags:
   - AI
   - MoE
@@ -49,7 +49,6 @@ $$
 
 ## 关联
 
-- [[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - [[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
 - [[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - [[wiki/sources/模型架构：多头注意力与 QKV]]

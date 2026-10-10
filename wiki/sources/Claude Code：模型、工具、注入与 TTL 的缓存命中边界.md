@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1ZQ5u6bEJ7
 author: 张司机在路上
 published: 2026-05-12
 ingested: 2026-09-14
-updated: 2026-09-14
+updated: 2026-10-10
 tags:
   - AI
   - Claude Code
@@ -53,7 +53,6 @@ tags:
 ## 关联
 
 - 多轮缓存计量：[[wiki/sources/Claude Code：多轮对话的前缀缓存与 Token 成本]]
-- 第三方 API 的 cch 失效：[[wiki/sources/Claude Code：第三方 API 的 cch 缓存失效与 Attribution Header]]
 - 缓存内容与层级：[[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级]]
 - 延迟工具加载：[[wiki/sources/Claude Code：ToolSearch 延迟加载与缓存保持]]
 - Claude Code 请求结构：[[wiki/sources/Claude Code：请求结构、SSE 与缓存 Token 计量]]

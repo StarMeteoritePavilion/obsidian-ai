@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1gkPieREDw
 author: 唐国梁Tommy
 published: 2025-02-25
 ingested: 2026-09-03
-updated: 2026-09-07
+updated: 2026-10-10
 tags:
   - AI
   - 模型架构
@@ -15,7 +15,7 @@ tags:
 
 # 模型架构：MoBA 混合块注意力
 
-原始资料：[[raw/sources/模型原理/模型架构/月之暗面发布面向大模型的MoBA（混合块注意力）架构 结合MoE和稀疏注意力 算法原理详解|月之暗面 MoBA 算法原理详解]]
+原始资料：[[raw/sources/模型原理/模型架构/月之暗面发布面向大模型的MoBA（混合块注意力）架构 结合MoE和稀疏注意力 算法原理详解（2026-10-10 修订版）|月之暗面 MoBA 算法原理详解]]
 
 ## 核心机制
 

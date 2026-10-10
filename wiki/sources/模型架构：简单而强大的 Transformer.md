@@ -46,7 +46,7 @@ Encoder 处理完整源文本；Decoder 用因果掩码限制目标侧可见性�
 
 ## 关联
 
-- [[wiki/sources/模型架构：从词嵌入到 RNN]]：上一 P 只点名 Transformer。
+- [[wiki/sources/模型架构：从词嵌入到 RNN]]：上一篇。
 - [[wiki/sources/模型架构：多头注意力与 QKV]]
 - [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
 - [[wiki/sources/模型架构：正弦位置编码与注意力的顺序缺口]]

@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1fc5j62E1Q
 author: 张司机在路上
 published: 2026-05-10
 ingested: 2026-09-14
-updated: 2026-09-14
+updated: 2026-10-10
 tags:
   - AI
   - Claude Code
@@ -23,7 +23,7 @@ tags:
 
 ## 核心结论
 
-资料将普通模式概括为“上下文 → 行动”，将 Thinking 模式概括为“上下文 → 中间推理 → 行动”。当次 Claude Code 抓包的请求使用 `thinking: adaptive` 与 `effort: high`；响应中的 Thinking Block 先定位 TTL 缓存的 `get` 没有检查过期时间，Text Block 再给出 `Date.now()`、`entry.expiry`、删除条目并返回 `null` 的 Lazy Eviction 修复方案。
+资料将普通模式概括为“上下文 → 行动”，将 Thinking 模式概括为“上下文 → 中间推理 → 行动”。当次 Claude Code 抓包的请求使用 `thinking: adaptive` 与 `effort: high`，案例见 [[#TTL 缓存案例]]。
 
 ## 运行时控制
 

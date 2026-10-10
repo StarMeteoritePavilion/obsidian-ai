@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1zR9JBREua
 author: 唐国梁Tommy
 published: 2026-04-02
 ingested: 2026-09-04
-updated: '2026-09-07'
+updated: 2026-10-10
 tags:
 - AI
 - Agent
@@ -63,7 +63,6 @@ Prompt 工厂按 Override、Coordinator、Agent、Custom、Default、Append 六�
 
 ## 关联
 
-- Harness 综合：[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]
 - 循环与恢复：[[wiki/syntheses/循环工程：从逐轮操作到外部调度]]
 - 上下文治理：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
 - 可进化 Harness：[[wiki/sources/驾驭工程：HarnessX 可进化 Agent Harness]]

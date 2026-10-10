@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1CgZABxEcy
 author: 隔壁的程序员老王
 published: 2026-02-19
 ingested: 2026-09-04
-updated: 2026-09-14
+updated: 2026-10-10
 tags:
   - AI
   - 模型架构
@@ -44,5 +44,4 @@ DeepSeek V4 进一步处理 MoE 的训练稳定性：Anticipatory Routing 使用
 - 块级稀疏注意力：[[wiki/sources/模型架构：MoBA 混合块注意力]]
 - Kimi K2 Thinking 的 MoE 实例：[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
 - Qwen 3.5 的 397B／17B 与 10 路由专家＋1 共享专家实例：[[wiki/sources/大语言模型：Qwen 3.5 的 MoE、混合注意力与应用演示]]
-- DeepSeek V4 的路由稳定性：[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
 - 模型推理与成本：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

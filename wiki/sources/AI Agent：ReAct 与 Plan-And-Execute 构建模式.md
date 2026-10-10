@@ -56,6 +56,5 @@ Plan-And-Execute 把规划与执行分开：Plan 模型生成初始计划，执�
 
 ## 关联
 
-- [[wiki/syntheses/AI Agent：从工具调用到可信行动]]
 - [[wiki/syntheses/循环工程：从逐轮操作到外部调度]]
 - [[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]

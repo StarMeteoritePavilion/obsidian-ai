@@ -48,4 +48,3 @@ API 演示通过阿里云百炼创建密钥，在 VS Code 的 Cline 中选择 `O
 - 混合注意力与压缩／稀疏路线对照：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维#表示机制、RAG 推理扩展与执行优化是三条轴]]、[[wiki/syntheses/长上下文模型架构：共享、筛选、压缩与可增长记忆#先压缩再筛选]]
 - Kimi K2 Thinking 的 MoE 与 Agent 训练：[[wiki/sources/大语言模型：Kimi K2 Thinking 的 MoE 架构与 Agent 训练]]
 - 模型之外的执行外壳：[[wiki/syntheses/驾驭工程：模型之外的 Agent Harness]]
-- 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

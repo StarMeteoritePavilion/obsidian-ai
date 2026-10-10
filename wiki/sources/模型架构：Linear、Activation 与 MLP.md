@@ -40,7 +40,6 @@ Linear 用可训练的权重和偏置完成向量间的线性映射；多个 Lin
 
 本文承接 [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支|Transformer 架构导论]]，解释前馈网络中的线性映射与激活。
 
-- 系列导论：[[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
 - PyTorch 实践续篇：[[wiki/sources/模型训练：PyTorch 手写数字识别实战]]
 - 参数训练机制：[[wiki/sources/模型训练：梯度下降与均方误差]]
 - Attention 与上下文表示：[[wiki/sources/模型架构：多头注意力与 QKV]]

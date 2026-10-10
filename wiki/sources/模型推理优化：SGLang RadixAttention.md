@@ -44,7 +44,6 @@ SGLang 使用 Radix Tree 组织不同请求的公共前缀。树节点保存连�
 
 ## 关联
 
-- [[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐]]
 - [[wiki/sources/模型推理优化：Continuous Batching 与 Ragged Batching]]：SGLang 在该资料中被列为连续批处理的实现者之一；前缀树复用与按轮换入请求不是同一机制。
 - [[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级]]
 - [[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA]]

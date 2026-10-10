@@ -36,7 +36,6 @@ RNN 每步接收一个词向量并更新隐藏状态。$W_{xh}$ 映射当前输�
 
 - [[wiki/sources/模型架构：简单而强大的 Transformer]]：下一 P 才展开注意力；本 P 仍然只点名 Transformer。
 - [[wiki/sources/模型架构：从全连接矩阵到卷积神经网络]]
-- [[wiki/sources/模型原理：词向量与嵌入矩阵]]
 - [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - [[wiki/sources/模型原理：从函数到神经网络]]
 - [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

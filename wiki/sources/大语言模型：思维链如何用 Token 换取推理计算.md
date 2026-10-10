@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1pvYp6WEHY
 author: 隔壁的程序员老王
 published: 2026-09-17
 ingested: 2026-09-19
-updated: 2026-09-19
+updated: 2026-10-10
 tags:
   - 基础原理
   - AI
@@ -52,4 +52,3 @@ tags:
 - 提示词综合：[[wiki/syntheses/提示词工程：从单轮指令到生产规范]]
 - 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
 - 后训练综合：[[wiki/syntheses/大模型后训练：从模仿到行为选择]]
-- 可见思维链边界：[[wiki/sources/大语言模型：思维链的模式匹配与泛化边界]]

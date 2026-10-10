@@ -46,9 +46,6 @@ tags:
 
 ## 关联
 
-- [[wiki/sources/模型推理优化：PagedAttention 分页、前缀共享与驱逐]]
-- [[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling]]
-- [[wiki/sources/模型推理优化：SGLang RadixAttention]]
 - [[wiki/sources/模型推理优化：KV Cache 与 Prompt Cache 的复用层级]]
 - [[wiki/sources/模型架构：KV Cache 显存公式与 MHA、MQA、GQA]]
 - [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

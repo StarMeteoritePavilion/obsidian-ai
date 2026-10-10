@@ -43,9 +43,6 @@ $$
 
 ## 关联
 
-- [[wiki/sources/模型训练：损失函数、梯度下降与反向传播]]
 - [[wiki/sources/模型原理：从函数到神经网络]]
-- [[wiki/sources/模型训练：梯度下降与均方误差]]
-- [[wiki/sources/模型架构：从全连接矩阵到卷积神经网络]]
 - [[wiki/sources/模型架构：Linear、Activation 与 MLP]]
 - [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

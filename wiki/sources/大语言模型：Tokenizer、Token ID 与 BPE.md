@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1LjTX6ZEJV
 author: 张司机在路上
 published: 2026-07-06
 ingested: 2026-09-13
-updated: 2026-10-09
+updated: 2026-10-10
 tags:
   - AI
   - Token
@@ -41,7 +41,6 @@ Word-based 切分保留完整词义、序列短，却面临 OOV、`[UNK]` 和大
 
 ## 关联
 
-- [[wiki/sources/模型原理：词向量与嵌入矩阵]]
 - [[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
 - [[wiki/sources/Codex：请求结构、服务端通信与 Token 计量]]
 - [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

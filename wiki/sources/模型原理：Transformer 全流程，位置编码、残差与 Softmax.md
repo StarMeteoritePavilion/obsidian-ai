@@ -39,10 +39,9 @@ Softmax 为 $p_i=e^{x_i}/\sum_j e^{x_j}$；logits $4,2,1,5,3$ 对应「求」「
 
 ## 关联
 
-- [[wiki/sources/模型原理：注意力，从加权求和到多头]]：上一集完成加权求和，本集补结构图上剩下的组件。
-- [[wiki/sources/模型原理：模型训练，预训练、后训练与思维链]]：下一集讲这些参数怎样从文本里训练出来。
+- [[wiki/sources/模型原理：注意力，从加权求和到多头]]：上一篇。
+- [[wiki/sources/模型原理：模型训练，预训练、后训练与思维链]]：下一篇。
 - [[wiki/sources/模型原理：前馈神经网络与线性投影]]
 - [[wiki/sources/模型原理：定义问题，预测下一个词]]
 - [[wiki/sources/模型架构：简单而强大的 Transformer]]
-- [[wiki/sources/模型架构：正弦位置编码与注意力的顺序缺口]]
 - [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

@@ -44,5 +44,4 @@ mHC 约束多通道残差的混合矩阵，AttnRes 则选择历史表示；两�
 - Token 间注意力：[[wiki/sources/模型架构：多头注意力与 QKV]]
 - FFN 与 MoE：[[wiki/sources/模型架构：MoE 稀疏专家路由]]
 - Residual Stream 与内部表示：[[wiki/sources/大语言模型：Token、Embedding 与 Latent Space]]
-- 多通道约束残差：[[wiki/sources/模型架构：DeepSeek V4 的长上下文与训练稳定性]]
 - 模型推理综合：[[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]

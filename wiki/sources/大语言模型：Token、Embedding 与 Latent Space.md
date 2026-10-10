@@ -46,8 +46,6 @@ Coconut和Soft Thinking把部分中间步骤保留在连续状态中，但隐藏
 
 ## 关联
 
-- [[wiki/sources/大语言模型：Abliteration 与拒绝方向干预]]
-- [[wiki/sources/模型原理：词向量与嵌入矩阵]]
 - [[wiki/sources/大语言模型：Tokenizer、Token ID 与 BPE]]
 - [[wiki/sources/模型架构：Transformer 编码器、解码器与模型分支]]
 - [[wiki/sources/模型架构：Linear、Activation 与 MLP]]
