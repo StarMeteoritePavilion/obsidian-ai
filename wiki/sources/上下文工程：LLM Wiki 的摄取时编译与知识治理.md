@@ -52,12 +52,9 @@ Wiki 还可以通过 `llms.txt`、JSON-LD、GraphML 和 MCP Resources 分别向�
 
 长期生命周期需要 Retention 与 Forgetting：旧资料不必直接删除，但长期未验证、很少访问或被新证据削弱的内容，应在检索排序和上下文注入中逐步降权。资料提出 Source Coverage、Index Freshness、Citation Coverage、Review Backlog 和 Query Save Rate 五项健康指标，分别检查来源覆盖、索引更新、引用覆盖、待审积压和高价值回答回写。
 
-本文为应用工程／上下文与知识工程独立专题，没有期数标识。
-
 ## 关联
 
-- 基础向量检索：[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]]
-- 生产 RAG：[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]]
+- RAG 基础与生产检索：[[wiki/sources/上下文工程：RAG 从个人知识库到生产检索]]
 - 图结构与分层检索：[[wiki/sources/上下文工程：GraphRAG 从知识图谱到分层检索]]
 - 上下文工程综合：[[wiki/syntheses/上下文工程：有限窗口中的信息治理]]
 - Agent 记忆边界：[[wiki/sources/Agent 记忆：MemRL 运行时强化学习]]
