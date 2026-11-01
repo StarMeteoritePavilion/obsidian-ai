@@ -1,6 +1,6 @@
 ---
 title: 驾驭工程：模型之外的 Agent Harness
-updated: 2026-10-10
+updated: 2026-11-01
 tags:
   - AI
   - Agent
@@ -56,7 +56,7 @@ Agent Harness 是模型输出与真实执行之间的工程外壳：它组装输
 
 前两层由[[wiki/sources/Claude Code：compact 上下文压缩与工作现场恢复|压缩与工作现场恢复]]具体说明，长期记忆与会话状态见[[wiki/sources/驾驭工程：Claude Code Agent Runtime 架构拆解|Runtime 架构]]；环境层见[[wiki/sources/Agent 强化学习基础设施：Kimi K3 AgentENV|AgentENV]]。外部副作用仍需幂等键、日志和补偿流程，microVM 快照不会自动撤销已经发生的远程操作。
 
-因此，子上下文隔离、Worktree 与沙箱不能互相替代：它们分别侧重信息、文件和执行环境。信息选择、压缩、缓存及按需加载的具体取舍由[[wiki/syntheses/上下文工程：有限窗口中的信息治理|上下文工程综合]]展开，本页保留“谁保存什么、能恢复到哪里”的运行责任。
+因此，子上下文隔离、Worktree 与沙箱不能互相替代：它们分别侧重信息、文件和执行环境。信息选择、压缩、缓存及按需加载的具体取舍由[[wiki/syntheses/上下文工程：有限窗口中的信息治理|上下文工程综合]]展开，运行责任需要明确“谁保存什么、能恢复到哪里”。
 
 ## 安全边界不能交给提示词独自承担
 

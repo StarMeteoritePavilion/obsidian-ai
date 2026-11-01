@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1SqAVzLEci
 author: 唐国梁Tommy
 published: 2026-03-19
 ingested: 2026-09-02
-updated: '2026-09-07'
+updated: 2026-11-01
 tags:
 - AI
 - AI Agent
@@ -50,7 +50,7 @@ Microsoft Agent Framework 与 Google ADK 作为大厂企业统一型框架另行
 ## 来源内部边界
 
 - 总览列出 LangGraph、CrewAI、LlamaIndex、PydanticAI、Agno、Microsoft Agent Framework、OpenAI Agents SDK、Google ADK、Dify、AgentScope 十个框架，但 Agno 只出现在总览、趋势与团队建议中，没有独立能力分析。
-- Dify Star 数在同一视频中不一致：旁白称 13.1 万余，画面显示 `120,247`；本库不统一这两个数字。
+- Dify Star 数在同一视频中不一致：旁白称 13.1 万余，画面显示 `120,247`。
 - LangGraph、CrewAI 等评分与“事实标准”判断均来自作者评价，不是统一基准测试结果。
 - 框架版本、协议支持、云绑定和商业功能变化较快，实际选型前必须重新核对官方文档。
 

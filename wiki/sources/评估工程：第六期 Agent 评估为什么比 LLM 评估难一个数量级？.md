@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1URui6CEBT
 author: 晴天AI实战
 published: 2026-08-11
 ingested: 2026-08-11
-updated: 2026-10-10
+updated: 2026-10-31
 tags:
 - AI
 - 评估工程
@@ -37,7 +37,7 @@ Capability Eval 从低通过率出发，量化 Agent 获得新能力的过程；
 
 ## 评分器铁律
 
-评分器应检查产出，不检查路径。规定 Agent 必须调用某组工具，会把实现方式误当成业务目标；更可靠的标准是单元测试是否通过、退款记录是否创建、配置是否正确改变。
+评分器应检查产出，而非固定实现路径。规定 Agent 必须调用某组工具，会把实现方式误当成业务目标；更可靠的标准是单元测试是否通过、退款记录是否创建、配置是否正确改变。结合安全评估，还须检查过程中的违规动作，不能以任务完成替代行为合规。（[[wiki/sources/Agent 安全评估：AutoControl Arena 与对齐幻觉#两种危险机制|安全评估的补充边界]]）
 
 Code-based 评分器适合确定性的编程结果，Model-based 评分器适合对话和研究中的语义判断，Human Grader 提供金标准和校准。三者可以组合，但自动评分器必须继续接受人工抽检。
 
