@@ -1,6 +1,6 @@
 ---
 title: AI 知识索引
-updated: 2026-11-05
+updated: 2026-11-06
 tags:
   - AI
   - 索引

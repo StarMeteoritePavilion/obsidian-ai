@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1zR9JBREua
 author: 唐国梁Tommy
 published: 2026-04-02
 ingested: 2026-09-04
-updated: 2026-10-10
+updated: 2026-11-06
 tags:
 - AI
 - Agent
@@ -39,7 +39,7 @@ tags:
 - 自研 Zustand 风格 Store 用 `Object.is`、Selector 和 `useSyncExternalStore` 控制终端 UI 更新。
 - 六类 Hook 与 24 种事件把工具、权限、会话、压缩和用户输入暴露为扩展点。
 
-这些取舍分别服务于成本、上下文连续性、交互延迟、安全、渲染性能和企业定制，没有合并成单一抽象。
+这些取舍分别服务于成本、上下文连续性、交互延迟、安全、渲染性能和企业定制。
 
 ## 多 Agent、记忆与提示编排
 
