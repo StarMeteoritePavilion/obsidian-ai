@@ -4,7 +4,7 @@ source: https://www.bilibili.com/video/BV1MjN16oE84
 author: 隔壁的程序员老王
 published: 2026-07-16
 ingested: 2026-09-04
-updated: 2026-10-10
+updated: 2026-11-26
 tags:
   - AI
   - 模型工程
@@ -29,6 +29,7 @@ tags:
 
 ## 关联
 
+- [[wiki/sources/AI 计算硬件：Tensor Core 累加精度与实际提速]]
 - [[wiki/syntheses/模型推理：从 Token、Latent 到多模态交错思维]]
 - [[wiki/sources/模型推理优化：Token 成本、KV Cache 与缓存机制]]
 - [[wiki/sources/模型推理优化：FlashAttention 算子融合、在线 Softmax 与 Tiling]]
